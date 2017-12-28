@@ -1,0 +1,118 @@
+/**
+ * WManager
+ *
+ * An open source application for business process management
+ * and a process automation development framework
+ *
+ * This content is released under the MIT License (MIT)
+ *
+ * WManager
+ * Copyright (c) 2017 JAMAIN SOCIAL AND SERVICES SRL (http://jamain.co)
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ *
+ * @package     WManager
+ * @author      Eng. Gianluca Pelliccioli and JAMAIN SOCIAL AND SERVICES SRL development team
+ * @copyright   Copyright (c) 2017 JAMAIN SOCIAL AND SERVICES SRL (http://jamain.co)
+ * @license     http://opensource.org/licenses/MIT      MIT License
+ * @link        http://wmanager.org
+ * @since       Version 1.0.0
+ * @filesource
+ */
+ 
+ .admin-container{
+	background-color: white;
+    border: 1px solid #e3e3e3;
+    border-radius: 4px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05) inset;
+    margin-bottom: 20px;
+    min-height: 20px;
+    padding: 19px;
+}
+
+.form-horizontal{
+	margin-top: 25px !important;
+}
+
+.tab-pane{
+	margin-top: 25px !important;
+}
+
+.filters{
+	margin-top: 15px !important;
+}
+
+.input-group-btn{
+	padding-left: 10px !important;
+}
+
+.panel-yellow{
+	background-color: #f0ad4e;
+	color: white;
+}
+
+.panel-green{
+	background-color: #5cb85c;
+	color: white;
+}
+
+.panel-red{
+	background-color: #d9534f;
+	color: white;
+}
+
+.huge {
+    font-size: 40px;
+}
+
+.modal-title {
+	font-color: white !important;
+}
+
+.box_right{
+	border-right:1px solid #f2f2f2;
+	border-bottom:1px solid #f2f2f2;
+}
+
+.box_bottom_alone{
+	border-bottom:1px solid #f2f2f2;
+}
+
+.box_only_right{
+	border-right:1px solid #f2f2f2;
+}
+
+.admin-box{
+	min-height:60px;
+}
+
+.admin-box:hover {
+    background-color: #f2f2f2;
+}
+
+.admin-box-content{
+	text-align:center;
+	margin-top: 5px;
+}
+
+.admin-box-content a{
+	text-align:center;
+	color: #333;
+}
+
