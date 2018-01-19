@@ -671,314 +671,7 @@ CREATE SEQUENCE contratti_tuo_app_id_seq
 
 ALTER TABLE public.contratti_tuo_app_id_seq OWNER TO install_host_username;
 
---
--- Name: credit_payments; Type: TABLE; Schema: public; Owner: install_host_username; Tablespace: 
---
 
-CREATE TABLE credit_payments (
-    id integer NOT NULL,
-    d_last_update date,
-    invoice_num character varying(255),
-    contract_code character varying(255),
-    be_code character varying(255),
-    invoice_date date,
-    invoice_amount numeric(12,3),
-    payment_term_date date,
-    payment_method character varying(255),
-    customer_name character varying(255),
-    amount_closed numeric(12,3),
-    payment_date date,
-    amount_open numeric(12,3),
-    payment_terms_days character varying(255),
-    payment_is_late character varying(255),
-    contract_status character varying(255),
-    customer_cluster character varying(255),
-    invoice_default_method character varying(20),
-    document_cluster character varying(50),
-    document_aging numeric,
-    document_aging_cluster character varying(50),
-    invoice_lot character varying(255),
-    mmyy_opened date,
-    mmyy_closed date,
-    amount_payed_ontime numeric(12,3),
-    amount_payed_late numeric(12,3),
-    payment_delay_days numeric,
-    payment_delay numeric,
-    credit_expiring numeric(12,3),
-    credit_expired numeric(12,3),
-    credit_expired_aging numeric,
-    credit_expired_aging_cluster character varying(255),
-    ndc_expiring numeric(12,3),
-    ndc_expired numeric(12,3),
-    ndc_expired_aging numeric,
-    rat_expiring numeric(12,3),
-    rat_expired numeric(12,3),
-    rat_expired_aging numeric,
-    cm_phase character varying(255),
-    status_fatturazione character varying(255),
-    lotto_fatturazione character varying(255),
-    periodo_fatturazione character varying(255),
-    customer_detailed_cluster character varying(100),
-    d_firma timestamp without time zone,
-    stato_fornitura character varying(255),
-    installment_id integer
-);
-
-
-ALTER TABLE public.credit_payments OWNER TO install_host_username;
-
---
--- Name: credit_balances; Type: VIEW; Schema: public; Owner: install_host_username
---
-
-CREATE VIEW credit_balances AS
- SELECT credit_payments.d_last_update,
-    credit_payments.contract_code,
-    credit_payments.be_code,
-    credit_payments.customer_name,
-    credit_payments.customer_cluster,
-    min(credit_payments.payment_term_date) AS oldest_expiration_date,
-    (credit_payments.d_last_update - min(credit_payments.payment_term_date)) AS oldest_aging,
-    sum(credit_payments.credit_expired) AS tot_credit_expired,
-    sum(credit_payments.amount_open) AS tot_amount_open,
-    count(*) AS num_open_inv_rat
-   FROM credit_payments
-  WHERE ((credit_payments.credit_expired <> (0)::numeric) AND ((credit_payments.document_cluster)::text <> 'NDC'::text))
-  GROUP BY credit_payments.contract_code, credit_payments.be_code, credit_payments.customer_name, credit_payments.d_last_update, credit_payments.customer_cluster;
-
-
-ALTER TABLE public.credit_balances OWNER TO install_host_username;
-
---
--- Name: credit_dashboard; Type: TABLE; Schema: public; Owner: install_host_username; Tablespace: 
---
-
-CREATE TABLE credit_dashboard (
-    d_last_update date,
-    contract_code character varying(255),
-    customer_name character varying(255),
-    tot_credit_expired numeric,
-    num_open_inv_rat integer,
-    oldest_aging integer,
-    oldest_aging_cluster character varying(1),
-    tr_gestione_credito_status character varying(255),
-    tr_gestione_credito_created timestamp without time zone,
-    a_phone_collection_todo character varying(255),
-    a_phone_collection_created timestamp without time zone,
-    a_racc_valutaz_todo character varying(255),
-    a_racc_preavviso_todo character varying(255),
-    a_racc_created timestamp without time zone,
-    a_sosp_todo character varying(255),
-    a_sosp_contatto_todo character varying(255),
-    a_sosp_contatto_created timestamp without time zone,
-    a_distacco_todo character varying(255),
-    a_distacco_created timestamp without time zone,
-    a_distacco_revoca_created timestamp without time zone,
-    a_legal_todo character varying(255),
-    a_affido_created timestamp without time zone,
-    a_legal_diffida_created timestamp without time zone,
-    a_legal_decreto_created timestamp without time zone,
-    tr_legal_cess_totale_created timestamp without time zone,
-    a_legal_atto_citaz_created timestamp without time zone,
-    cm_phase character varying(255),
-    check_probl_credito integer,
-    check_fornitura integer,
-    check_subentro integer,
-    check_danni integer,
-    check_acr integer,
-    check_atp integer,
-    check_conciliazione integer,
-    customer_cluster character varying(255),
-    check_reclamo_cliente integer,
-    check_reclamo_legale integer,
-    check_ndc integer,
-    check_mai_installato integer,
-    check_blocchi integer,
-    be_code character varying(255),
-    customer_detailed_cluster character varying(100),
-    oldest_aging_detailed_cluster integer,
-    tot_credit_expiring numeric,
-    tot_credit_expired_a numeric,
-    tot_credit_expired_b numeric,
-    tot_credit_expired_c numeric,
-    tot_credit_expired_d numeric,
-    tot_credit_expired_e numeric,
-    tot_amount_open numeric,
-    tot_ndc numeric,
-    a_dilazione character varying(255)
-);
-
-
-ALTER TABLE public.credit_dashboard OWNER TO install_host_username;
-
---
--- Name: credit_imports; Type: TABLE; Schema: public; Owner: install_host_username; Tablespace: 
---
-
-CREATE TABLE credit_imports (
-    id integer NOT NULL,
-    file character varying(255),
-    type character varying(100),
-    created timestamp without time zone DEFAULT now(),
-    status character varying(50)
-);
-
-
-ALTER TABLE public.credit_imports OWNER TO install_host_username;
-
---
--- Name: credit_imports_id_seq; Type: SEQUENCE; Schema: public; Owner: install_host_username
---
-
-CREATE SEQUENCE credit_imports_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.credit_imports_id_seq OWNER TO install_host_username;
-
---
--- Name: credit_imports_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: install_host_username
---
-
-ALTER SEQUENCE credit_imports_id_seq OWNED BY credit_imports.id;
-
-
---
--- Name: credit_never_installation; Type: TABLE; Schema: public; Owner: install_host_username; Tablespace: 
---
-
-CREATE TABLE credit_never_installation (
-    id integer NOT NULL,
-    nr_utenza character varying(100)
-);
-
-
-ALTER TABLE public.credit_never_installation OWNER TO install_host_username;
-
---
--- Name: credit_never_installation_id_seq; Type: SEQUENCE; Schema: public; Owner: install_host_username
---
-
-CREATE SEQUENCE credit_never_installation_id_seq
-    START WITH 397
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.credit_never_installation_id_seq OWNER TO install_host_username;
-
---
--- Name: credit_never_installation_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: install_host_username
---
-
-ALTER SEQUENCE credit_never_installation_id_seq OWNED BY credit_never_installation.id;
-
-
---
--- Name: credit_payments_id_seq; Type: SEQUENCE; Schema: public; Owner: install_host_username
---
-
-CREATE SEQUENCE credit_payments_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.credit_payments_id_seq OWNER TO install_host_username;
-
---
--- Name: credit_payments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: install_host_username
---
-
-ALTER SEQUENCE credit_payments_id_seq OWNED BY credit_payments.id;
-
-
---
--- Name: credit_public_administration; Type: TABLE; Schema: public; Owner: install_host_username; Tablespace: 
---
-
-CREATE TABLE credit_public_administration (
-    id integer NOT NULL,
-    nr character varying(100),
-    punto_di_riconsegna character varying(100),
-    stato_utenza character varying(50),
-    frequenza_fatturazione character varying(100)
-);
-
-
-ALTER TABLE public.credit_public_administration OWNER TO install_host_username;
-
---
--- Name: credit_public_administration_id_seq; Type: SEQUENCE; Schema: public; Owner: install_host_username
---
-
-CREATE SEQUENCE credit_public_administration_id_seq
-    START WITH 160
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.credit_public_administration_id_seq OWNER TO install_host_username;
-
---
--- Name: credit_public_administration_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: install_host_username
---
-
-ALTER SEQUENCE credit_public_administration_id_seq OWNED BY credit_public_administration.id;
-
-
---
--- Name: credit_rid_invoices; Type: TABLE; Schema: public; Owner: install_host_username; Tablespace: 
---
-
-CREATE TABLE credit_rid_invoices (
-    id integer NOT NULL,
-    pvg character varying(100),
-    data date,
-    nr_utenza character varying(50),
-    data_scadenza character varying(100),
-    imponibile_totale character varying(100),
-    netto_fattura character varying(100),
-    pagata character varying(50),
-    metodo_di_pagamento character varying(100),
-    abi_domiciliazione character varying(100),
-    cab_domiciliazione character varying(100),
-    tipo character varying(50),
-    anno character varying(100)
-);
-
-
-ALTER TABLE public.credit_rid_invoices OWNER TO install_host_username;
-
---
--- Name: credit_rid_invoices_id_seq; Type: SEQUENCE; Schema: public; Owner: install_host_username
---
-
-CREATE SEQUENCE credit_rid_invoices_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.credit_rid_invoices_id_seq OWNER TO install_host_username;
-
---
--- Name: credit_rid_invoices_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: install_host_username
---
-
-ALTER SEQUENCE credit_rid_invoices_id_seq OWNED BY credit_rid_invoices.id;
 
 --
 -- Name: delete_history; Type: TABLE; Schema: public; Owner: install_host_username; Tablespace: 
@@ -2223,42 +1916,6 @@ ALTER TABLE public.memos_id_seq OWNER TO install_host_username;
 ALTER SEQUENCE memos_id_seq OWNED BY memos.id;
 
 
---
--- Name: payments; Type: TABLE; Schema: public; Owner: install_host_username; Tablespace: 
---
-
-CREATE TABLE payments (
-    id integer NOT NULL,
-    transaction_id character varying(255),
-    invoice_number character varying(255),
-    status character varying(255),
-    amount character varying(255),
-    created timestamp without time zone
-);
-
-
-ALTER TABLE public.payments OWNER TO install_host_username;
-
---
--- Name: payments_id_seq; Type: SEQUENCE; Schema: public; Owner: install_host_username
---
-
-CREATE SEQUENCE payments_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.payments_id_seq OWNER TO install_host_username;
-
---
--- Name: payments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: install_host_username
---
-
-ALTER SEQUENCE payments_id_seq OWNED BY payments.id;
-
 
 --
 -- Name: products; Type: TABLE; Schema: public; Owner: install_host_username; Tablespace: 
@@ -2678,7 +2335,8 @@ CREATE TABLE setup_config (
     value character varying(150),
     type character varying(150),
     module character varying(100),
-    option character varying(255)
+    option character varying(255),
+    ab_path boolean DEFAULT false
 );
 
 
@@ -3714,40 +3372,6 @@ ALTER TABLE ONLY contacts ALTER COLUMN id SET DEFAULT nextval('contacts_id_seq':
 ALTER TABLE ONLY contracts ALTER COLUMN id SET DEFAULT nextval('contracts_id_seq'::regclass);
 
 
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: install_host_username
---
-
-ALTER TABLE ONLY credit_imports ALTER COLUMN id SET DEFAULT nextval('credit_imports_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: install_host_username
---
-
-ALTER TABLE ONLY credit_never_installation ALTER COLUMN id SET DEFAULT nextval('credit_never_installation_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: install_host_username
---
-
-ALTER TABLE ONLY credit_payments ALTER COLUMN id SET DEFAULT nextval('credit_payments_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: install_host_username
---
-
-ALTER TABLE ONLY credit_public_administration ALTER COLUMN id SET DEFAULT nextval('credit_public_administration_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: install_host_username
---
-
-ALTER TABLE ONLY credit_rid_invoices ALTER COLUMN id SET DEFAULT nextval('credit_rid_invoices_id_seq'::regclass);
-
 
 --
 -- Name: id; Type: DEFAULT; Schema: public; Owner: install_host_username
@@ -3896,11 +3520,7 @@ ALTER TABLE ONLY login_attempts ALTER COLUMN id SET DEFAULT nextval('login_attem
 ALTER TABLE ONLY memos ALTER COLUMN id SET DEFAULT nextval('memos_id_seq'::regclass);
 
 
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: install_host_username
---
 
-ALTER TABLE ONLY payments ALTER COLUMN id SET DEFAULT nextval('payments_id_seq'::regclass);
 
 
 --
@@ -4149,13 +3769,6 @@ ALTER TABLE ONLY vars ALTER COLUMN id SET DEFAULT nextval('vars_id_seq'::regclas
 
 
 --
--- Data for Name: accounts; Type: TABLE DATA; Schema: public; Owner: install_host_username
---
-
-INSERT INTO accounts VALUES (1, 'p', 'GIAN', 'LUCA', 'BCVA5465', 1, 1, '2017-11-30 11:08:05.688723', NULL, '2017-11-30 11:08:05.688723', NULL);
-
-
---
 -- Name: accounts_id_seq; Type: SEQUENCE SET; Schema: public; Owner: install_host_username
 --
 
@@ -4307,13 +3920,6 @@ SELECT pg_catalog.setval('email_template_id_seq', 1, true);
 
 
 --
--- Data for Name: extensions; Type: TABLE DATA; Schema: public; Owner: install_host_username
---
-
-INSERT INTO extensions VALUES (1, 'Core with all internal data', '1/core.zip', 'installed', '2017-11-15 18:19:10.178323', 'core', 'legal_test', NULL);
-
-
---
 -- Name: extensions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: install_host_username
 --
 
@@ -4324,10 +3930,9 @@ SELECT pg_catalog.setval('extensions_id_seq', 1, true);
 -- Data for Name: extention_manager; Type: TABLE DATA; Schema: public; Owner: install_host_username
 --
 
-INSERT INTO extention_manager VALUES (2, 'credit', 'Credit Management', 'Credit Management details', 'test/credit', true, 20000000, 'test_credit.zip');
-INSERT INTO extention_manager VALUES (4, 'graph', 'graph', 'testing graph', '/test/graph', true, 600000, 'graph');
-INSERT INTO extention_manager VALUES (3, 'targeted_wizards', 'Targeted Wizards', 'Testing targeted wizard', '/test/targeted_wizards', true, 500000, 'targeted_wizards.zip');
-INSERT INTO extention_manager VALUES (1, 'legal', 'Legal Extention', 'Testing legal ', '/test/legal', true, 10000000, 'legal.zip');
+
+INSERT INTO extention_manager VALUES (1, 'legal', 'Legal Extention', 'Testing legal ', '/test/legal', true, 10000, 'legal.zip');
+INSERT INTO extention_manager VALUES (2, 'credit', 'Credit Management', 'Credit Management details', 'test/credit', true, 20000, 'credit.zip');
 
 
 --
@@ -4571,17 +4176,17 @@ SELECT pg_catalog.setval('setup_company_roles_id_seq', 6, true);
 -- Data for Name: setup_config; Type: TABLE DATA; Schema: public; Owner: install_host_username
 --
 
-INSERT INTO setup_config VALUES (9, 'extension_source_folder', '/var/www/html/extension/', 'text', 'core', NULL);
-INSERT INTO setup_config VALUES (2, 'trouble_attach_type', '1', 'text', 'core', NULL);
-INSERT INTO setup_config VALUES (4, 'email_from_name', 'Wmanager', 'text', 'core', NULL);
-INSERT INTO setup_config VALUES (3, 'email_from', 'clienti@wmanager.org', 'text', 'email', NULL);
-INSERT INTO setup_config VALUES (5, 'email_to', 'clienti@wmanager.org', 'text', 'email', NULL);
-INSERT INTO setup_config VALUES (6, 'email_cc', '', 'text', 'email', NULL);
-INSERT INTO setup_config VALUES (7, 'loop_check_max_records', '50', 'text', 'core', NULL);
-INSERT INTO setup_config VALUES (8, 'loop_check_period', '3', 'text', 'core', NULL);
-INSERT INTO setup_config VALUES (10, 'extension_manager', '/var/www/html/extension_manager/', 'text', 'core', '');
-INSERT INTO setup_config VALUES (1, 'UPLOAD_DIR', 'assets/uploads', 'text', 'core', NULL);
-INSERT INTO setup_config VALUES (11, 'log_path', 'application/logs', 'text', 'core', '');
+INSERT INTO setup_config VALUES (9, 'extension_source_folder', 'extension/', 'text', 'core', NULL,true);
+INSERT INTO setup_config VALUES (2, 'trouble_attach_type', '1', 'text', 'core', NULL, false);
+INSERT INTO setup_config VALUES (4, 'email_from_name', 'Wmanager', 'text', 'core', NULL, false);
+INSERT INTO setup_config VALUES (3, 'email_from', 'clienti@wmanager.org', 'text', 'email', NULL, false);
+INSERT INTO setup_config VALUES (5, 'email_to', 'clienti@wmanager.org', 'text', 'email', NULL, false);
+INSERT INTO setup_config VALUES (6, 'email_cc', '', 'text', 'email', NULL, false);
+INSERT INTO setup_config VALUES (7, 'loop_check_max_records', '50', 'text', 'core', NULL,false);
+INSERT INTO setup_config VALUES (8, 'loop_check_period', '3', 'text', 'core', NULL,false);
+INSERT INTO setup_config VALUES (10, 'extension_manager', 'extension_manager/', 'text', 'core', '',true);
+INSERT INTO setup_config VALUES (1, 'UPLOAD_DIR', 'assets/uploads', 'text', 'core', NULL,true);
+INSERT INTO setup_config VALUES (11, 'log_path', 'application/logs', 'text', 'core', '',true);
 
 
 --
