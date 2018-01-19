@@ -52,10 +52,7 @@ class Memos {
 				$query = $this->CI->db->where ( 'id', $rel_id )->get ( 'activities' );
 				$act = $query->row ();
 				$memo_data ['thread_id'] = $act->id_thread;
-				$query = $this->CI->db->select ( "accounts.*, address.*,
-									(SELECT c.value  FROM contacts c LEFT JOIN accounts ON c.account_id = accounts.id where c.contact_type = 'tel') as tel,
-									(SELECT c.value  FROM contacts c LEFT JOIN accounts ON c.account_id = accounts.id where c.contact_type = 'email') as email,
-									(SELECT c.value  FROM contacts c LEFT JOIN accounts ON c.account_id = accounts.id where c.contact_type = 'cell') as cell,
+				$query = $this->CI->db->select ( "accounts.*, address.*
 									, accounts.id" )
 							->where ( 'threads.id', $act->id_thread )
 							->join ( 'be', 'be.id = threads.be' )
@@ -68,10 +65,7 @@ class Memos {
 			case "THREAD" :
 				$memo_data ['thread_id'] = $rel_id;
 				$query = $this->CI->db->select ( "accounts.*, 
-									address.*,
-									(SELECT c.value  FROM contacts c LEFT JOIN accounts ON c.account_id = accounts.id where c.contact_type = 'tel') as tel,
-									(SELECT c.value  FROM contacts c LEFT JOIN accounts ON c.account_id = accounts.id where c.contact_type = 'email') as email,
-									(SELECT c.value  FROM contacts c LEFT JOIN accounts ON c.account_id = accounts.id where c.contact_type = 'cell') as cell" )
+									address.*" )
 						->where ( 'threads.id', $rel_id )
 						->join ( 'be', 'be.id = threads.be' )
 						->join ( 'accounts', 'accounts.id = be.account_id' )
@@ -82,10 +76,7 @@ class Memos {
 				break;
 			case "TROUBLE" :
 				$memo_data ['trouble_id'] = $rel_id;
-				$query = $this->CI->db->select ( "accounts.*, address.*, 
-								(SELECT c.value  FROM contacts c LEFT JOIN accounts ON c.account_id = accounts.id where c.contact_type = 'tel') as tel,
-									(SELECT c.value  FROM contacts c LEFT JOIN accounts ON c.account_id = accounts.id where c.contact_type = 'email') as email,
-									(SELECT c.value  FROM contacts c LEFT JOIN accounts ON c.account_id = accounts.id where c.contact_type = 'cell') as cell" )
+				$query = $this->CI->db->select ( "accounts.*, address.*")
 							->where ( 'troubles.id', $rel_id )
 							->join ( 'be', 'be.id = troubles.be_id', 'left' )
 							->join ( 'accounts', 'accounts.id = be.account_id' )
@@ -96,10 +87,7 @@ class Memos {
 				break;
 				case "LEGAL":
 					$memo_data['legal_id'] = $rel_id;
-					$query = $this->CI->db->select("accounts.*, address.*,							
-								(SELECT c.value  FROM contacts c LEFT JOIN accounts ON c.account_id = accounts.id where c.contact_type = 'tel') as tel,
-									(SELECT c.value  FROM contacts c LEFT JOIN accounts ON c.account_id = accounts.id where c.contact_type = 'email') as email,
-									(SELECT c.value  FROM contacts c LEFT JOIN accounts ON c.account_id = accounts.id where c.contact_type = 'cell') as cell")
+					$query = $this->CI->db->select("accounts.*, address.*")
 					->where('legal_cases.id',$rel_id)
 					->join('be','be.id = legal_cases.be','left')
 					->join('accounts','accounts.id = be.account_id','left')

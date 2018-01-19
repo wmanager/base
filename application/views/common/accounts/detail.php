@@ -75,7 +75,7 @@
 							    			foreach($be as $item){
 												
 							    				echo '<tr>';							    					
-							    					echo "<td>#".str_pad($item->be_id, 5, "0", STR_PAD_LEFT )."<br><small>$item->contract_type</small></td>";
+							    					echo "<td>#".str_pad($item->be_id, 5, "0", STR_PAD_LEFT )."<br><small>$item->be_code</small><br><small>$item->contract_type</small></td>";
 							    					echo "<td>$item->company_name</td>";					    				
 							    					echo "<td><small>$item->address $item->state $item->country<br></small></td>";							    												    													    					
 							    				echo '</tr>';
@@ -112,7 +112,7 @@
 							    			foreach($contratti as $item){
 
 							    				echo '<tr>';
-							    					echo "<td>#".str_pad($item->be_id, 5, "0", STR_PAD_LEFT )."<br>$item->contract_code</td>";
+							    					echo "<td>#".str_pad($item->be_id, 5, "0", STR_PAD_LEFT )."<br><small>$item->be_code</small><br>$item->contract_code</td>";
 							    					echo "<td>$item->contract_type</td>";
 							    					echo "<td>$item->prod_type $item->prod_code</td>";
 							    					echo "<td>$item->contract_d_sign</td>";
@@ -150,7 +150,7 @@
 							    			foreach($impianti as $item){
 
 							    				echo '<tr>';
-							    					echo "<td>#".str_pad($item->be_id, 5, "0", STR_PAD_LEFT )."</td>";
+							    					echo "<td>#".str_pad($item->be_id, 5, "0", STR_PAD_LEFT )."<br><small>$item->be_code</small><br></td>";
 							    					echo "<td><small>$item->address $item->state $item->country<br></small></td>";		
 							    					echo "<td><span class='label label-primary'>$item->status</span></td>";							    												    					
 							    					echo "<td><small>Installation: $item->installed_power kW<br>Installable (max): $item->pot_installable kW<br>Consumption hours: $item->capacity</small></td>";							    					
@@ -187,7 +187,7 @@
 							    			foreach($indirizzi as $item){
 
 							    				echo '<tr>';
-							    					echo "<td>#".str_pad($item->be_id, 5, "0", STR_PAD_LEFT )."</td>";
+							    					echo "<td>#".str_pad($item->be_id, 5, "0", STR_PAD_LEFT )."<br><small>$item->be_code</small><br></td>";
 							    					echo "<td>$item->type</td>";
 							    					echo "<td>$item->first_name $item->last_name <br> $item->address $item->city $item->state $item->country <br>$item->tel $item->cell<br>$item->fax<br>$item->email</td>";
 							    				echo '</tr>';
@@ -258,7 +258,7 @@
 							    				echo '<tr>';
 							    					echo "<td>#".sprintf("%05d", $item->id)."<br>$item->type<br><span class='label label-primary'>$item->status</span> <span class='label label-default'>$item->result</span></td>";
 							    					echo "<td>$item->resp_risoluzione_company<br>$item->resp_risoluzione_user</td>";					    												    					
-							    					echo "<td>Created the ".date('d-m-Y H:i',strtotime(str_replace('/', '-',$item->created)))."<br> from $item->creator<br>Deadline ".date('d-m-Y',strtotime($item->deadline))."</td>";
+							    					echo "<td>Created on ".date('d-m-Y H:i',strtotime(str_replace('/', '-',$item->created)))."<br> by$item->creator<br>Deadline ".date('d-m-Y',strtotime(str_replace('/', '-', $item->deadline)))."</td>";
 							    					echo "<td width='10'>";
 						    						echo '<div class="dropdown">';
 						    							 echo '<a href="#" data-toggle="dropdown" class="dropdown-toggle"><i class="fa fa-list"></i></a>';

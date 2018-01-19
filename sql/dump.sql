@@ -4264,94 +4264,6 @@ SELECT pg_catalog.setval('contracts_id_seq', 1, false);
 
 
 --
--- Name: contratti_npu_app_id_seq; Type: SEQUENCE SET; Schema: public; Owner: install_host_username
---
-
-SELECT pg_catalog.setval('contratti_npu_app_id_seq', 1, false);
-
-
---
--- Name: contratti_sereno_app_id_seq; Type: SEQUENCE SET; Schema: public; Owner: install_host_username
---
-
-SELECT pg_catalog.setval('contratti_sereno_app_id_seq', 1, false);
-
-
---
--- Name: contratti_sereno_tls_id_seq; Type: SEQUENCE SET; Schema: public; Owner: install_host_username
---
-
-SELECT pg_catalog.setval('contratti_sereno_tls_id_seq', 1, true);
-
-
---
--- Name: contratti_tuo_app_id_seq; Type: SEQUENCE SET; Schema: public; Owner: install_host_username
---
-
-SELECT pg_catalog.setval('contratti_tuo_app_id_seq', 1, true);
-
-
-
---
--- Data for Name: credit_dashboard; Type: TABLE DATA; Schema: public; Owner: install_host_username
---
-
-
-
---
--- Data for Name: credit_imports; Type: TABLE DATA; Schema: public; Owner: install_host_username
---
-
-
-
---
--- Name: credit_imports_id_seq; Type: SEQUENCE SET; Schema: public; Owner: install_host_username
---
-
-SELECT pg_catalog.setval('credit_imports_id_seq', 1, true);
-
-
---
--- Data for Name: credit_never_installation; Type: TABLE DATA; Schema: public; Owner: install_host_username
---
-
-
-
---
--- Name: credit_never_installation_id_seq; Type: SEQUENCE SET; Schema: public; Owner: install_host_username
---
-
-SELECT pg_catalog.setval('credit_never_installation_id_seq', 1, false);
-
-
---
--- Data for Name: credit_payments; Type: TABLE DATA; Schema: public; Owner: install_host_username
---
-
-
-
---
--- Name: credit_payments_id_seq; Type: SEQUENCE SET; Schema: public; Owner: install_host_username
---
-
-SELECT pg_catalog.setval('credit_payments_id_seq', 1, true);
-
-
---
--- Data for Name: credit_public_administration; Type: TABLE DATA; Schema: public; Owner: install_host_username
---
-
-
-
---
--- Name: credit_public_administration_id_seq; Type: SEQUENCE SET; Schema: public; Owner: install_host_username
---
-
-SELECT pg_catalog.setval('credit_public_administration_id_seq', 1, false);
-
-
-
---
 -- Data for Name: dependencies; Type: TABLE DATA; Schema: public; Owner: install_host_username
 --
 
@@ -4660,16 +4572,16 @@ SELECT pg_catalog.setval('setup_company_roles_id_seq', 6, true);
 --
 
 INSERT INTO setup_config VALUES (9, 'extension_source_folder', '/var/www/html/extension/', 'text', 'core', NULL);
-INSERT INTO setup_config VALUES (2, 'trouble_attach_type', '1', '', 'core', NULL);
-INSERT INTO setup_config VALUES (4, 'email_from_name', 'Wmanager', '', 'core', NULL);
-INSERT INTO setup_config VALUES (3, 'email_from', 'clienti@wmanager.org', '', 'email', NULL);
-INSERT INTO setup_config VALUES (5, 'email_to', 'clienti@wmanager.org', '', 'email', NULL);
-INSERT INTO setup_config VALUES (6, 'email_cc', '', '', 'email', NULL);
-INSERT INTO setup_config VALUES (7, 'loop_check_max_records', '50', '', 'core', NULL);
-INSERT INTO setup_config VALUES (8, 'loop_check_period', '3', '', 'core', NULL);
+INSERT INTO setup_config VALUES (2, 'trouble_attach_type', '1', 'text', 'core', NULL);
+INSERT INTO setup_config VALUES (4, 'email_from_name', 'Wmanager', 'text', 'core', NULL);
+INSERT INTO setup_config VALUES (3, 'email_from', 'clienti@wmanager.org', 'text', 'email', NULL);
+INSERT INTO setup_config VALUES (5, 'email_to', 'clienti@wmanager.org', 'text', 'email', NULL);
+INSERT INTO setup_config VALUES (6, 'email_cc', '', 'text', 'email', NULL);
+INSERT INTO setup_config VALUES (7, 'loop_check_max_records', '50', 'text', 'core', NULL);
+INSERT INTO setup_config VALUES (8, 'loop_check_period', '3', 'text', 'core', NULL);
 INSERT INTO setup_config VALUES (10, 'extension_manager', '/var/www/html/extension_manager/', 'text', 'core', '');
-INSERT INTO setup_config VALUES (1, 'UPLOAD_DIR', 'assets/uploads', '', 'core', NULL);
-INSERT INTO setup_config VALUES (11, 'log_path', 'application/logs', '', 'core', '');
+INSERT INTO setup_config VALUES (1, 'UPLOAD_DIR', 'assets/uploads', 'text', 'core', NULL);
+INSERT INTO setup_config VALUES (11, 'log_path', 'application/logs', 'text', 'core', '');
 
 
 --
@@ -5012,46 +4924,6 @@ ALTER TABLE ONLY contacts
 
 ALTER TABLE ONLY contracts
     ADD CONSTRAINT contracts_id PRIMARY KEY (id);
-
-
---
--- Name: credit_imports_pkey; Type: CONSTRAINT; Schema: public; Owner: install_host_username; Tablespace: 
---
-
-ALTER TABLE ONLY credit_imports
-    ADD CONSTRAINT credit_imports_pkey PRIMARY KEY (id);
-
-
---
--- Name: credit_never_installation_pkey; Type: CONSTRAINT; Schema: public; Owner: install_host_username; Tablespace: 
---
-
-ALTER TABLE ONLY credit_never_installation
-    ADD CONSTRAINT credit_never_installation_pkey PRIMARY KEY (id);
-
-
---
--- Name: credit_payments_pkey; Type: CONSTRAINT; Schema: public; Owner: install_host_username; Tablespace: 
---
-
-ALTER TABLE ONLY credit_payments
-    ADD CONSTRAINT credit_payments_pkey PRIMARY KEY (id);
-
-
---
--- Name: credit_public_administration_pkey; Type: CONSTRAINT; Schema: public; Owner: install_host_username; Tablespace: 
---
-
-ALTER TABLE ONLY credit_public_administration
-    ADD CONSTRAINT credit_public_administration_pkey PRIMARY KEY (id);
-
-
---
--- Name: credit_rid_invoices_pkey; Type: CONSTRAINT; Schema: public; Owner: install_host_username; Tablespace: 
---
-
-ALTER TABLE ONLY credit_rid_invoices
-    ADD CONSTRAINT credit_rid_invoices_pkey PRIMARY KEY (id);
 
 
 --
@@ -5435,27 +5307,6 @@ CREATE INDEX activities_id_thread_idx ON activities USING btree (id_thread);
 CREATE INDEX activities_type_idx ON activities USING btree (type);
 
 
---
--- Name: credit_paymens_be_code_idx; Type: INDEX; Schema: public; Owner: install_host_username; Tablespace: 
---
-
-CREATE INDEX credit_paymens_be_code_idx ON credit_payments USING btree (be_code);
-
-
---
--- Name: credit_paymens_contract_code_idx; Type: INDEX; Schema: public; Owner: install_host_username; Tablespace: 
---
-
-CREATE INDEX credit_paymens_contract_code_idx ON credit_payments USING btree (contract_code);
-
-
---
--- Name: credit_rid_invoices_pvg_idx; Type: INDEX; Schema: public; Owner: install_host_username; Tablespace: 
---
-
-CREATE INDEX credit_rid_invoices_pvg_idx ON credit_rid_invoices USING btree (pvg);
-
-
 
 --
 -- Name: history_caller_activity_idx; Type: INDEX; Schema: public; Owner: install_host_username; Tablespace: 
@@ -5477,12 +5328,6 @@ CREATE INDEX history_exit_scenario_idx ON history USING btree (exit_scenario);
 
 CREATE INDEX history_id_activity_idx ON history USING btree (id_activity);
 
-
---
--- Name: lotto_fatturazione; Type: INDEX; Schema: public; Owner: install_host_username; Tablespace: 
---
-
-CREATE INDEX lotto_fatturazione ON credit_payments USING btree (lotto_fatturazione);
 
 
 --
@@ -5559,42 +5404,6 @@ GRANT ALL ON TABLE ci_sessions TO install_host_username;
 REVOKE ALL ON TABLE companies FROM PUBLIC;
 REVOKE ALL ON TABLE companies FROM install_host_username;
 GRANT ALL ON TABLE companies TO install_host_username;
-
-
---
--- Name: credit_imports; Type: ACL; Schema: public; Owner: install_host_username
---
-
-REVOKE ALL ON TABLE credit_imports FROM PUBLIC;
-REVOKE ALL ON TABLE credit_imports FROM install_host_username;
-GRANT ALL ON TABLE credit_imports TO install_host_username;
-
-
---
--- Name: credit_never_installation; Type: ACL; Schema: public; Owner: install_host_username
---
-
-REVOKE ALL ON TABLE credit_never_installation FROM PUBLIC;
-REVOKE ALL ON TABLE credit_never_installation FROM install_host_username;
-GRANT ALL ON TABLE credit_never_installation TO install_host_username;
-
-
---
--- Name: credit_public_administration; Type: ACL; Schema: public; Owner: install_host_username
---
-
-REVOKE ALL ON TABLE credit_public_administration FROM PUBLIC;
-REVOKE ALL ON TABLE credit_public_administration FROM install_host_username;
-GRANT ALL ON TABLE credit_public_administration TO install_host_username;
-
-
---
--- Name: credit_rid_invoices; Type: ACL; Schema: public; Owner: install_host_username
---
-
-REVOKE ALL ON TABLE credit_rid_invoices FROM PUBLIC;
-REVOKE ALL ON TABLE credit_rid_invoices FROM install_host_username;
-GRANT ALL ON TABLE credit_rid_invoices TO install_host_username;
 
 
 --

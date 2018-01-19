@@ -77,7 +77,7 @@ class Be extends CI_Model {
 							accounts.*, inst.name as installatore,
 							contracts.*, contracts.created as data_contratto,
 							inst.name as agenzia, immobili.*,impianti.*,
-							address.*,setup_master_status.label as be_status
+							address.*
 							FROM be 
 							LEFT JOIN accounts ON be.account_id = accounts.id
 							LEFT JOIN immobili ON immobili.be_id = be.id
@@ -85,8 +85,7 @@ class Be extends CI_Model {
 							LEFT JOIN assets ON assets.be_id = be.id
 							LEFT JOIN contracts ON contracts.id = assets.contract_id
 							LEFT JOIN companies inst ON inst.id = accounts.company_id
-							LEFT JOIN impianti ON impianti.id = assets.impianti_id
-							LEFT JOIN setup_master_status ON setup_master_status.key = be.be_status
+							LEFT JOIN impianti ON impianti.id = assets.impianti_id							
 							";
 		if($filter1 || $filter2 || $filter3) {
 			$sql .= " WHERE";
