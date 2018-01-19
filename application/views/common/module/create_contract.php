@@ -154,8 +154,9 @@
 											</div>
 											<div class="form-group">
 											<div class="col-md-6">
-												<label>Product *</label>												
-												<select class="form-control"  ng-model="form_data.asset.product_id" validator="required">
+												<label>Product *</label>	
+																							
+												<select class="form-control"  ng-model="form_data.asset.product_id" name="product_id" validator="required">
 														<option ng-repeat="n in products" ng-value="n.id" ng-selected="form_data.asset.product_id == n.id">{{n.title}}</option>
 												</select>
 											</div>

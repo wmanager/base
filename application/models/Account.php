@@ -109,9 +109,10 @@ class Account extends CI_Model
 
 		$query = $this->db->select("accounts.code,
 									be.id as be_id,
+									be.be_code,
 									contracts.contract_code,
 									contracts.contract_type,				
-									(select accounts.first_name ||' '|| accounts.last_name from accounts join be as be2 on be2.account_id=accounts.id) as client_name,
+									(select accounts.first_name ||' '|| accounts.last_name from accounts join be as be2 on be2.account_id=accounts.id where  accounts.id = $id) as client_name,
 									companies.name as company_name,
 									a.id, a.type as address_type,
 									a.address as address,
@@ -120,9 +121,9 @@ class Account extends CI_Model
 									a.state as state,
 									a.country as country,
 									accounts.id as id_cliente,
-									(SELECT c.value  FROM contacts c LEFT JOIN accounts ON c.account_id = accounts.id where c.contact_type = 'tel') as tel,
-									(SELECT c.value  FROM contacts c LEFT JOIN accounts ON c.account_id = accounts.id where c.contact_type = 'email') as email,
-									(SELECT c.value  FROM contacts c LEFT JOIN accounts ON c.account_id = accounts.id where c.contact_type = 'cell') as cell")
+									(SELECT c.value  FROM contacts c LEFT JOIN accounts ON c.account_id = accounts.id where c.contact_type = 'tel' and accounts.id = $id) as tel,
+									(SELECT c.value  FROM contacts c LEFT JOIN accounts ON c.account_id = accounts.id where c.contact_type = 'email' and accounts.id = $id) as email,
+									(SELECT c.value  FROM contacts c LEFT JOIN accounts ON c.account_id = accounts.id where c.contact_type = 'cell' and accounts.id = $id) as cell")
 									->where('be.account_id',$id)					
 									->join('accounts','accounts.id = be.account_id','left')
 									->join('assets', 'assets.be_id = be.id','left')
@@ -137,7 +138,7 @@ class Account extends CI_Model
 
 	public function contratti($id)
 	{
-		$query = $this->db->select("be.*,
+		$query = $this->db->select("be.*,									
 									be.id as be_id,
 									contracts.id as contract_id,
 									contracts.contract_code,
@@ -167,7 +168,7 @@ class Account extends CI_Model
 					->join('assets', 'assets.impianti_id = impianti.id','left')
 					->join('be','be.id = assets.be_id','left')
 					->join('accounts','accounts.id = be.account_id','left')					
-					->join('address a',"a.id = impianti.address_id AND a.type = 'IMMOBILI'",'left')
+					->join('address a',"a.id = impianti.address_id AND a.type = 'IMPIANTI'",'left')
 					->join("companies","companies.id = accounts.company_id","left")
 					->order_by('impianti.be_id','ASC')
 					->get('impianti');
@@ -178,11 +179,12 @@ class Account extends CI_Model
 	{    
 	    $query = $this->db->select("accounts.*,
 	    						address.*,
+	    						be.be_code,
 	    						be.id as be_id,
-	    						(SELECT c.value  FROM contacts c LEFT JOIN accounts ON c.account_id = accounts.id where c.contact_type = 'tel') as tel,
-								(SELECT c.value  FROM contacts c LEFT JOIN accounts ON c.account_id = accounts.id where c.contact_type = 'email') as email,
-								(SELECT c.value  FROM contacts c LEFT JOIN accounts ON c.account_id = accounts.id where c.contact_type = 'cell') as cell,
-	    						(SELECT c.value  FROM contacts c LEFT JOIN accounts ON c.account_id = accounts.id where c.contact_type = 'fax') as fax")
+	    						(SELECT c.value  FROM contacts c LEFT JOIN accounts ON c.account_id = accounts.id where c.contact_type = 'tel' and accounts.id = $id) as tel,
+								(SELECT c.value  FROM contacts c LEFT JOIN accounts ON c.account_id = accounts.id where c.contact_type = 'email' and accounts.id = $id) as email,
+								(SELECT c.value  FROM contacts c LEFT JOIN accounts ON c.account_id = accounts.id where c.contact_type = 'cell' and accounts.id = $id) as cell,
+	    						(SELECT c.value  FROM contacts c LEFT JOIN accounts ON c.account_id = accounts.id where c.contact_type = 'fax' and accounts.id = $id) as fax")
 	                      ->distinct()
 	                      ->join('be','be.account_id = accounts.id','left')
 	                      ->join('address',"address.id = accounts.address_id",'left')
@@ -204,9 +206,9 @@ class Account extends CI_Model
 									a.state as state,
 									a.country as country,
 									accounts.id as id_cliente,
-									(SELECT c.value  FROM contacts c LEFT JOIN accounts ON c.account_id = accounts.id where c.contact_type = 'tel') as tel,
-									(SELECT c.value  FROM contacts c LEFT JOIN accounts ON c.account_id = accounts.id where c.contact_type = 'email') as email,
-									(SELECT c.value  FROM contacts c LEFT JOIN accounts ON c.account_id = accounts.id where c.contact_type = 'cell') as cell")			
+									(SELECT c.value  FROM contacts c LEFT JOIN accounts ON c.account_id = accounts.id where c.contact_type = 'tel' and accounts.id = $id) as tel,
+									(SELECT c.value  FROM contacts c LEFT JOIN accounts ON c.account_id = accounts.id where c.contact_type = 'email' and accounts.id = $id) as email,
+									(SELECT c.value  FROM contacts c LEFT JOIN accounts ON c.account_id = accounts.id where c.contact_type = 'cell' and accounts.id = $id) as cell")			
 			->join('address a',"a.id = accounts.address_id AND a.type = 'CLIENT'",'left')
 			->where('accounts.id',$id)
 			->get('accounts');

@@ -390,7 +390,7 @@ if ($this->session->flashdata ( 'growl_show' ) == 'true') {
 	$( document ).ready(function() {
 		var success_growl = "<?=$this->session->flashdata('growl_success')?>";
 		var error_growl = "<?=$this->session->flashdata('growl_error')?>";
-		//var success_growl = "L'attività è stata creata";
+		//var success_growl = "Activity is created";
 		if(success_growl != ''){
 			new PNotify({
 		        title: false,

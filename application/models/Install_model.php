@@ -569,12 +569,17 @@ class Install_model extends CI_Model {
 	}
 	
 	public function update_configs() {
-		$data = array(
-				'UPLOAD_DIR' => FCPATH.'assets/uploads',
-				'log_path' => APPPATH.'logs',
-				'extension_source_folder' => FCPATH.'extension',
-				'extension_manager' => FCPATH.'extension_manager'
-		);
+		
+		$query = $this->db->select("value,key")
+					->where("ab_path",'t')
+					->get('setup_config');
+		$result = $query->result_array(); 
+		$data = array();
+		if(count($result) > 0) {
+			foreach($result as $row) {
+				$data[$row['key']] = FCPATH.$row['value'];
+			}
+		}
 		$query = NULL;
 		foreach($data as $key => $row) {
 			$query = $this->db->where('key', $key)

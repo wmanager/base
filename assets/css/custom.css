@@ -79,6 +79,10 @@ span.fancytree-empty, span.fancytree-vline, span.fancytree-icon, span.fancytree-
 	font-weight: normal;
 }
 
+.dropdown-menu {
+    border-radius: 0px !important;
+}
+
 span.fancytree-focused span.fancytree-title {
 	background-color: #B73232;
 	outline: 1px dotted #000000;
@@ -87,6 +91,18 @@ span.fancytree-focused span.fancytree-title {
 .fancytree-active span.fancytree-title {
 	background-color: #B73232 !important;
 	color: #FFFFFF !important;
+}
+
+ul.dropdown-menu li a {
+    background-color: #fff;
+    color: #000;
+    border-radius: 1px;
+}
+
+ul.dropdown-menu li a:hover {
+    background-color: #0573a1;
+    color: #fff;
+    border-radius: 1px;
 }
 
 ul.fancytree-container {
@@ -219,8 +235,8 @@ label {
 }
 
 .subnavbar .mainnav {
-	border-left: 1px solid #589ad4;
-	border-right: 1px solid #589ad4;
+	border-left: 1px solid #4f80a8;
+	border-right: 1px solid #4f80a8;
 	display: inline-block;
 	/* height: 80px;*/
 	margin: 0;
@@ -1134,7 +1150,7 @@ table .dropdown-toggle i {
 @media screen and (max-width:915px) {
 	ul.mainnav li {
 		min-width: 14% !important;
-		border-bottom: 1px solid #589ad4;
+		border-bottom: 1px solid #4f80a8;
 	}
 	.subnavbar .subnavbar-inner {
 		height: 160px;
@@ -1181,8 +1197,8 @@ table .dropdown-toggle i {
 		width: 100% !important;
 	}
 	.subnavbar .mainnav {
-		border-left: 0px solid #589ad4;
-		border-right: 0px solid #589ad4;
+		border-left: 0px solid #4f80a8;
+		border-right: 0px solid #4f80a8;
 	}
 	.navbar-toggle {
 		z-index: 99;

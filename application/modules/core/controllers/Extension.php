@@ -68,11 +68,11 @@ class Extension extends Common_Controller {
 			if($result){
 				$this->output
 				->set_content_type('application/json')
-				->set_output(json_encode(array('result' => 'success', 'message'=>'Installment added successfully.')));
+				->set_output(json_encode(array('result' => 'success', 'message'=>'Extention added successfully.')));
 			}else{
 				$this->output
 				->set_content_type('application/json')
-				->set_output(json_encode(array('result' => 'failed', 'message'=>'Installment failed to process.')));
+				->set_output(json_encode(array('result' => 'failed', 'message'=>'Extention failed to process.')));
 			}
 				
 		} else {
@@ -96,7 +96,7 @@ class Extension extends Common_Controller {
 			$extension_details = $this->extension_model->get_extension_details($id);
 			if($extension_details->file_name == $filename) {
 				if($ext == '.zip') {
-					if(move_uploaded_file($_FILES['file']['tmp_name'], $this->config->item("extension_source_folder").'/'.$_FILES['file']['name'])) {
+					if(move_uploaded_file($_FILES['file']['tmp_name'], rtrim($this->config->item("extension_source_folder"), "/").'/'.$_FILES['file']['name'])) {
 						if(isset($_POST['id']) && !empty($_POST['id'])) {
 								
 							if($extension_details === FALSE){
@@ -107,9 +107,10 @@ class Extension extends Common_Controller {
 							$installed_result = false;
 							$folder = $this->config->item("extension_source_folder");
 							$zip_path = $folder.$extension_details->file_name;
+							chmod($zip_path, 0777);
 							$zip = new ZipArchive();
 							$x = $zip->open($zip_path);
-								
+
 							if ($x === true) {
 								//extract file to same folder
 								$zip->extractTo($folder);
@@ -153,19 +154,29 @@ class Extension extends Common_Controller {
 							}else{
 								$this->extension_model->add_install_log($id,"DECODE_INSTRUCTION",serialize($instruction_array),"SUCCESS");
 							}
-								
-							//step4: execute instruction
-							$execution_result = $this->execute_instructions($instruction_array,$source_folder);
-				
-							//step5 : updating the extention table
-							$result = $this->extension_model->updated_extension_details($id);
-							if($result) {
+
+							//step4 : Adding the routes data
+							$file_path = rtrim($this->config->item("extension_source_folder"),"/")."/".$ext_folder."/routes.txt";
+							if(file_exists($file_path)){
 								$installed_result = true;
-							} else {
+								$this->extension_model->add_install_log($id,"ROUTES",serialize($instruction_array),"SUCCESS");
+								$file = fopen($file_path,'r');
+								$inport_string = fread($file,filesize($file_path));								
+								fclose($file);
+								$dest_path = FCPATH."application/config/routes.php";
+								chmod($dest_path, 0777);
+								file_put_contents($dest_path, $inport_string.PHP_EOL , FILE_APPEND | LOCK_EX);
+							}else{
 								$installed_result = false;
+								$this->extension_model->add_install_log($id,"ROUTES","failed to add the routes","FAILED");
 							}
-				
+							
 							if($installed_result) {
+								//step5: execute instruction
+								$execution_result = $this->execute_instructions($instruction_array,$source_folder);
+								
+								//step6 : updating the extention table
+								$result = $this->extension_model->updated_extension_details($id);
 								$this->output
 								->set_content_type('application/json')
 								->set_output(json_encode(array('result' => 'success', 'message'=>'Extention installed successfully')));
@@ -366,7 +377,6 @@ class Extension extends Common_Controller {
 	public function copy_dir($src,$dst)
 	{	
 	    if (is_dir($src)) {
-
 	        mkdir($dst);
 	        chmod($dst,0777);
 	        foreach (scandir($src) as $file) {

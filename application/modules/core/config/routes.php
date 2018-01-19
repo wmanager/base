@@ -60,38 +60,6 @@ $route ['module/targeted_wizard/wizard/export'] = "targeted_wizard/wizard/export
 
 /*
  * =======================================================================
- * CREDIT ROUTES
- * =======================================================================
- */
-$route ['module/credit/dashboard'] = "credit/dashboard";
-$route ['module/credit/dashboard/index/page/(:any)'] = "credit/dashboard";
-$route ['module/credit/dashboard/index/page'] = "credit/dashboard";
-$route ['module/credit/dashboard/credit_dashboard_export'] = "credit/dashboard/credit_dashboard_export";
-$route ['module/credit/credit/export'] = "credit/credit/export";
-$route ['module/credit/credit'] = "credit/credit/index";
-$route ['module/credit/credit/index'] = "credit/credit/index";
-$route ['module/credit/dashboard/related_tickets/(:any)'] = "credit/dashboard/related_tickets/$1";
-$route ['module/credit/dashboard/related_docs/(:any)'] = "credit/dashboard/related_docs/$1";
-$route ['module/credit/credit/report/(:any)'] = "credit/credit/report/$1";
-$route ['module/credit/credit/report_credit'] = "credit/credit/report_credit";
-$route ['module/credit/credit/payment_import'] = "credit/credit/payment_import";
-$route ['module/credit/credit/import_administrative'] = "credit/credit/import_administrative";
-$route ['module/credit/credit/import_install'] = "credit/credit/import_install";
-$route ['module/credit/credit/import_rid_invoice'] = "credit/credit/import_rid_invoice";
-$route ['module/credit/credit/import_crm_sole'] = "credit/credit/import_crm_sole";
-$route ['module/credit/credit/import_credit_anagrafica_sole'] = "credit/credit/import_credit_anagrafica_sole";
-$route ['module/credit/credit/fileslink/(:any)/(:any)'] = "credit/credit/fileslink/$1/$2";
-$route ['module/credit/credit/download_credit_payments'] = "credit/credit/download_credit_payments";
-$route ['module/credit/credit/report_insoluto'] = "credit/credit/report_insoluto";
-$route ['module/credit/credit/report_rs1'] = "credit/credit/report_rs1";
-$route ['module/credit/credit/rf1_credit_quality/(:any)'] = "credit/credit/rf1_credit_quality/$1";
-$route ['module/credit/credit/rf2_vintage_analysis_disbursed/(:any)'] = "credit/credit/rf2_vintage_analysis_disbursed/$1";
-$route ['module/credit/credit/rf3_report/(:any)'] = "credit/credit/rf3_report/$1";
-$route ['module/credit/credit/process'] = "credit/credit/process/";
-$route ['module/credit/credit/export'] = "/credit/credit/export";
-
-/*
- * =======================================================================
  * INSTALLMENT ROUTES
  * =======================================================================
  */
