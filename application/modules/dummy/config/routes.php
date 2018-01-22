@@ -42,30 +42,8 @@
  * CORE ENGINE ROUTES
  * =======================================================================
  */
-$route ['admin/engine_debug/be_debug/(:any)'] = "core/engine_debug/be_debug/$1";
-$route ['admin/engine_debug/debug/(:any)/(:any)'] = "core/engine_debug/debug/$1/$2";
-$route ['admin/engine_debug/debug/(:any)/(:any)'] = "core/engine_debug/debug/$1/$2";
-$route ['admin/extension'] = "core/extension/index";
-$route ['admin/extension/add'] = "core/extension/add";
+$route ['dummy'] = "dummy/dummy/index/";
 
-
-
-/*
- * =======================================================================
- * Admin Panel Routes
- * =======================================================================
- */
-$route['admin/setup_activities/(:num)'] = "wmanager/setup_activities/get/$1";
-$route['admin/(:any)'] = "wmanager/$1";
-$route['admin/(:any)/(:any)'] = "wmanager/$1/$2";
-$route['admin/(:any)/(:any)/(:any)'] = "wmanager/$1/$2/$3";
-$route['admin/(:any)/(:any)/(:any)/(:any)'] = "wmanager/$1/$2/$3/$4";
-$route['admin/(:any)/(:any)/(:any)/(:any)/(:any)'] = "wmanager/$1/$2/$3/$4/$5";
-$route['admin/(:any)/(:any)/(:any)/(:any)/(:any)/(:any)'] = "wmanager/$1/$2/$3/$4/$5/$6";
-$route ['dashboard'] = "wmanager/dashboard";
-$route ['dashboard/get_graph_data'] = "wmanager/dashboard/get_graph_data";
-$route ['trouble_type'] = "wmanager/trouble_type";
-//$route ['trouble_type'] = "wmanager/trouble_type";
 
 
 

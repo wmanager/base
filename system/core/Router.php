@@ -223,6 +223,45 @@ class CI_Router {
 			$this->routes = $route;
 		}
 
+		// Include routes every modules
+		$modules_locations = config_item('modules_locations') ? config_item('modules_locations') : FALSE;
+		if(!$modules_locations)
+		{
+			$modules_locations = APPPATH . 'modules/';
+			if(is_dir($modules_locations))
+			{
+				$modules_locations = array($modules_locations => '../modules/');
+			}
+			else
+			{
+				show_error('Modules directory not found');
+			}
+		}
+		foreach ($modules_locations as $key => $value)
+		{
+			if ($handle = opendir($key))
+			{
+				while (false !== ($entry = readdir($handle)))
+				{
+					if ($entry != "." && $entry != "..")
+					{
+						if(is_dir($key.$entry))
+						{
+							$rfile = Modules::find('routes'.EXT, $entry, 'config/');
+							if($rfile[0])
+							{
+								include($rfile[0].$rfile[1]);
+							}
+						}
+					}
+				}
+				closedir($handle);
+			}
+		}
+		
+		$this->routes = ( ! isset($route) OR ! is_array($route)) ? array() : $route;
+		unset($route);
+		
 		// Is there anything to parse?
 		if ($this->uri->uri_string !== '')
 		{

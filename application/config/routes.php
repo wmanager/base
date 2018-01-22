@@ -56,6 +56,3 @@ $route ['translate_uri_dashes'] = FALSE;
 $route ['home'] = "common/home"; 
 $route ['admin/domains'] = "admin/contracts";
 $route ['admin/domains/(:any)'] = "admin/contracts/$1";
-$route ['CRD/home'] = "credit/credit/export";
-
-require APPPATH . 'modules/core/config/routes.php';

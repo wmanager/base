@@ -3930,16 +3930,16 @@ SELECT pg_catalog.setval('extensions_id_seq', 1, true);
 -- Data for Name: extention_manager; Type: TABLE DATA; Schema: public; Owner: install_host_username
 --
 
+INSERT INTO extensions VALUES (1, 'Credit Management details', NULL, 'downloaded', '2018-01-22 00:00:00', 'Credit Management', 'credit', 'credit.zip');
 
-INSERT INTO extention_manager VALUES (1, 'legal', 'Legal Extention', 'Testing legal ', '/test/legal', true, 10000, 'legal.zip');
-INSERT INTO extention_manager VALUES (2, 'credit', 'Credit Management', 'Credit Management details', 'test/credit', true, 20000, 'credit.zip');
+INSERT INTO extention_manager VALUES (1, 'credit', 'Credit Management', 'Credit Management details', 'test/credit', true, 35767, 'credit.zip');
 
 
 --
 -- Name: extention_manager_id_seq; Type: SEQUENCE SET; Schema: public; Owner: install_host_username
 --
 
-SELECT pg_catalog.setval('extention_manager_id_seq', 4, true);
+SELECT pg_catalog.setval('extention_manager_id_seq', 1, true);
 
 
 --

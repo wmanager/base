@@ -37,38 +37,39 @@
  * @filesource
  */
 
-/*
- * =======================================================================
- * CORE ENGINE ROUTES
- * =======================================================================
- */
-$route ['admin/engine_debug/be_debug/(:any)'] = "core/engine_debug/be_debug/$1";
-$route ['admin/engine_debug/debug/(:any)/(:any)'] = "core/engine_debug/debug/$1/$2";
-$route ['admin/engine_debug/debug/(:any)/(:any)'] = "core/engine_debug/debug/$1/$2";
-$route ['admin/extension'] = "core/extension/index";
-$route ['admin/extension/add'] = "core/extension/add";
-
-
-
-/*
- * =======================================================================
- * Admin Panel Routes
- * =======================================================================
- */
-$route['admin/setup_activities/(:num)'] = "wmanager/setup_activities/get/$1";
-$route['admin/(:any)'] = "wmanager/$1";
-$route['admin/(:any)/(:any)'] = "wmanager/$1/$2";
-$route['admin/(:any)/(:any)/(:any)'] = "wmanager/$1/$2/$3";
-$route['admin/(:any)/(:any)/(:any)/(:any)'] = "wmanager/$1/$2/$3/$4";
-$route['admin/(:any)/(:any)/(:any)/(:any)/(:any)'] = "wmanager/$1/$2/$3/$4/$5";
-$route['admin/(:any)/(:any)/(:any)/(:any)/(:any)/(:any)'] = "wmanager/$1/$2/$3/$4/$5/$6";
-$route ['dashboard'] = "wmanager/dashboard";
-$route ['dashboard/get_graph_data'] = "wmanager/dashboard/get_graph_data";
-$route ['trouble_type'] = "wmanager/trouble_type";
-//$route ['trouble_type'] = "wmanager/trouble_type";
-
-
-
-
-
-
+if (! defined ( 'BASEPATH' ))
+	exit ( 'No direct script access allowed' );
+class Dummy extends Common_Controller {
+	public function __construct() {
+		parent::__construct ();
+		ini_set('display_errors', 1);
+		ini_set('display_startup_errors', 1);
+		error_reporting(E_ALL);
+		//if you are accessing the same module give model name as usual
+		$this->load->model ( 'dummy_model' );
+		$this->load->library('dummy_library');
+		$this->load->helper('dummy');
+		//if you are accessing the different module give module_name/model_name
+		//$this->load->model ( 'core/action_model' );
+		
+	}
+	
+	public function index(){
+		
+		$datas['model'] = $this->dummy_model->sample();
+		$datas['library'] = $this->dummy_library->sample();
+		$datas['helper'] = sample_helper_function();
+		$data['datas'] = $datas;
+		$data ['content'] = $this->load->view ( 'dummy', $data, true );
+		
+		/*we have 2 templates
+		 * ADMIN TEMPLATE for admin panel
+		 *  $this->load->view("wmanager/admin_template",$data);
+		 * 
+		 * APPLICATION TEMPLATE
+		 * 	$this->load->view("template",$data);
+		 */ 
+		$this->load->view("template",$data);
+		
+	}
+}

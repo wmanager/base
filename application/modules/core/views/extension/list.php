@@ -15,6 +15,7 @@
 				<div class="actions pull-right">
 					<a href="/admin/extension/add" class="btn btn-default"><i class="fa fa-plus-circle"></i> Add Extension</a>
 				</div>
+
 					<div class="col-md-12">
 						<table class="table table-striped table-hover">
 							<thead>
@@ -36,7 +37,7 @@
 													echo "<td>" . ucwords ( $item->status ) . "</td>";
 													echo "<td>" . date ( 'd/m/Y H:i:s', strtotime ( str_replace ( "/", "-", $item->created ) ) ) . "</td>";
 													echo "<td>";
-													echo '<a href="#" class="btn" title="Download Zip"><i class="fa fa-download" aria-hidden="true"></i></a>';
+													echo '<a href="/core/extension/download_extention/'.$item->file_name.'" class="btn" title="Download Zip"><i class="fa fa-download" aria-hidden="true"></i></a>';
 													echo '<a href="#" class="btn" title="Uninsatall Extension"><i class="fa fa-chain-broken" aria-hidden="true"></i></a>';
 													echo "</td>";
 													echo "</tr>";

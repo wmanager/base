@@ -156,7 +156,7 @@ class Extension extends Common_Controller {
 							}
 
 							//step4 : Adding the routes data
-							$file_path = rtrim($this->config->item("extension_source_folder"),"/")."/".$ext_folder."/routes.txt";
+/* 							$file_path = rtrim($this->config->item("extension_source_folder"),"/")."/".$ext_folder."/routes.txt";
 							if(file_exists($file_path)){
 								$installed_result = true;
 								$this->extension_model->add_install_log($id,"ROUTES",serialize($instruction_array),"SUCCESS");
@@ -169,7 +169,7 @@ class Extension extends Common_Controller {
 							}else{
 								$installed_result = false;
 								$this->extension_model->add_install_log($id,"ROUTES","failed to add the routes","FAILED");
-							}
+							} */
 							
 							if($installed_result) {
 								//step5: execute instruction
@@ -237,7 +237,7 @@ class Extension extends Common_Controller {
 		if(!is_array($instruction_array) || count($instruction_array)==0){
 			return false;
 		}
-	
+		
 		$execution_result = array();
 		foreach ($instruction_array as $item){
 			switch($item[0]){
@@ -250,10 +250,15 @@ class Extension extends Common_Controller {
 				case "mkdir": $execution_result[] = $this->new_dir($item);
 							break;
 				
-				case "copy_dir": $src = $source_folder.$item[1];
+				case "copy_dir": $src = $source_folder.$item[1];									
 								 $dst = FCPATH.$item[2];
 								 $this->copy_dir($src,$dst);
 								 break;
+								 
+				 case "cron_file": $src = $source_folder.$item[2];
+				 $dst = APPPATH.'controllers/'.$item[1];
+				 $this->copy_cron_file($src,$dst);
+				 break;								 
 				default: break;
 			}
 		}
@@ -387,8 +392,14 @@ class Extension extends Common_Controller {
 	    } elseif (is_file($src)) {
 	        copy($src, $dst);
 	    }
+
 	}
 
+	public function copy_cron_file($src,$dst) {
+		if (is_file($src)) {
+			copy($src, $dst);
+		}
+	}
 
 	public function get_all_extention() {
 		echo json_encode($this->extension_model->get_extensions ());
