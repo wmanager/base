@@ -36,9 +36,7 @@
 													echo "<td>$item->description</td>";
 													echo "<td>" . ucwords ( $item->status ) . "</td>";
 													echo "<td>" . date ( 'd/m/Y H:i:s', strtotime ( str_replace ( "/", "-", $item->created ) ) ) . "</td>";
-													echo "<td>";
-													echo '<a href="/core/extension/download_extention/'.$item->file_name.'" class="btn" title="Download Zip"><i class="fa fa-download" aria-hidden="true"></i></a>';
-													echo '<a href="#" class="btn" title="Uninsatall Extension"><i class="fa fa-chain-broken" aria-hidden="true"></i></a>';
+													echo "<td>";													
 													echo "</td>";
 													echo "</tr>";
 												}
