@@ -42,6 +42,20 @@ if (! defined ( 'BASEPATH' ))
 class Siteconfig extends CI_Model {
 	public function get_all()
 	{
-		return $this->db->get('setup_config');
+		$query = $this->db->select("value, key, ab_path")		
+					->get('setup_config');
+		$result = $query->result_array();
+		$data = array();
+		if(count($result) > 0) {
+			foreach($result as $row) {
+				if($row['ab_path'] == 't') {
+					$data[$row['key']] = FCPATH.$row['value'];
+				} else {
+					$data[$row['key']] = $row['value'];
+				}
+			}
+		}
+
+		return $data;
 	}
 }

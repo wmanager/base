@@ -54,10 +54,10 @@
  * NOTE: If you change these, also change the error_reporting() code below
  */
 	if (PHP_SAPI === 'cli'){
-	    if(!isset($argv[2]))
+	    if(!isset($argv[4]))
 	        exit("Access denied\n");
 	    else
-	        define('ENVIRONMENT', $argv[2]);
+	        define('ENVIRONMENT', $argv[4]);
 	    	set_time_limit(0);
 	} else {
 		$level = getenv('APPLICATION_ENVIRONMENT');

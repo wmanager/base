@@ -131,6 +131,21 @@
 					?>
 				</tr>
 				
+				<tr>
+					<th>Write permission for Extensions folder
+						<a href="/install/help/module_write" target="_blank">
+							<i class="fa fa-question-circle" aria-hidden="true"></i>
+						</a>
+					</th>
+					<?php 
+					if($checks['module_write'] == 'OK'){
+						echo "<td class='status_green'>OK</td>";
+					}else{
+						echo "<td class='status_red'>Fail</td>";
+						}
+					?>
+				</tr>
+				
 			</tbody>
 		</table>
 		<div class="clearfix"></div>

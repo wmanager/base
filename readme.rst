@@ -54,6 +54,11 @@ License
 Please see the `license
 agreement <https://github.com/xxx>`_.
 
+*******
+Version
+*******
+1.0.1v
+
 *********
 Resources
 *********
