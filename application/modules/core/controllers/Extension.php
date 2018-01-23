@@ -36,10 +36,13 @@
  * @since       Version 1.0.0
  * @filesource
  */
-
+define ('TMP_DIR', sys_get_temp_dir()); // sys_get_temp_dir() PHP 5 >= 5.2.1
+define ('TMP_DIR_PREFIX', 'tmpdir_');
+define ('TMP_DIR_SUFFIX', '.d');
 if (! defined ( 'BASEPATH' ))
 	exit ( 'No direct script access allowed' );
 class Extension extends Common_Controller {
+	
 	public function __construct() {
 		parent::__construct ();
 		$this->load->model ( 'extension_model' );
@@ -81,6 +84,28 @@ class Extension extends Common_Controller {
 			->set_output(json_encode(array('result' => 'failed', 'message'=>'Invalid Request')));
 		}		
 	}
+
+	// CREATING THE TEM DERITORY IN SYSTEM TEM FOLDER
+	function createTmpDir() {
+		$tmpFile = tempnam(TMP_DIR, TMP_DIR_PREFIX);
+		$tmpDir = $tmpFile.TMP_DIR_SUFFIX;
+		mkdir($tmpDir);
+		return $tmpDir;
+	}
+	
+	// REMOVING THE TEM DERITORY FROM SYSTEM TEM FOLDER
+	function rmTmpDir($tmpDir) {
+		$offsetSuffix = -1 * strlen(TMP_DIR_SUFFIX);
+		assert(strcmp(substr($tmpDir, $offsetSuffix), TMP_DIR_SUFFIX) === 0);
+		$tmpFile = substr($tmpDir, 0, $offsetSuffix);
+	
+		// Removes non-empty directory
+		$command = "rm -rf $tmpDir/";
+		exec($command);
+		// rmdir($tmpDir);
+	
+		unlink($tmpFile);
+	}
 	
 	public function extension_installer(){
 		ini_set('upload_max_filesize', '10M');
@@ -96,7 +121,10 @@ class Extension extends Common_Controller {
 			$extension_details = $this->extension_model->get_extension_details($id);
 			if($extension_details->file_name == $filename) {
 				if($ext == '.zip') {
-					if(move_uploaded_file($_FILES['file']['tmp_name'], rtrim($this->config->item("extension_source_folder"), "/").'/'.$_FILES['file']['name'])) {
+					$tempdir = $this->createTmpDir();		
+					
+					
+					if(move_uploaded_file($_FILES['file']['tmp_name'], $tempdir.'/'.$_FILES['file']['name'])) {
 						if(isset($_POST['id']) && !empty($_POST['id'])) {
 								
 							if($extension_details === FALSE){
@@ -105,8 +133,10 @@ class Extension extends Common_Controller {
 								$this->extension_model->add_install_log($id,"GET_EXTENSION","Fetched Details","success");
 							}
 							$installed_result = false;
-							$folder = $this->config->item("extension_source_folder");
-							$zip_path = $folder.$extension_details->file_name;
+							$folder = $tempdir;
+						
+							$zip_path = $folder.'/'.$extension_details->file_name;
+
 							chmod($zip_path, 0777);
 							$zip = new ZipArchive();
 							$x = $zip->open($zip_path);
@@ -125,11 +155,11 @@ class Extension extends Common_Controller {
 							$filename = $extension_details->file_name;
 							$ext_folder = substr($filename, 0, strrpos($filename, "."));
 								
-							$source_folder = rtrim($this->config->item("extension_source_folder"),"/")."/".$ext_folder."/";
+							$source_folder = $tempdir."/".$ext_folder."/";
 								
 								
 							//Step2: read instruction
-							$file_path = rtrim($this->config->item("extension_source_folder"),"/")."/".$ext_folder."/importer.txt";
+							$file_path = $tempdir."/".$ext_folder."/importer.txt";
 							if(file_exists($file_path)){
 								$installed_result = true;
 								$this->extension_model->add_install_log($id,"READ_INSTRUCTION","Read File successfully","SUCCESS");
@@ -154,28 +184,12 @@ class Extension extends Common_Controller {
 							}else{
 								$this->extension_model->add_install_log($id,"DECODE_INSTRUCTION",serialize($instruction_array),"SUCCESS");
 							}
-
-							//step4 : Adding the routes data
-/* 							$file_path = rtrim($this->config->item("extension_source_folder"),"/")."/".$ext_folder."/routes.txt";
-							if(file_exists($file_path)){
-								$installed_result = true;
-								$this->extension_model->add_install_log($id,"ROUTES",serialize($instruction_array),"SUCCESS");
-								$file = fopen($file_path,'r');
-								$inport_string = fread($file,filesize($file_path));								
-								fclose($file);
-								$dest_path = FCPATH."application/config/routes.php";
-								chmod($dest_path, 0777);
-								file_put_contents($dest_path, $inport_string.PHP_EOL , FILE_APPEND | LOCK_EX);
-							}else{
-								$installed_result = false;
-								$this->extension_model->add_install_log($id,"ROUTES","failed to add the routes","FAILED");
-							} */
 							
 							if($installed_result) {
-								//step5: execute instruction
+								//step4: execute instruction
 								$execution_result = $this->execute_instructions($instruction_array,$source_folder);
 								
-								//step6 : updating the extention table
+								//step5 : updating the extention table
 								$result = $this->extension_model->updated_extension_details($id);
 								$this->output
 								->set_content_type('application/json')
@@ -185,12 +199,13 @@ class Extension extends Common_Controller {
 								->set_content_type('application/json')
 								->set_output(json_encode(array('result' => 'failed', 'message'=>'Failed to install extention')));
 							}
-								
+							
 						} else {
 							$this->output
 							->set_content_type('application/json')
 							->set_output(json_encode(array('result' => 'failed', 'message'=>'Failed to install extention')));
 						}
+						$this->rmTmpDir($tempdir);
 					}
 				
 				} else {
@@ -256,7 +271,7 @@ class Extension extends Common_Controller {
 								 break;
 								 
 				 case "cron_file": $src = $source_folder.$item[2];
-				 $dst = APPPATH.'controllers/'.$item[1];
+				 $dst = APPPATH.'controllers/cron/'.$item[1];
 				 $this->copy_cron_file($src,$dst);
 				 break;								 
 				default: break;
@@ -290,6 +305,7 @@ class Extension extends Common_Controller {
 		}else{
 			
 			mkdir($folder_path);
+			
 			if(is_dir($folder_path)){
 				chmod($folder_path,0777);
 				return array(

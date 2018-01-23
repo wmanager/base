@@ -568,27 +568,6 @@ class Install_model extends CI_Model {
 		}
 	}
 	
-	public function update_configs() {
-		
-		$query = $this->db->select("value,key")
-					->where("ab_path",'t')
-					->get('setup_config');
-		$result = $query->result_array(); 
-		$data = array();
-		if(count($result) > 0) {
-			foreach($result as $row) {
-				$data[$row['key']] = FCPATH.$row['value'];
-			}
-		}
-		$query = NULL;
-		foreach($data as $key => $row) {
-			$query = $this->db->where('key', $key)
-							->update('setup_config', array('value' => $row));
-		}
-		
-	}
-	
-	
 	public function update_database() {
 		if($this->db->query('ALTER DATABASE '.$_COOKIE['db_name'].' SET datestyle TO "SQL, DMY"')){
 			// delete the cookie we have created before

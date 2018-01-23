@@ -4176,7 +4176,6 @@ SELECT pg_catalog.setval('setup_company_roles_id_seq', 6, true);
 -- Data for Name: setup_config; Type: TABLE DATA; Schema: public; Owner: install_host_username
 --
 
-INSERT INTO setup_config VALUES (9, 'extension_source_folder', 'extension/', 'text', 'core', NULL,true);
 INSERT INTO setup_config VALUES (2, 'trouble_attach_type', '1', 'text', 'core', NULL, false);
 INSERT INTO setup_config VALUES (4, 'email_from_name', 'Wmanager', 'text', 'core', NULL, false);
 INSERT INTO setup_config VALUES (3, 'email_from', 'clienti@wmanager.org', 'text', 'email', NULL, false);
@@ -4184,16 +4183,15 @@ INSERT INTO setup_config VALUES (5, 'email_to', 'clienti@wmanager.org', 'text', 
 INSERT INTO setup_config VALUES (6, 'email_cc', '', 'text', 'email', NULL, false);
 INSERT INTO setup_config VALUES (7, 'loop_check_max_records', '50', 'text', 'core', NULL,false);
 INSERT INTO setup_config VALUES (8, 'loop_check_period', '3', 'text', 'core', NULL,false);
-INSERT INTO setup_config VALUES (10, 'extension_manager', 'extension_manager/', 'text', 'core', '',true);
 INSERT INTO setup_config VALUES (1, 'UPLOAD_DIR', 'assets/uploads', 'text', 'core', NULL,true);
-INSERT INTO setup_config VALUES (11, 'log_path', 'application/logs', 'text', 'core', '',true);
+INSERT INTO setup_config VALUES (9, 'log_path', 'application/logs', 'text', 'core', NULL,true);
 
 
 --
 -- Name: setup_config_id_seq; Type: SEQUENCE SET; Schema: public; Owner: install_host_username
 --
 
-SELECT pg_catalog.setval('setup_config_id_seq', 11, true);
+SELECT pg_catalog.setval('setup_config_id_seq', 9, true);
 
 
 --

@@ -41,8 +41,9 @@
   function load_config() {
 	$CI = & get_instance ();
 	$CI->load->model ( 'siteconfig' );
-    foreach($CI->siteconfig->get_all()->result() as $site_config) {
-   		$CI->config->set_item($site_config->key,$site_config->value);
+	$result = $CI->siteconfig->get_all();
+    foreach($result as $key=> $row) {
+   		$CI->config->set_item($key,$row);
    	} 
   }
 ?>

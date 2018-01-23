@@ -261,11 +261,6 @@ class Install extends CI_Controller {
 			$database_name = $_COOKIE['db_name'];
 			
 			if ($this->install_model->create_tables($database_name) === true) {
-				if($this->install_model->update_configs() === false) {
-					$data->error = 'There was a problem to update the configuration in the database';
-					$data->content = $this->load->view ( 'install/install_tables_creation', $data, true );
-					$this->load->view ( 'install/install_template', $data );
-				}
 				if($method == 'NEW') {
 					if($this->install_model->update_database() === false) {
 						$data->error = 'There was a problem to updating the date format in the databse';
@@ -510,6 +505,15 @@ class Install extends CI_Controller {
 			$checks['upload_write'] = 'FAIL';
 		}
 		
+		//modules write
+		$module_folder = FCPATH."application/modules";
+		$cron_folder = FCPATH."application/controllers/cron";
+		if(is_writable($module_folder) && is_writable($cron_folder)){
+			$checks['module_write'] = 'OK';
+		}else{
+			$checks['module_write'] = 'FAIL';
+		}
+		
 		//curl
 		if  (in_array  ('curl', get_loaded_extensions())) {
 			$checks['curl'] = 'OK';
@@ -550,7 +554,7 @@ class Install extends CI_Controller {
 	
 	public function help($id){
 		$message_array = array(
-			"php" => "PHP >= 5.5 To run Wmanager, you have to have PHP version 5.5 or later.",
+			"php" => "PHP >= 5.5 is needed to run WManager, Please install PHP version 5.5 or later.",
 			"postgres" => "PostgresSQL is needed to install WManager. Please check postgres is installed properly.",
 			"curl" => "cURL should be installed to run some useful process handling features. Therefore please install cURL before proceeding with the installation.",
 			"session" => "PHP sessions. Wmanager requires sessions to work properly. Without it you won't be able to login to administration area nor finish the install process. If sessions doesn't work on your host, please Google or ask your hosting provider for help.",
@@ -558,7 +562,8 @@ class Install extends CI_Controller {
 			"htaccess" => ".htaccess file is needed for SEO friendly URLs. Most likely it might be missing because your Operating System hides all files starting with dot. If you are using Unix, likely you can see .htaccess file by pressing CTRL + H. Make sure you copy this file from downloaded archive.",
 			"write_config" => "Please provide write permission for the particular folder <code>".FCPATH."application/config</code> in the directory where you have extracted the wmanager.",
 			"log_write" => "Please Provide write permission to logs folder <code>".FCPATH."application/logs</code>.",
-			"upload_write" => "Please Provide write permission to uploads folder <code>".FCPATH."assets/uploads</code>.",	
+			"upload_write" => "Please Provide write permission to uploads folder <code>".FCPATH."assets/uploads</code>.",
+			"module_write" => "Please Provide write permission to the following folders <code>".FCPATH."application/modules</code> and <code>".FCPATH."application/controllers/cron</code> to enable installation of extensions."
 		);
 		
 		$heading_array = array(
@@ -570,7 +575,8 @@ class Install extends CI_Controller {
 			"htaccess" => ".htaccess",
 			"write_config" => "Configuration Rewrite",
 			"log_write" => "Logs permission",
-			"upload_write" => "Uploads"	
+			"upload_write" => "Uploads",
+			"module_write" => "Extensions"	
 		);
 		
 		$data["heading"] = $heading_array[$id];
