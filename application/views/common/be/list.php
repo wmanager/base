@@ -74,7 +74,10 @@
 														
 														echo "<td>$item->code<br><a target='_blank' href='/common/accounts/detail/$item->account_id'>$item->first_name $item->last_name </a></td>";
 														echo "<td>$item->address $item->city $item->state<br>$item->country $item->province $item->zip</td>";
-														echo "<td>$item->contract_code<br><span class='label label-info'>$item->be_status</span><br><small>" . date ( 'd-m-Y H:i', strtotime ( str_replace ( '/', '-', $item->data_contratto ) ) ) . "</small></td>";
+														echo "<td>$item->contract_code<br><span class='label label-info'>$item->be_status</span><br><small>";
+														if($item->data_contratto)
+															echo date ( 'd-m-Y H:i', strtotime ( str_replace ( '/', '-', $item->data_contratto ) ) ); 
+														echo  "</small></td>";
 														echo "<td>$item->agenzia</td>";
 														echo "<td><small>Installatore: ";
 														if (isset ( $item->installed_power ))
