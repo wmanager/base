@@ -1042,45 +1042,6 @@ ALTER SEQUENCE extensions_id_seq OWNED BY extensions.id;
 
 
 --
--- Name: extention_manager; Type: TABLE; Schema: public; Owner: install_host_username; Tablespace: 
---
-
-CREATE TABLE extention_manager (
-    id integer NOT NULL,
-    key character varying(255),
-    name character varying(255),
-    description text,
-    path character varying(255),
-    active boolean,
-    file_size integer,
-    file_name character varying(100)
-);
-
-
-ALTER TABLE public.extention_manager OWNER TO install_host_username;
-
---
--- Name: extention_manager_id_seq; Type: SEQUENCE; Schema: public; Owner: install_host_username
---
-
-CREATE SEQUENCE extention_manager_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.extention_manager_id_seq OWNER TO install_host_username;
-
---
--- Name: extention_manager_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: install_host_username
---
-
-ALTER SEQUENCE extention_manager_id_seq OWNED BY extention_manager.id;
-
-
---
 -- Name: form_types; Type: TABLE; Schema: public; Owner: install_host_username; Tablespace: 
 --
 
@@ -3414,14 +3375,6 @@ ALTER TABLE ONLY extension_installer_log ALTER COLUMN id SET DEFAULT nextval('ex
 
 ALTER TABLE ONLY extensions ALTER COLUMN id SET DEFAULT nextval('extensions_id_seq'::regclass);
 
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: install_host_username
---
-
-ALTER TABLE ONLY extention_manager ALTER COLUMN id SET DEFAULT nextval('extention_manager_id_seq'::regclass);
-
-
 --
 -- Name: id; Type: DEFAULT; Schema: public; Owner: install_host_username
 --
@@ -3926,21 +3879,6 @@ SELECT pg_catalog.setval('email_template_id_seq', 1, true);
 SELECT pg_catalog.setval('extensions_id_seq', 1, true);
 
 
---
--- Data for Name: extention_manager; Type: TABLE DATA; Schema: public; Owner: install_host_username
---
-
-INSERT INTO extensions VALUES (1, 'Credit Management details', NULL, 'downloaded', '2018-01-22 00:00:00', 'Credit Management', 'credit', 'credit.zip');
-
-INSERT INTO extention_manager VALUES (1, 'credit', 'Credit Management', 'Credit Management details', 'test/credit', true, 35767, 'credit.zip');
-
-
---
--- Name: extention_manager_id_seq; Type: SEQUENCE SET; Schema: public; Owner: install_host_username
---
-
-SELECT pg_catalog.setval('extention_manager_id_seq', 1, true);
-
 
 --
 -- Data for Name: form_types; Type: TABLE DATA; Schema: public; Owner: install_host_username
@@ -4185,7 +4123,7 @@ INSERT INTO setup_config VALUES (7, 'loop_check_max_records', '50', 'text', 'cor
 INSERT INTO setup_config VALUES (8, 'loop_check_period', '3', 'text', 'core', NULL,false);
 INSERT INTO setup_config VALUES (1, 'UPLOAD_DIR', 'assets/uploads', 'text', 'core', NULL,true);
 INSERT INTO setup_config VALUES (9, 'log_path', 'application/logs', 'text', 'core', NULL,true);
-
+INSERT INTO setup_config VALUES (10, 'api_url', 'http://marketplace/', 'text', 'core', NULL, false);
 
 --
 -- Name: setup_config_id_seq; Type: SEQUENCE SET; Schema: public; Owner: install_host_username
@@ -4535,14 +4473,6 @@ ALTER TABLE ONLY contracts
 
 ALTER TABLE ONLY email_queue
     ADD CONSTRAINT email_queue_pkey PRIMARY KEY (id);
-
-
---
--- Name: extention_manager_pkey; Type: CONSTRAINT; Schema: public; Owner: install_host_username; Tablespace: 
---
-
-ALTER TABLE ONLY extention_manager
-    ADD CONSTRAINT extention_manager_pkey PRIMARY KEY (id);
 
 
 --
