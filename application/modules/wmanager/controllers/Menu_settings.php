@@ -119,11 +119,12 @@ class Menu_settings extends Admin_Controller {
 		echo $this->load->view ( 'wmanager/menu_settings/add_model', $data );
 	}
 	
-	public function edit_menu($user_id) {
-		$id = $user_id;
+	public function edit_menu($menu_id, $parent_id = NULL) {
+		$id = $menu_id;
 
 		if($this->input->post()){
-			if($result = $this->menu_settings_model->edit($_POST, $user_id)){
+
+			if($result = $this->menu_settings_model->edit($_POST, $menu_id, $parent_id)){
 				$this->session->set_flashdata('result_success', 'Updated successfully');
 			} else {
 				$this->session->set_flashdata('result_error', 'Something Went wrong');
@@ -133,7 +134,7 @@ class Menu_settings extends Admin_Controller {
 		$data = array();
 		$menu_list = array();
 		
-		$data['edit_id'] = $user_id;
+		$data['edit_id'] = $menu_id;
 		$menu_list = $this->menu_settings_model->get_single_menu($id);		
 		
 		$users_group_list = $this->company->get_users_group_list();
@@ -147,15 +148,18 @@ class Menu_settings extends Admin_Controller {
 						'id' => 'link',
 						'label' => 'Link',
 						'placeholder' => 'Enter link for menu',
-				),
-				array(
-						'id' => 'icon',
-						'label' => 'Icon',
-						'placeholder' => 'Enter icon for menu',
-						'help' => 'Please add the font awsome icon label. Eg.fa-user'
 				)
 	
 		);
+		if(!$parent_id) {
+			$icon  = array(
+					'id' => 'icon',
+					'label' => 'Icon',
+					'placeholder' => 'Enter icon for menu',
+					'help' => 'Please add the font awsome icon label. Eg.fa-user'
+			);
+			array_push($array_form, $icon);
+		}
 
 		$user_group = explode(',', $menu_list->access);
 		$array_users_group = array ();
@@ -217,12 +221,6 @@ class Menu_settings extends Admin_Controller {
 						'id' => 'link',
 						'label' => 'Link',
 						'placeholder' => 'Enter link for menu',
-				),
-				array(
-						'id' => 'icon',
-						'label' => 'Icon',
-						'placeholder' => 'Enter icon for menu',
-						'help' => 'Please add the font awsome icon label. Eg.fa-user'
 				)
 		);
 		$array_users_group= array();

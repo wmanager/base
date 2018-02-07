@@ -104,9 +104,11 @@ class Menu_settings_model extends CI_Model {
 		return $result;
 	}
 	
-	public function edit($data, $id) {	
+	public function edit($data, $id, $parent_id) {	
 
-		$data['is_child'] = 'f';
+		
+		if($parent_id)
+			$data['is_child'] = 'f';
 		$data['access'] = implode(',',$data['access']);
 
 		if($this->db->where('id', $id)->update('setup_menu', $data)) {

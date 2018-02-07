@@ -156,13 +156,16 @@ var extentionCtr = myApp.controller('extentionCtrl', function ($scope, $filter, 
     	$('#upload_'+item.id).click();
     }
 
+    $scope.set_item = function(item) {    	
+    	$scope.selected_item = item;
+    }
     
-    $scope.download_file = function(filename, item) {    		
+/*   $scope.download_file = function(filename, item, key) {    		
     		$('#spinner_'+item.id).show();
     		$('#install_'+item.id).hide();
     		$('#downloding_'+item.id).hide();
     		$('#downloaded_'+item.id).hide();
-    	    var page_url = '/api/service/download_file?filename='+filename;    	
+    	    var page_url = '/api/service/download_file/'+key+'/'+$('#token').val();    	
     	    var req = new XMLHttpRequest();
     	    req.open("GET", page_url, true);
     	    function transfer_complete(e) {
@@ -246,7 +249,53 @@ var extentionCtr = myApp.controller('extentionCtrl', function ($scope, $filter, 
     	    };
     	    req.send();
     	
-    }
+    }*/
+    
+    $scope.download_file = function(selected_item) {    		
+    	$(".download").hide();
+    	$(".spinner").show();
+	    var page_url = '/api/service/download_file/';    	
+	    var req = new XMLHttpRequest();
+	    req.open("POST", page_url, true);
+	    function transfer_complete(e) {
+	    	  $(".download").show();
+	    	  $(".spinner").hide();	    	  
+	    	  if (this.status == 200) {	
+	    		  $('.error').hide();
+	    		  $('.success').show();
+	    		  $('.success').hide().html('File downloaded successfully').fadeIn('slow').delay(1000).hide('slow');
+	    		  $scope.busy = false;		    		   
+	    		  var link = document.createElement('a');
+	    		  link.href = window.URL.createObjectURL(req.response);
+	    		  link.download = selected_item.file_name;
+	    		  link.click();	
+	    		  $http({
+  		    		method: "post",
+  		    		url: '/core/extension/add_extention', 	    		
+  		    		data: {'formData' : selected_item}
+  				}).then(function mySuccess(response) {
+
+  				}, function myError(response) {
+  				   
+  				});
+	    	  } else {
+	    		  $('.success').hide();
+	    		  $('.error').show();
+	    		  $('.error').hide().html('Error While downloading the file').fadeIn('slow').delay(1000).hide('slow');
+	    	  } 
+	    }
+	    
+    	function transfer_failed(e){console.log("An error occurred while transferring the file.");}    	
+    	req.responseType =  "blob" || "text";
+    	req.addEventListener("load", transfer_complete, false);
+    	req.addEventListener("error", transfer_failed, false);  	
+
+	    var postData = new FormData();
+	    postData.append('data', JSON.stringify(selected_item));
+	    postData.append('token', $('#token').val());
+	    req.send(postData);
+	
+}
     
 }) .factory('getExtension', function($http, $q) {
 	  var deffered = $q.defer();
@@ -289,11 +338,11 @@ function searchUtil(item, toSearch) {
 }
 
 var _validFileExtensions = [".zip"]; 
-function triggerFileChange(oInput, item) {
+function triggerFileChange(oInput, item) {	
 	 if (oInput.type == "file") {
-		 	$('#downloaded_'+item.id).hide();
-		 	$('#install_'+item.id).hide();
-		 	$('#install_spinner_'+item.id).show();
+		 	
+			$(".install_"+item.id).hide();
+	    	$(".install_spinner").show();
 	        var sFileName = oInput.value;
 	         if (sFileName.length > 0) {
 	            var blnValid = false;
@@ -302,30 +351,34 @@ function triggerFileChange(oInput, item) {
 	                if (sFileName.substr(sFileName.length - sCurExtension.length, sCurExtension.length).toLowerCase() == sCurExtension.toLowerCase()) {
 	                    blnValid = true;
 	                    var fdata = new FormData();
-	                    fdata.append("id",item.ext_id);
+	                    fdata.append("key",item.key);
 	                    
 	                    if($("#upload_"+item.id)[0].files.length>0)
 	                       fdata.append("file",$("#upload_"+item.id)[0].files[0])
-	                       
+	  
 	                        $.ajax({
 						        type: 'POST',
 						        url: '/core/extension/extension_installer/',
 						        data:fdata,
 						        contentType: false,
 						        processData: false, 
-						        success: function(data) {						        	
+						        success: function(data) {					            
 							         if(data.result == "success") {
-							        	 $('#install_spinner_'+item.id).hide();
-							        	 $('#installed_'+item.id).show();
-							        	 $('#success_'+item.id).show();
-							        	 $('#error_'+item.id).hide();
-							        	 $('#success_'+item.id).html(data.message);
+							        	 $(".install_"+item.id).hide();
+							        	 $(".installed_"+item.id).show();
+							 	    	 $(".install_spinner").hide();
+							        	 $('.install_error').hide();
+							        	 $('.install_success').hide().html(data.message).fadeIn('slow').delay(1000).hide('slow');
+							        	 window.setTimeout(function () {
+							        		 location.href = "/admin/extension/add";
+							        	    }, 2000);
 							         }  else {
-							        	 $('#install_spinner_'+item.id).hide();
-							        	 $('#install_'+item.id).show();
-							        	 $('#success_'+item.id).hide();
-							        	 $('#error_'+item.id).show();
-							        	 $('#error_'+item.id).html(data.message);
+							        	 $(".install_spinner").hide();
+							        	 $(".installed_"+item.id).hide();
+							        	 $('.install_'+item.id).show();
+							        	 $('.success').hide();
+							        	 $('.install_error').show();
+							        	 $('.install_error').hide().html(data.message).fadeIn('slow').delay(1000).hide('slow');;
 							         }
 						        }
 						    })	                   

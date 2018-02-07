@@ -24,7 +24,6 @@
 									<th>Description</th>
 									<th>Status</th>
 									<th>Created</th>
-									<th>Options</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -33,13 +32,20 @@
 												foreach ( $extensions as $item ) {
 													echo "<tr>";
 													echo "<td>" . ucwords ( $item->module_name ) . "</td>";
-													echo "<td>$item->description</td>";
+													echo "<td>$item->title</td>";
 													echo "<td>" . ucwords ( $item->status ) . "</td>";
-													echo "<td>" . date ( 'd/m/Y H:i:s', strtotime ( str_replace ( "/", "-", $item->created ) ) ) . "</td>";
+													echo "<td>" . date ( 'd/m/Y', strtotime ( str_replace ( "/", "-", $item->created ) ) ) . "</td>";
 													echo "<td>";													
 													echo "</td>";
 													echo "</tr>";
 												}
+											} else { 
+												echo "<tr>";
+												echo "<td colspan='5'>";
+												echo "No records found";
+												echo "</td>";
+												echo "</tr>";
+												
 											}
 											?>
 									</tbody>

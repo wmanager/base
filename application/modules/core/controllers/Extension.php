@@ -61,10 +61,11 @@ class Extension extends Common_Controller {
 		$data ['content'] = $this->load->view ( 'extension/add', $data, true );
 		$this->load->view ( 'wmanager/admin_template', $data );
 	}
-
+ 
 	public function add_extention() {
 		
 		$_POST = json_decode(file_get_contents("php://input"), true);
+
 		if(count($_POST['formData']) > 0) {
 			$result = $this->extension_model->insert_extension($_POST['formData']);		
 				
@@ -72,10 +73,6 @@ class Extension extends Common_Controller {
 				$this->output
 				->set_content_type('application/json')
 				->set_output(json_encode(array('result' => 'success', 'message'=>'Extention added successfully.')));
-			}else{
-				$this->output
-				->set_content_type('application/json')
-				->set_output(json_encode(array('result' => 'failed', 'message'=>'Extention failed to process.')));
 			}
 				
 		} else {
@@ -83,7 +80,7 @@ class Extension extends Common_Controller {
 			->set_content_type('application/json')
 			->set_output(json_encode(array('result' => 'failed', 'message'=>'Invalid Request')));
 		}		
-	}
+	} 
 
 	// CREATING THE TEM DERITORY IN SYSTEM TEM FOLDER
 	function createTmpDir() {
@@ -108,6 +105,7 @@ class Extension extends Common_Controller {
 	}
 	
 	public function extension_installer(){
+
 		ini_set('upload_max_filesize', '10M');
 		$return_array  = array();
 		$extension_details = NULL;
@@ -117,15 +115,19 @@ class Extension extends Common_Controller {
 			$ext = substr($filename, strpos($filename,'.'), strlen($filename)-1);
 			// cheking the file 
 			//get extension details
-			$id = $_POST['id'];
-			$extension_details = $this->extension_model->get_extension_details($id);
+		
+			if(isset($_POST['key'])) {
+				$key = $_POST['key'];
+	
+			$extension_details = $this->extension_model->get_extension_details($key);
+			$id = $extension_details->id;
 			if($extension_details->file_name == $filename) {
 				if($ext == '.zip') {
 					$tempdir = $this->createTmpDir();		
 					
 					
 					if(move_uploaded_file($_FILES['file']['tmp_name'], $tempdir.'/'.$_FILES['file']['name'])) {
-						if(isset($_POST['id']) && !empty($_POST['id'])) {
+						if(isset($_POST['key']) && !empty($_POST['key'])) {
 								
 							if($extension_details === FALSE){
 								$this->extension_model->add_install_log($id,"GET_EXTENSION","SOME ERROR","FAILED");
@@ -217,6 +219,11 @@ class Extension extends Common_Controller {
 			$this->output
 			->set_content_type('application/json')
 			->set_output(json_encode(array('result' => 'failed', 'message'=>'Invalid file')));	
+			}
+			} else {
+				$this->output
+				->set_content_type('application/json')
+				->set_output(json_encode(array('result' => 'failed', 'message'=>'Invalid file')));
 			}
 		} 		
 	}
@@ -420,5 +427,6 @@ class Extension extends Common_Controller {
 	public function get_all_extention() {
 		echo json_encode($this->extension_model->get_extensions ());
 	}
+	
 
 }	

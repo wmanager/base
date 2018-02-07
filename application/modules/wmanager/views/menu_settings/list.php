@@ -23,6 +23,7 @@
 				<div class="actions pull-right">
 					<a href="/admin/menu_settings/add_menu" data-toggle="modal" data-target="#responseModal" class="btn btn-default"><i class="fa fa-plus-circle"></i> New Menu</a>
 				</div>
+				<br>
 				<h4>Preview</h4>
 				<?= menu_display() ?>	
 				
@@ -50,7 +51,7 @@
 													echo '<div class="dropdown">';
 													echo '<a href="#" data-toggle="dropdown" class="dropdown-toggle"><i class="fa fa-list"></i></a>';
 													echo '<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">';
-													echo '<li role="presentation"><a href="/admin/menu_settings/edit_menu/'.$row->id.'" data-toggle="modal" data-target="#responseEditModal">Edit</a></li>';
+													echo '<li role="presentation"><a href="/admin/menu_settings/edit_menu/'.$row->id.'/'.$row->parent_id.'" data-toggle="modal" data-target="#responseEditModal">Edit</a></li>';
 													if($row->is_child == 'f') 
 														echo '<li role="presentation"><a href="/admin/menu_settings/add_child_menu/'.$row->id.'/'. $row->label.'" data-toggle="modal" data-target="#responseAddModal">Add Child</a></li>';
 													

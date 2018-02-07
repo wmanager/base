@@ -37,55 +37,61 @@
  * @filesource
  */
 
-require APPPATH.'/libraries/REST_Controller.php';  
-
-class Service extends REST_Controller
+class Service extends CI_Controller
 {
     public function __construct()
     {
     	parent::__construct();
-    	$this->CI = & get_instance ();
-    	$this->CI->load->model('extention_manager');
     }
 
- 	public function allextention_get() {
- 		$result = $this->CI->extention_manager->get_all();
- 		if (count($result) > 0) { 		 			
- 			// Set the response and exit
-			$this->response($result, REST_Controller::HTTP_OK); // OK (200) being the HTTP response code 			
- 		} else {
- 				// Set the response and exit
- 				$this->response([
- 						'status' => FALSE,
- 						'message' => 'No extention were found'
- 				], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
- 			}
+ 	public function allextention() {
+ 		//API URL
+ 		$url = $this->config->item('api_url').'api/service/allextention';
+ 
+ 		//HEADER
+ 		$header = array(
+ 				'Version:'. '1.0.1'
+ 		);
+ 		//CREATING THE cURL REQUEST
+ 		$ch = curl_init($url);
+ 		curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+ 		curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
+ 		curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
+ 		curl_setopt($ch, CURLOPT_HTTPHEADER, $header); 	
+ 		$result = curl_exec($ch);
+ 		echo $result;
+ 		//CLOSE cURL 
+ 		curl_close($ch);
     }
     
-    public function download_file_get() {
-    	
- 		$filename = $this->get('filename'); 		
- 		if (file_exists($this->CI->config->item("extension_manager").$filename))
- 		{
- 			$filename = $this->CI->config->item("extension_manager").$filename;
-	    	$filesize = filesize($filename);
-	    	header('Content-Type: application/zip');
-	    	header('Content-Disposition: attachment; filename="'.$filename.'"');	    	
-	    	header("Content-Length: " . $filesize); // set header length
-	    	// if the headers is not set then the evt.loaded will be 0
-	    	readfile($filename);
-	    	sleep(3);
-	    	exit;
- 		}
- 		else
- 		{
- 			$this->response([
-    			'status' => FALSE,
-    			'message' => 'No extention were found'
-    		], REST_Controller::HTTP_NOT_FOUND); 
- 		}
- 		
-    	
-    }
+    public function download_file($key = NULL, $token = NULL) { 
+    		if($_POST) {
+		    	$token = ($_POST['token']) ? $_POST['token'] : NULL;
+		    	$_POST = json_decode($_POST['data']);
+		    	$key = $_POST->key;
+		
+	    	}	
+	    	// API Request
+	    	$url = $this->config->item('api_url').'api/service/download_file';
+	    	// POST data
+	    	$header = array(
+	    			'X-API-KEY:'. $key,
+	    			'Version:'.'1.0.1',
+	    			'Authorization:'.$token
+	    	);
+	    	//CREATING THE cURL REQUEST
+	    	$ch = curl_init($url);
+	    	curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+	    	curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
+	    	curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
+	    	curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+	    	$result = curl_exec($ch);
+	    	$response = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+	    	header("HTTP/1.0 $response");
+	    	echo $result; 
+	    	//CLOSE cURL
+	    	curl_close($ch);
+    	}
+    
 }
 ?>

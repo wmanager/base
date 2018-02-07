@@ -38,8 +38,8 @@
  
 .notice {
     padding: 15px;
-    background-color: #fafafa;
-    border-left: 6px solid #7f7f84;
+    background-color: rgba(70, 155, 180, 0.07);
+    border-left: 6px solid #4285f4;
     margin-bottom: 10px;
     display: -webkit-box;
     -webkit-box-shadow: 0 5px 8px -6px rgba(0,0,0,.2);
@@ -78,6 +78,53 @@
 .label-primary {
     background-color: #428bca !important;
 }
-.badge {
-	padding: 7px 14px !important;
+.notice, .badge-btn{
+	box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12);
+}
+.notice{
+	back
+}
+.badge-btn{
+	background: #4285f4;
+    padding: 10px 24px !important;
+    border-radius: 2px;
+}
+.btn-group-input{
+    padding: 0px;
+    border: solid 1px #E4E4E4;
+    border-radius: 6px;
+    background-color: #fff;
+    max-width: 400px;
+    float: right;
+    margin-right: 15px;
+}
+
+.btn-group-input input{
+    border: 0;
+    box-shadow: none;
+}
+.or{
+	font-size: 32px;
+    color: #c3c8d5;
+    padding: 15px;
+}
+.btn-group-input button{
+    margin: 2px 0 0 0;
+    background: none;
+    box-shadow: none;
+    border: 0;
+    color: #666666;
+    padding: 0 8px 0 10px;
+}
+.input-group-btn {
+    padding-left: 0px !important;
+}
+.btn-group-input .glyphicon-search{
+    font-size: 23px;
+}
+.modal-footer,.modal-header, .modal-body{
+	padding:15px 30px;
+}
+.badge-primary{
+	background-color: #3F729B;
 }

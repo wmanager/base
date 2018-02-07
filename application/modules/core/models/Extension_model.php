@@ -55,6 +55,7 @@ class Extension_model extends CI_Model {
 				"message"	   => $message,
 				"status"		=> $status,
 		);
+
 		
 		if($this->db->insert("extension_installer_log",$data_array)){
 			return true;
@@ -63,9 +64,9 @@ class Extension_model extends CI_Model {
 		}
 	}
 	
-	public function get_extension_details($id){
+	public function get_extension_details($key){
 		
-		$query = $this->db->where("status = 'downloaded'")->where("id",$id)->get("extensions");
+		$query = $this->db->where("status = 'downloaded'")->where("key",$key)->get("extensions");
 		
 		if($query->num_rows() > 0){
 			return $query->row();
@@ -97,7 +98,7 @@ class Extension_model extends CI_Model {
 	
 	public function insert_extension($data) {
 		$data_array = array(
-				"description" => $data['description'],
+				"title" => $data['title'],
 				"status"  => 'downloaded',
 				"key" => $data['key'],
 				"file_name" => $data['file_name'],
