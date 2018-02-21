@@ -81,8 +81,6 @@ class Module_inorder extends Common_Controller {
 			"asset"   => $this->inorder_model->get_asset($asset_id),
 		);
 		$data["contract"] = $this->inorder_model->get_contracts($data['asset']['contract_id']);
-		$data["immobili"] = $this->inorder_model->get_immobili($data['asset']['immobili_id']);
-		$data["impianti"] = $this->inorder_model->get_impianti($data['asset']['impianti_id']);
 		$this->output->set_content_type ( 'application/json' )->set_output ( json_encode ( $data ) );
 	}
 	

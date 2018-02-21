@@ -209,65 +209,7 @@
 											</div>											
 									</div>
 										<div class="clearfix"></div>
-										<br>			
-							<h3>C) Impianti Details</h3>							
-									<div class="form-group">									
-											<div class="col-md-6">
-												<label>Address </label>
-												<textarea rows="3" style="width: 100%;" name="impianti_address" ng-model="form_data.impianti_address.address"></textarea>												
-											</div>
-									</div>
-									<div class="form-group">
-											<div class="col-md-6">
-												<label>City </label>
-												<input type="text" class="form-control" name="impianti_city" ng-model="form_data.impianti_address.city">												
-											</div>	
-											<div class="col-md-6">
-												<label>State </label>
-												<input type="text" class="form-control" name="impianti_state" ng-model="form_data.impianti_address.state">												
-											</div>
-											
-									</div>
-									<div class="form-group">
-											<div class="col-md-6">
-												<label>Country </label>
-												<input type="text" class="form-control" name="impianti_country" ng-model="form_data.impianti_address.country">
-											</div>
-											<div class="col-md-6">
-												<label>Zip </label>
-												<input type="text" class="form-control" name="impianti_zip" ng-model="form_data.impianti_address.zip">												
-											</div>											
-									</div>
-										<div class="clearfix"></div>
-										<br>			
-							<h3>D) Immobili Details</h3>
-									<div class="form-group">
-											<div class="col-md-6">
-												<label>Address </label>
-												<textarea rows="3" style="width: 100%;" name="imobili_address" ng-model="form_data.immobili_address.address"></textarea>												
-											</div>
-											<div class="col-md-6">
-												<label>City </label>
-												<input type="text" class="form-control" name="imobili_city" ng-model="form_data.immobili_address.city">												
-											</div>											
-											
-									</div>
-									<div class="form-group">
-											<div class="col-md-6">
-												<label>State </label>
-												<input type="text" class="form-control" name="imobili_state" ng-model="form_data.immobili_address.state">												
-											</div>
-											<div class="col-md-6">
-												<label>Country </label>
-												<input type="text" class="form-control" name="imobili_country" ng-model="form_data.immobili_address.country">
-											</div>
-									</div>
-									<div class="form-group">
-											<div class="col-md-6">
-												<label>Zip </label>
-												<input type="text" class="form-control" name="imobili_zip" ng-model="form_data.immobili_address.zip">												
-											</div>											
-									</div>	
+										<br>										
 						</tab>
 									
 					</div>

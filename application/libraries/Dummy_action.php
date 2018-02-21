@@ -40,8 +40,8 @@
 class Dummy_action {
 	function test() {
 		$this->ci = &get_instance ();
-		$this->ci->load->library ( 'core/actions' );
-		$result = $this->ci->actions->test_actions ();
+		$this->ci->load->library ( 'core/core_actions' );
+		$result = $this->ci->core_actions->test_actions ();
 		return $result;
 	}
 }

@@ -25,16 +25,16 @@
 					<div class="row">
 						<div class="col-md-6 col-sm-5">
 							<p class="pull-left"><?php if(isset($header->first_name)) echo $header->first_name; ?> <?php if(isset($header->last_name)) echo $header->last_name; ?> <br>
-            							<?php if(isset($header->code)) echo $header->code; ?><br>
+            							<?php if(isset($header->code)) echo $header->code. '<br>'; ?>
             							<?php
 																			if (isset($header->email)) {
-																				echo " Email:" . $header->email;
+																				echo " Email: " . $header->email;
 																			}
 																			if (isset($header->tel)) {
-																				echo " Tel:" . $header->tel;
+																				echo " Tel: " . $header->tel;
 																			}
 																			if (isset($header->cell)) {
-																				echo " Cell:" . $header->cell;
+																				echo " Cell: " . $header->cell;
 																			}
 																			?>
             						</p>
@@ -47,7 +47,6 @@
 				<ul class="nav nav-tabs" role="tablist">
 					<li class="active"><a href="#be" role="tab" data-toggle="tab">Business entity</a></li>
 					<li><a href="#contratti" role="tab" data-toggle="tab">Contracts</a></li>
-					<li><a href="#impianti" role="tab" data-toggle="tab">Impianti</a></li>
 					<li><a href="#indirizzi" role="tab" data-toggle="tab">Address</a></li>
 					<li><a href="#attachment" role="tab" data-toggle="tab">Attachment</a></li>
 					<li><a href="#troubles" role="tab" data-toggle="tab">Troubles</a></li>
@@ -64,7 +63,6 @@
 						    		<tr>
 						    			<th>BE</th>
 						    			<th>Company</th>
-						    			<th>Immobile Address</th>
 						    			
 						    		</tr>
 						    	</thead>
@@ -76,13 +74,12 @@
 												
 							    				echo '<tr>';							    					
 							    					echo "<td>#".str_pad($item->be_id, 5, "0", STR_PAD_LEFT )."<br><small>$item->be_code</small><br><small>$item->contract_type</small></td>";
-							    					echo "<td>$item->company_name</td>";					    				
-							    					echo "<td><small>$item->address $item->state $item->country<br></small></td>";							    												    													    					
+							    					echo "<td>$item->company_name</td>";
 							    				echo '</tr>';
 							    			}
 							    		} else {
 												echo "<tr>";
-												echo "<td colspan='3'>";
+												echo "<td colspan='2'>";
 												echo "No record found";
 												echo "</td>";
 												echo "</tr>";
@@ -92,6 +89,7 @@
 
 						    </table>					
 					</div>
+
 							<div class="tab-pane" id="contratti">
 								<div class="clearfix"></div>
 								<table class="table table-striped table-hover">
@@ -106,7 +104,7 @@
 						    	</thead>
 						    	<tbody>
 						    		<?php
-						    		
+						    			
 						    			if(is_array($contratti) && !empty($contratti)){
 						    				
 							    			foreach($contratti as $item){
@@ -130,44 +128,7 @@
 
 						    </table>
 							</div>	
-							<div class="tab-pane" id="impianti">
-								<div class="clearfix"></div>
-								<table class="table table-striped table-hover">
-						    	<thead>
 
-						    		<tr>
-						    			<th>BE</th>
-						    			<th>Address</th>
-						    			<th>Status</th>
-						    			<th>Power</th>						    			
-						    		</tr>
-						    	</thead>
-						    	<tbody>
-						    		<?php
-						    		
-						    			if(is_array($impianti) && !empty($impianti)){
-						    				
-							    			foreach($impianti as $item){
-
-							    				echo '<tr>';
-							    					echo "<td>#".str_pad($item->be_id, 5, "0", STR_PAD_LEFT )."<br><small>$item->be_code</small><br></td>";
-							    					echo "<td><small>$item->address $item->state $item->country<br></small></td>";		
-							    					echo "<td><span class='label label-primary'>$item->status</span></td>";							    												    					
-							    					echo "<td><small>Installation: $item->installed_power kW<br>Installable (max): $item->pot_installable kW<br>Consumption hours: $item->capacity</small></td>";							    					
-							    				echo '</tr>';
-							    			}
-							    		} else {
-												echo "<tr>";
-												echo "<td colspan='4'>";
-												echo "No record found";
-												echo "</td>";
-												echo "</tr>";
-											}
-						    		?>
-						    	</tbody>
-
-						    </table>
-							</div>
 							<div class="tab-pane" id="indirizzi">
 								<div class="clearfix"></div>
 								<table class="table table-striped table-hover">
@@ -189,7 +150,15 @@
 							    				echo '<tr>';
 							    					echo "<td>#".str_pad($item->be_id, 5, "0", STR_PAD_LEFT )."<br><small>$item->be_code</small><br></td>";
 							    					echo "<td>$item->type</td>";
-							    					echo "<td>$item->first_name $item->last_name <br> $item->address $item->city $item->state $item->country <br>$item->tel $item->cell<br>$item->fax<br>$item->email</td>";
+							    					echo "<td>$item->first_name $item->last_name";
+							    					if($item->address)
+							    					echo "<br> $item->address $item->city $item->state $item->country ";
+							    					if($item->tel || $item->cell)
+							    					echo "<br>$item->tel $item->cell";
+							    					if($item->fax)
+							    					echo "<br>$item->fax";
+							    					if($item->email)
+							    					echo "<br>$item->email</td>";
 							    				echo '</tr>';
 							    			}
 							    		} else {

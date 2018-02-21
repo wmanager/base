@@ -168,17 +168,6 @@ class Inorder_model extends CI_Model {
 		if($this->db->insert("assets",$asset_data)){
 			$asset_id = $this->db->insert_id();
 			
-			//add immobili and impianti
-			$immobili_id = $this->add_immobili($data);
-			$impianti_id = $this->add_impianti($data);
-			
-			$update_array = array(
-				"impianti_id" => $impianti_id,
-				"immobili_id" => $immobili_id	
-			);
-			
-			$this->db->where("id",$asset_id)->update("assets",$update_array);
-			
 			return array(
 					"status" => TRUE,
 					"asset_id" => $asset_id
@@ -189,46 +178,6 @@ class Inorder_model extends CI_Model {
 					"message" => "Failed to created asset"
 			);
 		}
-	}
-	
-	public function add_immobili($data){
-		
-		$immobili_address = $this->add_address("IMMOBILI");
-		
-		
-		
-		$immobili_data = array(
-			"be_id" => $data['be_id'],
-			"client_id" => $data['account_id'],
-			"created" => date("Y-m-d H:i:s"),
-			"address_id" => $immobili_address
-		);
-		
-		if($this->db->insert("immobili",$immobili_data)){
-			return $this->db->insert_id();
-		}else{
-				return 0;
-			}
-		
-	}
-	
-	public function add_impianti($data){
-	
-		$impianti_address = $this->add_address("IMPIANTI");
-		$immobili_data = array(
-				"be_id" => $data['be_id'],
-				"client_id" => $data['account_id'],
-				"created" => date("Y-m-d H:i:s"),
-				"address_id" => $impianti_address,
-				"status" => "ACTIVE"
-		);
-	
-		if($this->db->insert("impianti",$immobili_data)){
-			return $this->db->insert_id();
-		}else{
-			return 0;
-		}
-	
 	}
 	
 	public function add_address($type){
@@ -270,29 +219,6 @@ class Inorder_model extends CI_Model {
 			$return_array['CLIENT'] = array();
 		}
 		
-		//immobili
-		$query = $this->db->select("address.*")
-							->join("assets","assets.immobili_id = immobili.id","left")
-							->join("address","address.id = immobili.address_id","left")
-							->where("assets.id",$asset_id)->get("immobili");
-		
-		if($query->num_rows() > 0){
-			$return_array['IMMOBILI'] =  $query->row_array();
-		}else{
-			$return_array['IMMOBILI'] = array();
-		}
-		
-		//impianti
-		$query = $this->db->select("address.*")
-		->join("assets","assets.impianti_id = impianti.id","left")
-		->join("address","address.id = impianti.address_id","left")
-		->where("assets.id",$asset_id)->get("impianti");
-		
-		if($query->num_rows() > 0){
-			$return_array['IMPIANTI'] =  $query->row_array();
-		}else{
-			$return_array['IMPIANTI'] = array();
-		}
 		
 		//invoice
 		$query = $this->db->select("address.*")
@@ -334,35 +260,6 @@ class Inorder_model extends CI_Model {
 		}
 	}
 	
-	public function get_immobili($immobili_id){
-		if($immobili_id <= 0 || $immobili_id == ''){
-			return array();
-		}
-		
-		$query = $this->db->select("immobili.*")->where("id",$immobili_id)->get("immobili");
-		
-		if($query->num_rows() > 0){
-			return $query->row_array();
-		}else{
-			return array();
-		}
-	
-	}
-	
-	public function get_impianti($impianti_id){
-		if($impianti_id <= 0 || $impianti_id == ''){
-			return array();
-		}
-		
-		$query = $this->db->select("impianti.*")->where("id",$impianti_id)->get("impianti");
-		
-		if($query->num_rows() > 0){
-			return $query->row_array();
-		}else{
-			return array();
-		}
-	
-	}
 	
 	public function get_contracts($contract_id = NULL){
 		if($contract_id <= 0 || $contract_id == ''){
@@ -473,22 +370,6 @@ class Inorder_model extends CI_Model {
 			$address =  (array) $address;
 			$invoice_address = $this->update_address($be['invoice_address'],$address);
 		}
-				
-		//immobile
-		$immobile = $data['immobili'];
-		$address = $data['immobili_address'];
-		$address =  (array) $address;
-		$immobile =  (array) $immobile;
-
-		$immobile_address = $this->update_address($immobile['address_id'],$address);
-		
-		//impianti
-		$impianti = $data['impianti'];
-		$address = $data['impianti_address'];
-		$address =  (array) $address;
-		$impianti =  (array) $impianti;
-		$impianti_address = $this->update_address($impianti['address_id'],$address);
-		
 		
 		//contract
 		$contract_id = $data['asset']->contract_id;
@@ -499,7 +380,7 @@ class Inorder_model extends CI_Model {
 		}
 		
 		
-		if($impianti_address && $immobile_address && $be_update && $client_address && $account_update){
+		if($be_update && $client_address && $account_update){
 			return array(
 				"status" => TRUE,
 				"message" => "Update of customer was successfull"		

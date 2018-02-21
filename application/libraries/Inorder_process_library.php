@@ -55,7 +55,6 @@ class inorder_process_library {
 		
 		$CI->core_actions->Set_Satus_Thread ( $thread_id, 'CANCELED', 'RIPENSAMENTOCLIENTE' );
 		$CI->core_actions->Set_Status_Be ( $input_data ['be_id'], 'CANCELED', 'RIPENSAMENTOCLIENTE' );
-		$CI->core_actions->Set_Status_Impianto ( $input_data ['impianto_id'], 'CANCELED', 'RIPENSAMENTOCLIENTE' );
 		
 		// Activities status change
 		$activities = $CI->activity->get_activities_for_cancel ( $thread_id );

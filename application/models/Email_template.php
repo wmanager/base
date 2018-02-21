@@ -100,10 +100,9 @@ class Email_template extends CI_Model {
 	 * @return integer
 	 */
 	public function get_template_data($type_ids) {
-		$query = $this->db->select ( "orders.*,be.be_code, impianti.allaccio_data,impianti.install_data_fine, loans.loans_type,accounts.p_nome,accounts.p_cognome,accounts.o_ragione_sociale,accounts.p_cf,accounts.o_piva" );
+		$query = $this->db->select ( "orders.*,be.be_code, loans.loans_type,accounts.p_nome,accounts.p_cognome,accounts.o_ragione_sociale,accounts.p_cf,accounts.o_piva" );
 		$query = $this->db->join ( "accounts", "accounts.id = orders.customer_id", "left" );
 		$query = $this->db->join ( "loans", "loans.order_id = orders.id", "left" );
-		$query = $this->db->join ( "impianti", "impianti.cliente_id = orders.customer_id", "left" );
 		$query = $this->db->join ( "be", "be.id = orders.be_id", "left" );
 		if (count ( $type_ids ) > 0) {
 			foreach ( $type_ids as $key => $id ) {
@@ -221,7 +220,7 @@ class Email_template extends CI_Model {
 		}
 	}
 	public function get_template_final_response_data($order_id) {
-		$get_loan = $this->db->select ( "loans.*,be.be_code, impianti.allaccio_data,impianti.install_data_fine,accounts.id as customer_id,accounts.p_nome,accounts.p_cognome,accounts.o_ragione_sociale,accounts.p_cf,accounts.o_piva" )->join ( "accounts", "accounts.id = loans.customer_id", "left" )->join ( "impianti", "impianti.cliente_id = loans.customer_id", "left" )->join ( "be", "be.id = loans.be_id", "left" )->where ( "loans.order_id", $order_id )->get ( "loans" );
+		$get_loan = $this->db->select ( "loans.*,be.be_code,accounts.id as customer_id,accounts.p_nome,accounts.p_cognome,accounts.o_ragione_sociale,accounts.p_cf,accounts.o_piva" )->join ( "accounts", "accounts.id = loans.customer_id", "left" )->join ( "be", "be.id = loans.be_id", "left" )->where ( "loans.order_id", $order_id )->get ( "loans" );
 		return $get_loan->row_array ();
 	}
 	public function get_legal_notif_template_data($date) {

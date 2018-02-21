@@ -276,11 +276,7 @@ class Thread extends CI_Model {
 		$query = $this->db->where ( 'form_id', $form )->where ( 'required', 't' )->where ( 'use', 'UPLOAD' )->get ( 'setup_forms_attachments' );
 		return $query->result ();
 	}
-	public function get_be_impianti_ids($thread_id) {
-		$query = $this->db->select ( 'threads.be AS be_id,impianti.id AS impianti_id' )->join ( 'impianti', 'threads.be=impianti.be_id', 'left' );
-		$query = $this->db->where ( 'threads.id', $thread_id )->get ( 'threads' );
-		return $query->row ();
-	}
+
 	public function get_cancel_reasons() {
 		$query = $this->db->select ( 'list_cause_annullamento.key' )->order_by ( 'list_cause_annullamento.key' )->get ( 'list_cause_annullamento' );
 		return $query->result ();

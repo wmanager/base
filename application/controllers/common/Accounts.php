@@ -72,11 +72,11 @@ class Accounts extends Common_Controller {
 		$this->load->view ( 'template', $data );
 	}
 	public function detail($id = NULL) {
+
 		$data = array ();
 		$data ['header'] = $this->account->header ( $id );
 		$data ['be'] = $this->account->be ( $id );
 		$data['contratti'] = $this->account->contratti($id);
-		$data['impianti'] = $this->account->impianti($id);
 		$data['indirizzi'] = $this->account->indirizzi($id);
 		$data['attachments'] = $this->account->attachment($id);
 		$data['troubles'] = $this->trouble->get_by_customer($id);

@@ -195,7 +195,15 @@
 														echo "<td>$item->code<br><a href='/common/accounts/detail/$item->accounts_id'>$item->first_name $item->last_name </a></td>";														
 														echo "<td>$item->resp_risoluzione_company<br>$item->resp_risoluzione_user</td>";
 														echo "<td>$item->subtype</td>";
-														echo "<td>Created on " . date ( 'd-m-Y H:i', strtotime ( str_replace ( '/', '-', $item->created ) ) ) . "<br> Deadline $item->deadline</td>";
+														
+														echo "<td>Created on ";
+														if($item->created)
+															echo  date ( 'd-m-Y H:i', strtotime ( str_replace ( '/', '-', $item->created ) ) );
+														echo "<br>  Deadline ";
+														if($item->deadline)
+															echo  date ( 'd-m-Y H:i', strtotime ( str_replace ( '/', '-', $item->deadline ) ) );
+														echo "</td>";
+														
 														if ($item->reminder != '')
 															echo "<td><small><i class='fa fa-comment'></i> $item->followup<br><i class='fa fa-calendar'></i> $item->reminder</small></td>";
 														if ($item->reminder == '')

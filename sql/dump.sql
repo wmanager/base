@@ -230,8 +230,6 @@ CREATE TABLE assets (
     be_id integer,
     contract_id integer,
     assets_type character varying(50),
-    impianti_id integer,
-    immobili_id integer,
     start_date date,
     end_date date,
     created timestamp without time zone,
@@ -495,104 +493,6 @@ CREATE TABLE contracts (
 
 ALTER TABLE public.contracts OWNER TO install_host_username;
 
---
--- Name: contracts2companies; Type: TABLE; Schema: public; Owner: install_host_username; Tablespace: 
---
-
-CREATE TABLE contracts2companies (
-    id integer NOT NULL,
-    domain character varying(255),
-    id_company integer,
-    id_father integer,
-    id_contract integer,
-    active boolean DEFAULT true,
-    role character varying(255),
-    note text,
-    created timestamp(6) without time zone DEFAULT now(),
-    created_by integer,
-    modified timestamp(6) without time zone DEFAULT now(),
-    modified_by integer
-);
-
-
-ALTER TABLE public.contracts2companies OWNER TO install_host_username;
-
---
--- Name: contracts2companies_id_seq; Type: SEQUENCE; Schema: public; Owner: install_host_username
---
-
-CREATE SEQUENCE contracts2companies_id_seq
-    START WITH 31
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.contracts2companies_id_seq OWNER TO install_host_username;
-
---
--- Name: contracts2companies_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: install_host_username
---
-
-ALTER SEQUENCE contracts2companies_id_seq OWNED BY contracts2companies.id;
-
-
---
--- Name: contracts2keys_id_seq; Type: SEQUENCE; Schema: public; Owner: install_host_username
---
-
-CREATE SEQUENCE contracts2keys_id_seq
-    START WITH 21
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.contracts2keys_id_seq OWNER TO install_host_username;
-
---
--- Name: contracts2users; Type: TABLE; Schema: public; Owner: install_host_username; Tablespace: 
---
-
-CREATE TABLE contracts2users (
-    id integer NOT NULL,
-    domain character varying(255),
-    id_company integer,
-    id_contract integer,
-    id_user integer,
-    role character varying(255),
-    active boolean DEFAULT true,
-    created timestamp(6) without time zone DEFAULT now(),
-    created_by integer,
-    modified timestamp(6) without time zone DEFAULT now(),
-    modified_by integer
-);
-
-
-ALTER TABLE public.contracts2users OWNER TO install_host_username;
-
---
--- Name: contracts2users_id_seq; Type: SEQUENCE; Schema: public; Owner: install_host_username
---
-
-CREATE SEQUENCE contracts2users_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.contracts2users_id_seq OWNER TO install_host_username;
-
---
--- Name: contracts2users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: install_host_username
---
-
-ALTER SEQUENCE contracts2users_id_seq OWNED BY contracts2users.id;
-
 
 --
 -- Name: contracts_id_seq; Type: SEQUENCE; Schema: public; Owner: install_host_username
@@ -613,64 +513,6 @@ ALTER TABLE public.contracts_id_seq OWNER TO install_host_username;
 --
 
 ALTER SEQUENCE contracts_id_seq OWNED BY contracts.id;
-
-
---
--- Name: contratti_npu_app_id_seq; Type: SEQUENCE; Schema: public; Owner: install_host_username
---
-
-CREATE SEQUENCE contratti_npu_app_id_seq
-    START WITH 1000
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.contratti_npu_app_id_seq OWNER TO install_host_username;
-
---
--- Name: contratti_sereno_app_id_seq; Type: SEQUENCE; Schema: public; Owner: install_host_username
---
-
-CREATE SEQUENCE contratti_sereno_app_id_seq
-    START WITH 1000
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.contratti_sereno_app_id_seq OWNER TO install_host_username;
-
---
--- Name: contratti_sereno_tls_id_seq; Type: SEQUENCE; Schema: public; Owner: install_host_username
---
-
-CREATE SEQUENCE contratti_sereno_tls_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.contratti_sereno_tls_id_seq OWNER TO install_host_username;
-
---
--- Name: contratti_tuo_app_id_seq; Type: SEQUENCE; Schema: public; Owner: install_host_username
---
-
-CREATE SEQUENCE contratti_tuo_app_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.contratti_tuo_app_id_seq OWNER TO install_host_username;
-
 
 
 --
@@ -724,51 +566,6 @@ ALTER TABLE public.dependencies_id_seq OWNER TO install_host_username;
 --
 
 ALTER SEQUENCE dependencies_id_seq OWNED BY dependencies.id;
-
-
---
--- Name: dichiarazioni; Type: TABLE; Schema: public; Owner: install_host_username; Tablespace: 
---
-
-CREATE TABLE dichiarazioni (
-    id integer NOT NULL,
-    cliente_id integer,
-    be_id integer,
-    contratto_id integer,
-    data date,
-    codice character varying(255),
-    dichiarazione text,
-    value boolean DEFAULT true,
-    created timestamp(6) without time zone DEFAULT now(),
-    created_by integer,
-    modified timestamp(6) without time zone,
-    modified_by integer,
-    value_varchar character varying(255)
-);
-
-
-ALTER TABLE public.dichiarazioni OWNER TO install_host_username;
-
---
--- Name: dichiarazioni_id_seq; Type: SEQUENCE; Schema: public; Owner: install_host_username
---
-
-CREATE SEQUENCE dichiarazioni_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.dichiarazioni_id_seq OWNER TO install_host_username;
-
---
--- Name: dichiarazioni_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: install_host_username
---
-
-ALTER SEQUENCE dichiarazioni_id_seq OWNED BY dichiarazioni.id;
-
 
 --
 -- Name: email_queue; Type: TABLE; Schema: public; Owner: install_host_username; Tablespace: 
@@ -887,86 +684,6 @@ ALTER SEQUENCE email_template_id_seq OWNED BY email_template.id;
 
 
 --
--- Name: export_autoletture; Type: TABLE; Schema: public; Owner: install_host_username; Tablespace: 
---
-
-CREATE TABLE export_autoletture (
-    id integer NOT NULL,
-    cliente_id integer,
-    be_id integer,
-    thread_id integer,
-    crm_request_actid integer,
-    billing_filename character varying(255),
-    bo_verifica_actid integer,
-    status character varying(100),
-    billing_esito text,
-    billing_d_invio timestamp without time zone,
-    billing_ws_data text,
-    billing_d_esito timestamp without time zone,
-    billing_esito_note text,
-    scambio_cliente_numero character varying(255),
-    scambio_cont_modello character varying(255),
-    scambio_cont_codice character varying(255),
-    scambio_cont_numero character varying(255),
-    scambio_pa_f1 integer,
-    scambio_pa_f2 integer,
-    scambio_pa_f3 integer,
-    scambio_pp_f1 integer,
-    scambio_pp_f2 integer,
-    scambio_pp_f3 integer,
-    scambio_ia_f1 integer,
-    scambio_ia_f2 integer,
-    scambio_ia_f3 integer,
-    scambio_ip_f1 integer,
-    scambio_ip_f2 integer,
-    scambio_ip_f3 integer,
-    prod_cliente_numero character varying(255),
-    prod_cont_modello character varying(255),
-    prod_cont_codice character varying(255),
-    prod_cont_numero character varying(255),
-    prod_pa_f1 integer,
-    prod_pa_f2 integer,
-    prod_pa_f3 integer,
-    prod_pp_f1 integer,
-    prod_pp_f2 integer,
-    prod_pp_f3 integer,
-    prod_ia_f1 integer,
-    prod_ia_f2 integer,
-    prod_ia_f3 integer,
-    prod_ip_f1 integer,
-    prod_ip_f2 integer,
-    prod_ip_f3 integer,
-    created timestamp without time zone DEFAULT now(),
-    created_by integer,
-    modified timestamp without time zone DEFAULT now(),
-    modified_by integer
-);
-
-
-ALTER TABLE public.export_autoletture OWNER TO install_host_username;
-
---
--- Name: export_autoletture_id_seq; Type: SEQUENCE; Schema: public; Owner: install_host_username
---
-
-CREATE SEQUENCE export_autoletture_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.export_autoletture_id_seq OWNER TO install_host_username;
-
---
--- Name: export_autoletture_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: install_host_username
---
-
-ALTER SEQUENCE export_autoletture_id_seq OWNED BY export_autoletture.id;
-
-
---
 -- Name: extension_installer_log; Type: TABLE; Schema: public; Owner: install_host_username; Tablespace: 
 --
 
@@ -1078,83 +795,6 @@ ALTER SEQUENCE form_types_id_seq OWNED BY form_types.id;
 
 
 --
--- Name: ftp_upload_runs; Type: TABLE; Schema: public; Owner: install_host_username; Tablespace: 
---
-
-CREATE TABLE ftp_upload_runs (
-    id integer NOT NULL,
-    flux_name character varying(255),
-    result character varying(255),
-    created timestamp without time zone DEFAULT now()
-);
-
-
-ALTER TABLE public.ftp_upload_runs OWNER TO install_host_username;
-
---
--- Name: ftp_upload_runs_id_seq; Type: SEQUENCE; Schema: public; Owner: install_host_username
---
-
-CREATE SEQUENCE ftp_upload_runs_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.ftp_upload_runs_id_seq OWNER TO install_host_username;
-
---
--- Name: ftp_upload_runs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: install_host_username
---
-
-ALTER SEQUENCE ftp_upload_runs_id_seq OWNED BY ftp_upload_runs.id;
-
-
---
--- Name: ftp_upload_settings; Type: TABLE; Schema: public; Owner: install_host_username; Tablespace: 
---
-
-CREATE TABLE ftp_upload_settings (
-    id integer NOT NULL,
-    flux_name character varying(255),
-    ftp_hostname character varying(255),
-    ftp_username character varying(255),
-    ftp_password character varying(255),
-    source_folder character varying(255),
-    remote_folder character varying(255),
-    delete_after_upload character varying(255),
-    path_after_upload character varying(255),
-    created timestamp without time zone DEFAULT now(),
-    add_file character varying
-);
-
-
-ALTER TABLE public.ftp_upload_settings OWNER TO install_host_username;
-
---
--- Name: ftp_upload_settings_id_seq; Type: SEQUENCE; Schema: public; Owner: install_host_username
---
-
-CREATE SEQUENCE ftp_upload_settings_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.ftp_upload_settings_id_seq OWNER TO install_host_username;
-
---
--- Name: ftp_upload_settings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: install_host_username
---
-
-ALTER SEQUENCE ftp_upload_settings_id_seq OWNED BY ftp_upload_settings.id;
-
-
---
 -- Name: groups; Type: TABLE; Schema: public; Owner: install_host_username; Tablespace: 
 --
 
@@ -1233,132 +873,6 @@ ALTER TABLE public.history_id_seq OWNER TO install_host_username;
 --
 
 ALTER SEQUENCE history_id_seq OWNED BY history.id;
-
-
---
--- Name: immobili; Type: TABLE; Schema: public; Owner: install_host_username; Tablespace: 
---
-
-CREATE TABLE immobili (
-    id integer NOT NULL,
-    be_id integer,
-    client_id integer,
-    address_id integer,
-    created timestamp without time zone,
-    created_by integer,
-    modified timestamp without time zone,
-    modifed_by integer
-);
-
-
-ALTER TABLE public.immobili OWNER TO install_host_username;
-
---
--- Name: immobili_details; Type: TABLE; Schema: public; Owner: install_host_username; Tablespace: 
---
-
-CREATE TABLE immobili_details (
-    id integer NOT NULL,
-    immobile_id integer,
-    detail_id integer,
-    qta integer,
-    anno_acq character varying(255),
-    fonte character varying(100),
-    capacita character varying(100),
-    freq_uso character varying(100),
-    classe character varying(100),
-    created timestamp without time zone,
-    created_by integer,
-    modified timestamp without time zone,
-    modified_by integer
-);
-
-
-ALTER TABLE public.immobili_details OWNER TO install_host_username;
-
---
--- Name: immobili_details_id_seq; Type: SEQUENCE; Schema: public; Owner: install_host_username
---
-
-CREATE SEQUENCE immobili_details_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.immobili_details_id_seq OWNER TO install_host_username;
-
---
--- Name: immobili_details_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: install_host_username
---
-
-ALTER SEQUENCE immobili_details_id_seq OWNED BY immobili_details.id;
-
-
---
--- Name: immobili_id_seq; Type: SEQUENCE; Schema: public; Owner: install_host_username
---
-
-CREATE SEQUENCE immobili_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.immobili_id_seq OWNER TO install_host_username;
-
---
--- Name: immobili_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: install_host_username
---
-
-ALTER SEQUENCE immobili_id_seq OWNED BY immobili.id;
-
-
---
--- Name: impianti; Type: TABLE; Schema: public; Owner: install_host_username; Tablespace: 
---
-
-CREATE TABLE impianti (
-    id integer NOT NULL,
-    be_id integer,
-    client_id integer,
-    address_id integer,
-    created timestamp without time zone,
-    created_by integer,
-    modified timestamp without time zone,
-    modifed_by integer,
-    status character varying(100),
-    installed_power numeric(18,2),
-    pot_installable numeric(18,6),
-    capacity integer
-);
-
-
-ALTER TABLE public.impianti OWNER TO install_host_username;
-
---
--- Name: impianti_id_seq; Type: SEQUENCE; Schema: public; Owner: install_host_username
---
-
-CREATE SEQUENCE impianti_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.impianti_id_seq OWNER TO install_host_username;
-
---
--- Name: impianti_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: install_host_username
---
-
-ALTER SEQUENCE impianti_id_seq OWNED BY impianti.id;
 
 
 --
@@ -1553,45 +1067,6 @@ ALTER TABLE public.list_mps_id_seq OWNER TO install_host_username;
 --
 
 ALTER SEQUENCE list_mps_id_seq OWNED BY setup_mps.id;
-
-
---
--- Name: list_po_categorie; Type: TABLE; Schema: public; Owner: install_host_username; Tablespace: 
---
-
-CREATE TABLE list_po_categorie (
-    id integer NOT NULL,
-    po character varying(1),
-    categoria character varying(255),
-    created timestamp(6) without time zone DEFAULT now(),
-    created_by integer,
-    modified timestamp(6) without time zone,
-    modified_by integer
-);
-
-
-ALTER TABLE public.list_po_categorie OWNER TO install_host_username;
-
---
--- Name: list_po_categorie_id_seq; Type: SEQUENCE; Schema: public; Owner: install_host_username
---
-
-CREATE SEQUENCE list_po_categorie_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.list_po_categorie_id_seq OWNER TO install_host_username;
-
---
--- Name: list_po_categorie_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: install_host_username
---
-
-ALTER SEQUENCE list_po_categorie_id_seq OWNED BY list_po_categorie.id;
-
 
 --
 -- Name: list_processes; Type: TABLE; Schema: public; Owner: install_host_username; Tablespace: 
@@ -1920,20 +1395,6 @@ ALTER SEQUENCE products_id_seq OWNED BY products.id;
 
 
 --
--- Name: protocollo_ftp_export_id_seq; Type: SEQUENCE; Schema: public; Owner: install_host_username
---
-
-CREATE SEQUENCE protocollo_ftp_export_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.protocollo_ftp_export_id_seq OWNER TO install_host_username;
-
---
 -- Name: setup_actions; Type: TABLE; Schema: public; Owner: install_host_username; Tablespace: 
 --
 
@@ -2107,24 +1568,6 @@ ALTER TABLE public.setup_activities_id_seq OWNER TO install_host_username;
 
 ALTER SEQUENCE setup_activities_id_seq OWNED BY setup_activities.id;
 
-
---
--- Name: setup_activity_timer; Type: TABLE; Schema: public; Owner: install_host_username; Tablespace: 
---
-
-CREATE TABLE setup_activity_timer (
-    type_activity character varying(255) NOT NULL,
-    type_thread character varying(255) NOT NULL,
-    timer_gg integer DEFAULT 0 NOT NULL,
-    date_start character varying(100),
-    status_permitted character varying(255),
-    status_not_enabled character varying(255),
-    message character varying(255),
-    created timestamp without time zone DEFAULT now()
-);
-
-
-ALTER TABLE public.setup_activity_timer OWNER TO install_host_username;
 
 --
 -- Name: setup_attachments; Type: TABLE; Schema: public; Owner: install_host_username; Tablespace: 
@@ -2689,50 +2132,6 @@ ALTER TABLE public.setup_status_transitions_id_seq OWNER TO install_host_usernam
 
 ALTER SEQUENCE setup_status_transitions_id_seq OWNED BY setup_status_transitions.id;
 
-
---
--- Name: setup_targeted_wizards; Type: TABLE; Schema: public; Owner: install_host_username; Tablespace: 
---
-
-CREATE TABLE setup_targeted_wizards (
-    id integer NOT NULL,
-    title character varying(255),
-    description character varying(255),
-    be_required boolean,
-    targeted_view character varying(255),
-    trouble_type integer,
-    thread_type character varying(255),
-    thread_request_key character varying(255),
-    disabled boolean,
-    created timestamp without time zone,
-    created_by integer,
-    role character varying(255)
-);
-
-
-ALTER TABLE public.setup_targeted_wizards OWNER TO install_host_username;
-
---
--- Name: setup_targeted_wizards_id_seq; Type: SEQUENCE; Schema: public; Owner: install_host_username
---
-
-CREATE SEQUENCE setup_targeted_wizards_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.setup_targeted_wizards_id_seq OWNER TO install_host_username;
-
---
--- Name: setup_targeted_wizards_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: install_host_username
---
-
-ALTER SEQUENCE setup_targeted_wizards_id_seq OWNED BY setup_targeted_wizards.id;
-
-
 --
 -- Name: setup_troubles_status; Type: TABLE; Schema: public; Owner: install_host_username; Tablespace: 
 --
@@ -3059,9 +2458,7 @@ CREATE TABLE troubles (
     res_duty_company integer,
     res_duty_user integer,
     res_role character varying(255),
-    subtype character varying(255),
-    contratti integer,
-    targeted_wizard_id integer
+    subtype character varying(255)
 );
 
 
@@ -3381,21 +2778,6 @@ ALTER TABLE ONLY extensions ALTER COLUMN id SET DEFAULT nextval('extensions_id_s
 
 ALTER TABLE ONLY form_types ALTER COLUMN id SET DEFAULT nextval('form_types_id_seq'::regclass);
 
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: install_host_username
---
-
-ALTER TABLE ONLY ftp_upload_runs ALTER COLUMN id SET DEFAULT nextval('ftp_upload_runs_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: install_host_username
---
-
-ALTER TABLE ONLY ftp_upload_settings ALTER COLUMN id SET DEFAULT nextval('ftp_upload_settings_id_seq'::regclass);
-
-
 --
 -- Name: id; Type: DEFAULT; Schema: public; Owner: install_host_username
 --
@@ -3409,28 +2791,6 @@ ALTER TABLE ONLY groups ALTER COLUMN id SET DEFAULT nextval('groups_id_seq'::reg
 
 ALTER TABLE ONLY history ALTER COLUMN id SET DEFAULT nextval('history_id_seq'::regclass);
 
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: install_host_username
---
-
-ALTER TABLE ONLY immobili ALTER COLUMN id SET DEFAULT nextval('immobili_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: install_host_username
---
-
-ALTER TABLE ONLY immobili_details ALTER COLUMN id SET DEFAULT nextval('immobili_details_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: install_host_username
---
-
-ALTER TABLE ONLY impianti ALTER COLUMN id SET DEFAULT nextval('impianti_id_seq'::regclass);
-
-
 --
 -- Name: id; Type: DEFAULT; Schema: public; Owner: install_host_username
 --
@@ -3443,13 +2803,6 @@ ALTER TABLE ONLY list_activities ALTER COLUMN id SET DEFAULT nextval('list_activ
 --
 
 ALTER TABLE ONLY list_ambits ALTER COLUMN id SET DEFAULT nextval('list_ambits_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: install_host_username
---
-
-ALTER TABLE ONLY list_po_categorie ALTER COLUMN id SET DEFAULT nextval('list_po_categorie_id_seq'::regclass);
 
 
 --
@@ -3614,13 +2967,6 @@ ALTER TABLE ONLY setup_roles ALTER COLUMN id SET DEFAULT nextval('setup_roles_id
 --
 
 ALTER TABLE ONLY setup_status_transitions ALTER COLUMN id SET DEFAULT nextval('setup_status_transitions_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: install_host_username
---
-
-ALTER TABLE ONLY setup_targeted_wizards ALTER COLUMN id SET DEFAULT nextval('setup_targeted_wizards_id_seq'::regclass);
 
 
 --
@@ -3794,34 +3140,6 @@ SELECT pg_catalog.setval('contacts_id_seq', 1, false);
 
 
 
-
---
--- Name: contracts2companies_id_seq; Type: SEQUENCE SET; Schema: public; Owner: install_host_username
---
-
-SELECT pg_catalog.setval('contracts2companies_id_seq', 1, false);
-
-
---
--- Name: contracts2keys_id_seq; Type: SEQUENCE SET; Schema: public; Owner: install_host_username
---
-
-SELECT pg_catalog.setval('contracts2keys_id_seq', 1, false);
-
-
---
--- Data for Name: contracts2users; Type: TABLE DATA; Schema: public; Owner: install_host_username
---
-
-
-
---
--- Name: contracts2users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: install_host_username
---
-
-SELECT pg_catalog.setval('contracts2users_id_seq', 1, false);
-
-
 --
 -- Name: contracts_id_seq; Type: SEQUENCE SET; Schema: public; Owner: install_host_username
 --
@@ -3907,23 +3225,6 @@ SELECT pg_catalog.setval('groups_id_seq', 2, true);
 
 SELECT pg_catalog.setval('history_id_seq', 1, true);
 
-
-
-SELECT pg_catalog.setval('immobili_details_id_seq', 1, true);
-
-
---
--- Name: immobili_id_seq; Type: SEQUENCE SET; Schema: public; Owner: install_host_username
---
-
-SELECT pg_catalog.setval('immobili_id_seq', 1, true);
-
-
---
--- Name: impianti_id_seq; Type: SEQUENCE SET; Schema: public; Owner: install_host_username
---
-
-SELECT pg_catalog.setval('impianti_id_seq', 1, true);
 
 
 --
@@ -4048,12 +3349,6 @@ SELECT pg_catalog.setval('setup_activities_exits_id_seq', 1, true);
 --
 
 SELECT pg_catalog.setval('setup_activities_id_seq', 2, true);
-
-
---
--- Data for Name: setup_activity_timer; Type: TABLE DATA; Schema: public; Owner: install_host_username
---
-
 
 
 --
@@ -4259,14 +3554,6 @@ SELECT pg_catalog.setval('setup_processes_id_seq', 1, true);
 --
 
 SELECT pg_catalog.setval('setup_roles_id_seq', 1, true);
-
-
-
---
--- Name: setup_targeted_wizards_id_seq; Type: SEQUENCE SET; Schema: public; Owner: install_host_username
---
-
-SELECT pg_catalog.setval('setup_targeted_wizards_id_seq', 1, false);
 
 
 --
@@ -4500,43 +3787,12 @@ ALTER TABLE ONLY history
 
 
 --
--- Name: immobili_details_id; Type: CONSTRAINT; Schema: public; Owner: install_host_username; Tablespace: 
---
-
-ALTER TABLE ONLY immobili_details
-    ADD CONSTRAINT immobili_details_id PRIMARY KEY (id);
-
-
---
--- Name: immobili_id; Type: CONSTRAINT; Schema: public; Owner: install_host_username; Tablespace: 
---
-
-ALTER TABLE ONLY immobili
-    ADD CONSTRAINT immobili_id PRIMARY KEY (id);
-
-
---
--- Name: impianti_id; Type: CONSTRAINT; Schema: public; Owner: install_host_username; Tablespace: 
---
-
-ALTER TABLE ONLY impianti
-    ADD CONSTRAINT impianti_id PRIMARY KEY (id);
-
-
---
 -- Name: list_ambits_id; Type: CONSTRAINT; Schema: public; Owner: install_host_username; Tablespace: 
 --
 
 ALTER TABLE ONLY list_ambits
     ADD CONSTRAINT list_ambits_id PRIMARY KEY (id);
 
-
---
--- Name: list_po_categorie_id; Type: CONSTRAINT; Schema: public; Owner: install_host_username; Tablespace: 
---
-
-ALTER TABLE ONLY list_po_categorie
-    ADD CONSTRAINT list_po_categorie_id PRIMARY KEY (id);
 
 
 --
@@ -4617,14 +3873,6 @@ ALTER TABLE ONLY setup_activities_exits
 
 ALTER TABLE ONLY setup_activities
     ADD CONSTRAINT setup_activities_pkey PRIMARY KEY (id);
-
-
---
--- Name: setup_activity_timer_id; Type: CONSTRAINT; Schema: public; Owner: install_host_username; Tablespace: 
---
-
-ALTER TABLE ONLY setup_activity_timer
-    ADD CONSTRAINT setup_activity_timer_id PRIMARY KEY (type_activity, type_thread);
 
 
 --
@@ -4967,15 +4215,6 @@ GRANT ALL ON TABLE history TO install_host_username;
 
 
 --
--- Name: immobili_details; Type: ACL; Schema: public; Owner: install_host_username
---
-
-REVOKE ALL ON TABLE immobili_details FROM PUBLIC;
-REVOKE ALL ON TABLE immobili_details FROM install_host_username;
-GRANT ALL ON TABLE immobili_details TO install_host_username;
-
-
---
 -- Name: list_activities; Type: ACL; Schema: public; Owner: install_host_username
 --
 
@@ -5000,15 +4239,6 @@ GRANT ALL ON TABLE list_ambits TO install_host_username;
 REVOKE ALL ON TABLE list_mps FROM PUBLIC;
 REVOKE ALL ON TABLE list_mps FROM install_host_username;
 GRANT ALL ON TABLE list_mps TO install_host_username;
-
-
---
--- Name: list_po_categorie; Type: ACL; Schema: public; Owner: install_host_username
---
-
-REVOKE ALL ON TABLE list_po_categorie FROM PUBLIC;
-REVOKE ALL ON TABLE list_po_categorie FROM install_host_username;
-GRANT ALL ON TABLE list_po_categorie TO install_host_username;
 
 
 --
@@ -5063,15 +4293,6 @@ GRANT ALL ON TABLE memos TO install_host_username;
 REVOKE ALL ON TABLE setup_activities_attachments FROM PUBLIC;
 REVOKE ALL ON TABLE setup_activities_attachments FROM install_host_username;
 GRANT ALL ON TABLE setup_activities_attachments TO install_host_username;
-
-
---
--- Name: setup_activity_timer; Type: ACL; Schema: public; Owner: install_host_username
---
-
-REVOKE ALL ON TABLE setup_activity_timer FROM PUBLIC;
-REVOKE ALL ON TABLE setup_activity_timer FROM install_host_username;
-GRANT ALL ON TABLE setup_activity_timer TO install_host_username;
 
 
 --

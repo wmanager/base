@@ -53,12 +53,9 @@ class Customer extends CI_Model {
 		return $query->result ();
 	}
 	public function contracts($user) {
-		$query = $this->db->select ( 'be.id as be_id,be.be_code, be.be_status as status, 
-								address.*' )
+		$query = $this->db->select ( 'be.id as be_id,be.be_code, be.be_status as status')
 					->where ( 'be.account_id', $user )					
 					->join ( 'assets', 'assets.be_id = be.id' )
-					->join ( 'immobili', 'immobili.id = assets.immobili_id' )
-					->join ( 'address', 'address.id = immobili.address_id' )
 					->get ( 'be' );
 		$result = $query->result ();
 		
@@ -66,12 +63,9 @@ class Customer extends CI_Model {
 		return $result;
 	}
 	public function single_contract($id) {
-		$query = $this->db->select ( 'be.id,be.be_status as status, 
-							address.*' )
+		$query = $this->db->select ( 'be.id,be.be_status as status' )
 					->where ( 'be.id', $id )
 					->join ( 'assets', 'assets.be_id = be.id' )
-					->join ( 'immobili', 'immobili.id = assets.immobili_id' )
-					->join ( 'address', 'address.id = immobili.address_id' )
 					->get ( 'be' );
 		$result = $query->row ();
 		log_message ( 'DEBUG', $this->db->last_query () );

@@ -709,13 +709,7 @@ class Actions_model extends CI_Model {
 			return false;
 		}
 	}
-	public function get_Impiantoid($id) {
-		$query = $this->db->where ( 'be_id', $id )->get ( 'impianti' );
-		if ($query->num_rows () > 0)
-			return $query->row ()->id;
-		else
-			return false;
-	}
+
 	public function Set_Status_Be($BEID, $status, $status_detail) {
 		$res = true;
 		$data = array (
@@ -735,25 +729,7 @@ class Actions_model extends CI_Model {
 			return - 1;
 		}
 	}
-	public function Set_Status_Impianto($IMPIANTOID, $status, $status_detail) {
-		$res = true;
-		$data = array (
-				'status' => $status,
-				'modified' => date ( 'Y-m-d H:i:s' ) 
-		);
-		$response = $this->db->where ( 'id', $IMPIANTOID )->update ( 'impianti', $data );
-		log_message ( 'DEBUG', $this->db->last_query () );
-		if (! $response) {
-			$res = false;
-		}
-		if ($res) {
-			$this->session->set_flashdata ( 'growl_success', 'Updated Successfully' );
-			return 0;
-		} else {
-			$this->session->set_flashdata ( 'growl_error', 'Error' );
-			return - 1;
-		}
-	}
+
 	public function Set_Satus_Thread($THREADID, $status, $status_detail) {
 		$res = true;
 		$data = array (

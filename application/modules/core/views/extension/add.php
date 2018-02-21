@@ -17,7 +17,7 @@
 			    	<div class="input-group col-md-12">
 	                    <input type="text" class="form-control" ng-model="searchText" placeholder="Search" type="search" ng-change="search()" />
 	                    <span class="input-group-btn">
-	                        <button class="btn btn-info" type="button">
+	                        <button class="btn btn-info" type="button" disabled style="background-color: #fff;">
 	                            <i class="glyphicon glyphicon-search"></i>
 	                        </button>
 	                    </span>
@@ -40,7 +40,7 @@
 						    		<strong>{{item.name}}</strong><br>					    		
 						       		<small>{{item.title}}</small><br>
 						       		<small>Size : {{item.file_size}}</small><br>
-						       		<small><a ng-href="http://marketplace/extensions/details/{{item.id}}">Know more</a></small>	
+						       		<small><a ng-href="<?php echo $this->config->item('api_url'); ?>extensions/details/{{item.id}}">Know more</a></small>	
 								</div>
 						    	<div class="col-md-4">
 									<!--<div style="margin-top:5px;" class="pull-right text-right">
@@ -179,6 +179,7 @@
 							    	</a>
 							    	<span class="install_spinner" style="display:none"> <i class="fa fa-spinner load-animate fa-2x"></i>
 						      				<small>Installing ...</small></span>
+						      		<br>
 					      			<small style="color:red;" class="install_error"></small>
 					      			<small style="color:green;" class="install_success"></small>								
 								</div>

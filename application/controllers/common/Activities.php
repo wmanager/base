@@ -183,18 +183,14 @@ class Activities extends Common_Controller {
 		$company = $this->activity->get_company_name ();
 		$statuses = $this->activity->get_transition_status ( $activity->type, NULL, $activity->id_process, $id );
 		$customer = $this->activity->get_customer ( $activity->id_thread );		
-		$immobile = $this->activity->get_immobile ( $activity->id_thread );		
-		$impianti = $this->activity->get_impianti ( $activity->id_thread );		
-		$activity->indirizzi_cliente = $this->activity->get_indirizzi_cliente ( $impianti->be_id, $impianti->cliente_id );		
+		$activity->indirizzi_cliente = $this->activity->get_indirizzi_cliente ($customer->cliente_id );		
 		$activity->be = $this->activity->get_be ( $activity->id_thread );
 		$this->load->model ( 'account' );
-		$activity->account = $this->account->detail ( $impianti->cliente_id );
+		$activity->account = $this->account->detail ( $customer->cliente_id );
 		$activity->company = $company;
 		$activity->customer = $customer;		
-		$activity->immobile = $immobile;
 		$activity->statuses = $statuses;		
-		$activity->impianti = $impianti;
-		$activity->contratti = $this->activity->get_contratti ( $activity->impianti->be_id );		
+		$activity->contratti = $this->activity->get_contratti ( $activity->be->id );		
 		$activity->magic_variables = $this->activity->get_magic_fields ( $activity->form_id, $activity->type, $activity->id );		
 
 		// CHANGE FORM DATA BASED ON FORM/ACTIVITY TYPE

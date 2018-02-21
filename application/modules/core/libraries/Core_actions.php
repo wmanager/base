@@ -294,7 +294,6 @@ class Core_actions {
 								break;
 							
 							case "Set_Status_Be" :
-							case "Set_Status_Impianto" :
 							case "Set_Status_Thread" :
 							case "Set_Status_Activity" :
 							case "Set_Parent_Trouble_Status" :
@@ -391,25 +390,7 @@ class Core_actions {
 		$Beid = $CI->actions_model->get_Beid ( $threadid );
 		return $Beid;
 	}
-	public function get_Impiantoid($actid) {
-		$CI = & get_instance ();
-		$CI->load->model ( 'core/actions_model' );
-		$threadid = $CI->actions_model->get_thread_id ( $actid )->id_thread;
-		$Beid = $CI->actions_model->get_Beid ( $threadid );
-		$Impiantoid = $CI->actions_model->get_Impiantoid ( $Beid );
-		return $Impiantoid;
-	}
-	public function Set_Status_Impianto($IMPIANTOID, $status, $status_detail, $thread_id = NULL, $act_id = NULL, $exit_code = NULL) {
-		$CI = & get_instance ();
-		$CI->load->model ( 'core/actions_model' );
-		$updatestatus = $CI->actions_model->Set_Status_Impianto ( $IMPIANTOID, $status, $status_detail );
-		$action = 'update_status_impianto';
-		$session = $CI->session->userdata ( 'session_id' );
-		$parma ['STATUS'] = $status;
-		log_message ( 'DEBUG', 'trigger engine 10' );
-		$history = $CI->actions_model->add_history ( 'ACTIVITY', $act_id, 'THREAD', $thread_id, $parma, $action, $session, $updatestatus, $exit_code );
-		return $updatestatus;
-	}
+
 	public function Set_Satus_Thread($THREADID, $status, $status_detail, $thread_id = NULL, $act_id = NULL, $exit_code = NULL) {
 		$CI = & get_instance ();
 		$CI->load->model ( 'core/actions_model' );
@@ -593,17 +574,6 @@ class Core_actions {
 												log_message ( 'DEBUG', 'trigger engine 8' );
 												break;
 												
-											case "Set_Status_Impianto" :
-												$Impiantoid = $this->get_Impiantoid ( $act_id );
-												$response = $this->Set_Status_Impianto ( $Impiantoid, $each_action ['target_type'], $each_action ['target_id'], $thread_id, $act_id, $exit->code );
-												if ($response != 0) {
-													$error = true;
-													break;
-												}
-												$$each_action ['res'] = $response;
-												log_message ( 'DEBUG', 'trigger engine 9' );
-												break;
-												
 											case "Set_Status_Thread" :
 												
 												log_message ( 'DEBUG', 'Set_Status_Thread' );
@@ -708,5 +678,9 @@ class Core_actions {
 		}
 		
 		return 0;
+	}
+	
+	public function test_actions() {
+		echo "Test function";
 	}
 }

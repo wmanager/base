@@ -100,16 +100,7 @@ class Engine_debug extends Admin_Controller {
 								break;
 							}
 							$$each_action ['res'] = $response;
-							break;
-						case "Set_Status_Impianto" :
-							$Impiantoid = $this->actions->get_Impiantoid ( $each_action ['caller_id'] );
-							$response = $this->core_actions->Set_Status_Impianto ( $Impiantoid, $each_action ['target_type'] );
-							if ($response <= 0) {
-								$error = true;
-								break;
-							}
-							$$each_action ['res'] = $response;
-							break;
+							break;						
 						case "Set_Status_Thread" :
 							$Threadid = $this->actions->get_Threadid ( $each_action ['caller_id'] );
 							$response = $this->core_actions->Set_Satus_Thread ( $Threadid, $each_action ['target_type'] );

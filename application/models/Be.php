@@ -76,16 +76,12 @@ class Be extends CI_Model {
 		$sql = "SELECT be.*, 
 							accounts.*, inst.name as installatore,
 							contracts.*, contracts.created as data_contratto,
-							inst.name as agenzia, immobili.*,impianti.*,
-							address.*
+							inst.name as agenzia
 							FROM be 
-							LEFT JOIN accounts ON be.account_id = accounts.id
-							LEFT JOIN immobili ON immobili.be_id = be.id
-							LEFT JOIN address ON address.id = immobili.address_id							
+							LEFT JOIN accounts ON be.account_id = accounts.id					
 							LEFT JOIN assets ON assets.be_id = be.id
 							LEFT JOIN contracts ON contracts.id = assets.contract_id
-							LEFT JOIN companies inst ON inst.id = accounts.company_id
-							LEFT JOIN impianti ON impianti.id = assets.impianti_id							
+							LEFT JOIN companies inst ON inst.id = accounts.company_id						
 							";
 		if($filter1 || $filter2 || $filter3) {
 			$sql .= " WHERE";
@@ -132,16 +128,12 @@ class Be extends CI_Model {
 		$sql = "SELECT be.*, 
 							accounts.*, inst.name as installatore,
 							contracts.*, contracts.created as data_contratto,
-							inst.name as agenzia, immobili.*,
-							address.*
+							inst.name as agenzia
 							FROM be
 							LEFT JOIN accounts ON be.account_id = accounts.id
-							LEFT JOIN immobili ON immobili.be_id = be.id
-							LEFT JOIN address ON address.id = immobili.address_id
 							LEFT JOIN assets ON assets.be_id = be.id
 							LEFT JOIN contracts ON contracts.id = assets.contract_id
 							LEFT JOIN companies inst ON inst.id = accounts.company_id
-							LEFT JOIN impianti ON impianti.id = assets.impianti_id
 							LEFT JOIN setup_master_status ON setup_master_status.key = be.be_status
 							";
 		
@@ -197,7 +189,7 @@ class Be extends CI_Model {
 		}
 		
 		$data = array (
-				'title' => 'Contratto per la concessione in comodato gratuito di impianto fotovoltaico',
+				'title' => 'Contract for the free loan grant of a photovoltaic system',
 				'code' => substr ( md5 ( uniqid ( mt_rand (), true ) ), 0, 8 ),
 				'status' => 'DRAFT',
 				'building' => $build_id,
@@ -279,19 +271,12 @@ class Be extends CI_Model {
 						contracts.contract_type,
 						contracts.d_sign,
 						contracts.validity_start,
-						contracts.validity_end,
-						impianti.installed_power,
-						impianti.pot_installable,
-						impianti.capacity,
-						address.*
+						contracts.validity_end
 							FROM be LEFT JOIN threads ON threads.be = be.id
 							LEFT JOIN accounts ON be.account_id = accounts.id
-							LEFT JOIN immobili ON immobili.be_id = be.id
-							LEFT JOIN address ON address.id = immobili.address_id
 							LEFT JOIN assets ON assets.be_id = be.id
 							LEFT JOIN contracts ON contracts.id = assets.contract_id
 							LEFT JOIN companies inst ON inst.id = accounts.company_id
-							LEFT JOIN impianti ON impianti.id = assets.impianti_id
 							LEFT JOIN setup_master_status ON setup_master_status.key = be.be_status
 							";		
 		$set_and = false;

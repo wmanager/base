@@ -54,7 +54,6 @@ class Magic_form extends CI_Controller {
 		$magic_fields = $inputs;
 		
 		// Removing the other fileds
-		unset ( $magic_fields ['immobiliItemsDetail'] );
 		unset ( $magic_fields ['description'] );
 		unset ( $magic_fields ['status'] );
 		unset ( $magic_fields ['activity'] );

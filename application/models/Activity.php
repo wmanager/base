@@ -229,7 +229,7 @@ class Activity extends CI_Model {
 			->select ( '(SELECT COUNT(*) FROM memos WHERE activity_id = activities.id AND memos.type = \'FOLLOWUP\') as followup, (SELECT MIN(start_day) FROM memos WHERE activity_id = activities.id AND isdone = \'f\' AND memos.type = \'FOLLOWUP\') as reminder,						
 						threads.trouble_id,threads.status as thread_status,
 						setup_vars_values.label, setup_activities.role, setup_activities.title as activity_title,
-						address.*, duty.name as duty_company,						
+						duty.name as duty_company,						
 						contracts.created as data_inserimento, activities.status as activity_status, 
 						be.*,be.id as be_table_id,
 						be.be_status,contracts.contract_code,
@@ -243,10 +243,7 @@ class Activity extends CI_Model {
 						(SELECT value FROM vars va WHERE va.id_thread = activities.id_thread AND va.id_activity = activities.id AND key = \'RESULT\')
 						as result_value, 
 						(SELECT value FROM vars va WHERE va.id_thread = activities.id_thread AND va.id_activity = activities.id AND key = \'RESULT_NOTE\') as result_note_value,
-						threads.reclamo, 
-						impianti.installed_power, 
-						impianti.pot_installable, 
-						impianti.capacity,
+						threads.reclamo,
 						threads.id as thread_id, 
 						threads.reclamo, 
 						setup_activities.is_request' )
@@ -257,9 +254,6 @@ class Activity extends CI_Model {
 				->join ( 'threads', 'threads.id = activities.id_thread', 'left' )
 				->join ( 'be', 'be.id = threads.be', 'left' )
 				->join ( 'assets', "(assets.be_id = be.id", 'left' )				
-				-> join ( 'immobili', 'immobili.id = assets.immobili_id', 'left' )
-				->join ( 'address', 'address.id = immobili.address_id', 'left' )
-				->join ( 'impianti', 'impianti.id = assets.impianti_id', 'left' )
 				->join ( 'contracts', 'contracts.id = activities.id_contract', 'left' )
 				->join ( 'accounts', 'accounts.id = threads.customer', 'left' )
 				->join ( 'vars s', "s.id_activity = activities.id AND s.key = 'STATUS'", 'left' )
@@ -349,7 +343,7 @@ class Activity extends CI_Model {
 			->select ('					
 						threads.trouble_id,threads.status as thread_status,
 						setup_vars_values.label, setup_activities.role, setup_activities.title as activity_title,
-						address.*, (SELECT COUNT(*) FROM memos WHERE activity_id = activities.id AND memos.type = \'FOLLOWUP\') as followup, (SELECT MIN(start_day) FROM memos WHERE activity_id = activities.id AND isdone = \'f\' AND memos.type = \'FOLLOWUP\') as reminder,duty.name as duty_company,						
+						(SELECT COUNT(*) FROM memos WHERE activity_id = activities.id AND memos.type = \'FOLLOWUP\') as followup, (SELECT MIN(start_day) FROM memos WHERE activity_id = activities.id AND isdone = \'f\' AND memos.type = \'FOLLOWUP\') as reminder,duty.name as duty_company,						
 						contracts.created as data_inserimento, activities.status as activity_status, 
 						be.*,be.id as be_table_id,
 						be.be_status,contracts.contract_code,
@@ -363,10 +357,7 @@ class Activity extends CI_Model {
 						(SELECT value FROM vars va WHERE va.id_thread = activities.id_thread AND va.id_activity = activities.id AND key = \'RESULT\')
 						as result_value, 
 						(SELECT value FROM vars va WHERE va.id_thread = activities.id_thread AND va.id_activity = activities.id AND key = \'RESULT_NOTE\') as result_note_value,
-						threads.reclamo, 
-						impianti.installed_power, 
-						impianti.pot_installable, 
-						impianti.capacity,
+						threads.reclamo,
 						threads.id as thread_id, 
 						threads.reclamo, 
 						setup_activities.is_request' )
@@ -377,9 +368,6 @@ class Activity extends CI_Model {
 				->join ( 'threads', 'threads.id = activities.id_thread', 'left' )
 				->join ( 'be', 'be.id = threads.be', 'left' )
 				->join ( 'assets', "(assets.be_id = be.id", 'left' )				
-				-> join ( 'immobili', 'immobili.id = assets.immobili_id', 'left' )
-				->join ( 'address', 'address.id = immobili.address_id', 'left' )
-				->join ( 'impianti', 'impianti.id = assets.impianti_id', 'left' )
 				->join ( 'contracts', 'contracts.id = activities.id_contract', 'left' )
 				->join ( 'accounts', 'accounts.id = threads.customer', 'left' )
 				->join ( 'vars s', "s.id_activity = activities.id AND s.key = 'STATUS'", 'left' )
@@ -475,9 +463,6 @@ class Activity extends CI_Model {
 				->join ( 'threads', 'threads.id = activities.id_thread', 'left' )
 				->join ( 'be', 'be.id = threads.be', 'left' )
 				->join ( 'assets', "(assets.be_id = be.id", 'left' )				
-				-> join ( 'immobili', 'immobili.id = assets.immobili_id', 'left' )
-				->join ( 'address', 'address.id = immobili.address_id', 'left' )
-				->join ( 'impianti', 'impianti.id = assets.impianti_id', 'left' )
 				->join ( 'contracts', 'contracts.id = activities.id_contract', 'left' )
 				->join ( 'accounts', 'accounts.id = threads.customer', 'left' )
 				->join ( 'vars s', "s.id_activity = activities.id AND s.key = 'STATUS'", 'left' )
@@ -539,7 +524,7 @@ class Activity extends CI_Model {
 		return $result;
 	}
 	public function by_thread($thread) {
-		$query = $this->db->select ( 'activities.*, threads.type as thread_type,setup_forms.url, setup_forms.sidebar, c.first_name as creator_first_name, c.last_name as creator_last_name, m.first_name as modifier_first_name, m.last_name as modifier_last_name, d.first_name as duty_first_name, d.last_name as duty_last_name, s.value as status, r.value as result, rn.value as result_note' )->join ( "activities", "activities.id_thread = threads.id" )->join ( 'setup_forms', 'setup_forms.id = activities.form_id', 'left' )->join ( 'users c', 'c.id = activities.created_by', 'left' )->join ( 'users m', 'm.id = activities.modified_by', 'left' )->join ( 'users d', 'd.id = activities.duty_operator', 'left' )->join ( 'vars s', 's.id_activity = activities.id', 'left' )->where ( 's.key', 'STATUS' )->join ( 'vars r', 'r.id_activity = activities.id', 'left' )->where ( 'r.key', 'RESULT' )->join ( 'vars rn', 'rn.id_activity = activities.id', 'left' )->where ( 'rn.key', 'RESULT_NOTE' )->where ( 'activities.id_thread', $thread )->where ( "threads.id", $thread )->order_by ( 'activities.status_modified', 'DESC' )->get ( 'threads' );
+		$query = $this->db->select ( 'activities.*, threads.be as be_id, threads.type as thread_type,setup_forms.url, setup_forms.sidebar, c.first_name as creator_first_name, c.last_name as creator_last_name, m.first_name as modifier_first_name, m.last_name as modifier_last_name, d.first_name as duty_first_name, d.last_name as duty_last_name, s.value as status, r.value as result, rn.value as result_note' )->join ( "activities", "activities.id_thread = threads.id" )->join ( 'setup_forms', 'setup_forms.id = activities.form_id', 'left' )->join ( 'users c', 'c.id = activities.created_by', 'left' )->join ( 'users m', 'm.id = activities.modified_by', 'left' )->join ( 'users d', 'd.id = activities.duty_operator', 'left' )->join ( 'vars s', 's.id_activity = activities.id', 'left' )->where ( 's.key', 'STATUS' )->join ( 'vars r', 'r.id_activity = activities.id', 'left' )->where ( 'r.key', 'RESULT' )->join ( 'vars rn', 'rn.id_activity = activities.id', 'left' )->where ( 'rn.key', 'RESULT_NOTE' )->where ( 'activities.id_thread', $thread )->where ( "threads.id", $thread )->order_by ( 'activities.status_modified', 'DESC' )->get ( 'threads' );
 		$result = $query->result ();
 		
 		if (count ( $result ) > 0) {
@@ -671,7 +656,7 @@ class Activity extends CI_Model {
 		return $query->row ();
 	}
 	public function get_customer($thread_id) {
-		$query = $this->db->select ( "accounts.*, address.*,
+		$query = $this->db->select ( "accounts.*, accounts.id as cliente_id, address.*,
 									(SELECT c.value  FROM contacts c LEFT JOIN accounts ON c.account_id = accounts.id where c.contact_type = 'tel') as tel,
 									(SELECT c.value  FROM contacts c LEFT JOIN accounts ON c.account_id = accounts.id where c.contact_type = 'email') as email,
 									(SELECT c.value  FROM contacts c LEFT JOIN accounts ON c.account_id = accounts.id where c.contact_type = 'cell') as cell")
@@ -683,31 +668,6 @@ class Activity extends CI_Model {
 		return $query->row ();
 	}
 
-	public function get_visura($act_id) {
-		$query = $this->db->select ( 'activities.id_thread, threads.customer,threads.be, be.immobile_id' )->join ( 'threads', 'threads.id = activities.id_thread' )->join ( 'be', 'threads.be = be.id', 'left' )->where ( 'activities.id', $act_id )->get ( 'activities' );
-		$result = $query->row ();
-		if ($result->immobile_id == NULL) {
-			return false;
-		} else {
-			return $result->immobile_id;
-		}
-	}
-	public function get_immobile($thread_id) {
-		$query = $this->db->select ( 'immobili.*, address.*, 
-					immobili.id' )
-			->where ( 'threads.id', $thread_id )
-			->join ( 'be', 'be.id = threads.be' )
-			->join ( 'assets', 'assets.be_id = be.id' )
-			->join ( 'immobili', 'immobili.id = assets.immobili_id' )			
-			->join ( 'address', 'address.id = immobili.address_id' )
-			->get ( 'threads' );
-		return $query->row ();
-	}
-
-	public function get_visura_data($immobile_id) {
-		$query = $this->db->where ( 'id', $immobile_id )->get ( 'immobili' );
-		return $query->row ();
-	}
 	public function get_company_name() {
 		$query = $this->db->select ( 'co.name' )->join ( 'setup_roles r', 'r.id = cr.role_key' )->join ( 'companies co', 'cr.company_id = co.id' )->where ( 'r.key', 'PT-SOPRALLUOGO' )->where ( 'cr.operative_yn', 'Y' )->get ( 'setup_company_roles cr' );
 		return $query->result ();
@@ -777,15 +737,6 @@ class Activity extends CI_Model {
 		return $query->result ();
 	}
 
-	public function get_impianti($thread_id) {
-		$query = $this->db->select ( 'impianti.*' )
-		->where ( 'threads.id', $thread_id )
-		->join ( 'be', 'be.id = threads.be' )
-		->join ( 'assets', 'assets.be_id = be.id' )
-		->join ( 'impianti', 'impianti.id = assets.impianti_id' )
-		->get ( 'threads' );
-		return $query->row ();
-	}
 	
 
 	public function get_company($user_id) {

@@ -112,14 +112,8 @@ class Account extends CI_Model
 									be.be_code,
 									contracts.contract_code,
 									contracts.contract_type,				
-									(select accounts.first_name ||' '|| accounts.last_name from accounts join be as be2 on be2.account_id=accounts.id where  accounts.id = $id) as client_name,
-									companies.name as company_name,
-									a.id, a.type as address_type,
-									a.address as address,
-									a.zip as zip,
-									a.city as city,									
-									a.state as state,
-									a.country as country,
+									(select accounts.first_name ||' '|| accounts.last_name from accounts join be as be2 on be2.account_id=accounts.id where  accounts.id = $id group by  accounts.id) as client_name,
+									companies.name as company_name,									
 									accounts.id as id_cliente,
 									(SELECT c.value  FROM contacts c LEFT JOIN accounts ON c.account_id = accounts.id where c.contact_type = 'tel' and accounts.id = $id) as tel,
 									(SELECT c.value  FROM contacts c LEFT JOIN accounts ON c.account_id = accounts.id where c.contact_type = 'email' and accounts.id = $id) as email,
@@ -127,9 +121,7 @@ class Account extends CI_Model
 									->where('be.account_id',$id)					
 									->join('accounts','accounts.id = be.account_id','left')
 									->join('assets', 'assets.be_id = be.id','left')
-									->join('contracts','contracts.id = assets.contract_id','left')
-									->join('immobili', 'immobili.be_id = be.id','left')
-									->join('address a',"a.id = immobili.address_id AND a.type = 'IMMOBILI'",'left')				
+									->join('contracts','contracts.id = assets.contract_id','left')					
 									->join("companies","companies.id = accounts.company_id","left")
 									->order_by('be.id','ASC')
 									->get('be');
@@ -154,31 +146,11 @@ class Account extends CI_Model
 							->get('contracts');
 		return $query->result();
 	}
-	public function impianti($id)
-	{
-		$query = $this->db->select("be.*,
-							a.id, a.type as address_type,
-							a.address as address,
-							a.zip as zip,
-							a.city as city,							
-							a.state as state,
-							a.country as country,
-							impianti.*")	
-					->where('be.account_id',$id)
-					->join('assets', 'assets.impianti_id = impianti.id','left')
-					->join('be','be.id = assets.be_id','left')
-					->join('accounts','accounts.id = be.account_id','left')					
-					->join('address a',"a.id = impianti.address_id AND a.type = 'IMPIANTI'",'left')
-					->join("companies","companies.id = accounts.company_id","left")
-					->order_by('impianti.be_id','ASC')
-					->get('impianti');
-		return $query->result(); 
-	}
 
 	public function indirizzi($id)
 	{    
 	    $query = $this->db->select("accounts.*,
-	    						address.*,
+	    						address.*,address.type as address_type,
 	    						be.be_code,
 	    						be.id as be_id,
 	    						(SELECT c.value  FROM contacts c LEFT JOIN accounts ON c.account_id = accounts.id where c.contact_type = 'tel' and accounts.id = $id) as tel,
@@ -191,7 +163,7 @@ class Account extends CI_Model
 	                      ->where('accounts.id',$id)
 	                      ->order_by('address.id','ASC')
 	                      ->get('accounts');
-	                   
+
 		return  $query->result();
 		
 	}
@@ -237,12 +209,6 @@ class Account extends CI_Model
 	
 	public function get_master($pod){
 		$query = $this->db->where('mpod',$pod)->get('master');
-		return $query->result();
-	}
-
-	
-	public function get_impianti($impianto_id){
-		$query = $this->db->where('id',$impianto_id)->get('impianti');
 		return $query->result();
 	}
 	

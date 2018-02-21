@@ -47,7 +47,7 @@
 	<!-- Text Under Box -->
 	<div class="login-extra">
 		<p>
-			<a href="forgot_password">Forgot your password?</a>
+			<a href="/auth/forgot_password">Forgot your password?</a>
 		</p>
 	</div>
 	<!-- /login-extra -->

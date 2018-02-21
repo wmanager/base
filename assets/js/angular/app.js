@@ -407,14 +407,10 @@ var app = angular.module('WmanagerApp', ['ui.bootstrap','validation','ui.calenda
                 		$scope.form_data.vat = data.be.be_code;
                 		$scope.form_data.be = data.be;
                 		$scope.form_data.asset = data.asset;
-                		$scope.form_data.impianti_address = data.address.IMPIANTI;
-                		$scope.form_data.immobili_address = data.address.IMMOBILI;
                 		$scope.form_data.invoice_address = data.address.INVOICE;
                 		$scope.form_data.account_type = data.account.account_type;
                 		$scope.form_data.code = data.account.code;
                 		$scope.form_data.account = data.account;
-                		$scope.form_data.impianti = data.impianti;
-                		$scope.form_data.immobili = data.immobili;
                 		$scope.form_data.client_address = data.address.CLIENT;
                 	}
                 	 
@@ -832,22 +828,7 @@ $scope.busy = true;
     $scope.busy = false;
   });
     
-    $scope.addImmobileDetailItem = function(index){
-      if(!$scope.forms[index].immobiliItemsDetail)  $scope.forms[index].immobiliItemsDetail = [];
-      $scope.forms[index].immobiliItemsDetail.push($scope.forms[index].selectedModel);
-    }
-
-    $scope.addImmobileDetailItemUtenze= function(index){
-      if(!$scope.forms[index].immobiliItemsDetail)  $scope.forms[index].immobiliItemsDetail = [];
-      $scope.forms[index].immobiliItemsDetail.push($scope.forms[index].selectedModelUtenze);
-    }
-
-    $scope.removeImmobileDetail = function(act,$index){
-      $scope.forms[act].immobiliItemsDetail.splice($index,1);
-    }
-
    
-
     /* Change View */
     $scope.changeView = function(view,calendar) {
       uiCalendarConfig.calendars[calendar].fullCalendar('changeView',view);
@@ -925,11 +906,6 @@ $scope.viewCalendar = function(){
                           $scope.forms[0] = {};
                         }
 
-                        if(data.immobiliItemsDetail){
-                          $scope.forms[0].immobiliItemsDetail = data.immobiliItemsDetail;
-                        } else {
-                          $scope.forms[0].immobiliItemsDetail = [];
-                        }
                         /*if(data.order){
                             $scope.forms[0].order = data.order;
                           } else {
@@ -1717,134 +1693,6 @@ $scope.loadmemo_allaccio = function(company){
 
 })
 
-
-.controller("TargetedWizard", function( $scope, $rootScope, $http, $timeout, $ngBootbox,transformRequestAsFormPost, $q ) {
-	 $scope.$watch('targeted_wizard_id', function () {
-		 
-		 $scope.busy = true;
-		 
-		 var request = $http({
-	          method: "get",
-	          url: "/targeted_wizard/wizard/get_details/"+$scope.targeted_wizard_id
-	        });
-		 
-		 request.success(
-	          function(data) {
-	        	  $scope.wizard_details = data.result;
-	     		 var request = $http({
-	   	          method: "get",
-	   	          url: "/targeted_wizard/wizard/get_view_details/"+$scope.wizard_details.targeted_view+"/"+$scope.targeted_wizard_id
-	   	        });
-	   		 
-	   		 request.success(
-	   	          function(data) {
-	   	        	  $scope.view_details = data.result;
-	   	        	  if($scope.view_details) {
-	   	        		$scope.view_details.forEach(function(value, key){
-		   	        		  value.selected = false;
-		   	        	  })
-	   	        	  }
-	   	          }
-	   		 );
-	          }
-		 );		
-	 });
-	 
-	 
-	 $scope.get_requested_type = function() {
-		 
-		 if($scope.formdata.thread_type) {
-				var request = $http({
-		  	          method: "get",
-		  	          url: "/targeted_wizard/wizard/get_request_type/"+$scope.formdata.thread_type+"/"+$scope.wizard_details.be_required
-		  	        });
-		  		 
-		  		 request.success(
-		  	          function(data) {
-		  	        	  $scope.request_type = data.result;
-		  	          }
-		  		 );
-			 }
-	 }
-	 
-	 $scope.create_trouble = function() {
-		 $scope.disabled = true;
-		 $scope.form = {}
-		 $scope.form.be = [];
-		 $scope.form.client_id = [];
-		 $scope.view_details.forEach(function(value, key){
-			 if(value.selected == true) {
-				 if(value.be_id)
-					 $scope.form.be.push(value.be_id);
-				 $scope.form.client_id.push(value.id);
-			 }			 
-		 })
-		 
-		 $.ajax({		 
-				type: "POST",
-				url: "/targeted_wizard/wizard/create_trouble/",
-				data: {trouble_id : $scope.wizard_details.trouble_type, client_id : $scope.form.client_id, be_id : $scope.form.client_id, targeted_wizard_id : $scope.targeted_wizard_id},
-				success: function(data){
-					window.location.href= '/targeted_wizard/wizard/index/'+$scope.targeted_wizard_id;
-				 }
-			});
-	 }
-	 
-	 $scope.create_thread = function() {
-		 $scope.disabled = true;
-		 $scope.form = {}
-		 $scope.form.be = [];
-		 $scope.form.client_id = [];
-		 $scope.view_details.forEach(function(value, key){
-			 if(value.selected == true) {
-				 if(value.be_id)
-					 $scope.form.be.push(value.be_id);
-				 $scope.form.client_id.push(value.id);
-			 }			 
-		 })
-		 
-		 $.ajax({		 
-				type: "POST",
-				url: "/targeted_wizard/wizard/create_thread/",
-				data: {thread_type : $scope.wizard_details.thread_type, thread_request_key : $scope.wizard_details.thread_request_key, client_id : $scope.form.client_id, targeted_wizard_id : $scope.targeted_wizard_id},
-				success: function(data){
-					window.location.href= '/targeted_wizard/wizard/index/'+$scope.targeted_wizard_id;
-				 }
-			});
-	 }
-	  
-	 $scope.toggleAll = function() {
-	     var toggleStatus = $scope.isAllSelected;
-	     angular.forEach($scope.view_details, function(itm){ itm.selected = toggleStatus; });
-	     var count = 0;
-	     $scope.view_details.forEach(function(itm){
-			if(itm.selected)
-				count++;	
-		})
-		if(count > 1) {
-			$scope.ismultiSelected = true;
-		} else {
-			$scope.ismultiSelected = false;
-		}
-	   
-	  }
-  
-	 $scope.optionToggled = function(){
-		var count = 0;
-		$scope.view_details.forEach(function(itm){
-			if(itm.selected)
-				count++;	
-		})
-		if(count > 1) {
-			$scope.ismultiSelected = true;
-		} else {
-			$scope.ismultiSelected = false;
-		}
-		
-	   $scope.isAllSelected = $scope.view_details.every(function(itm){ return itm.selected; })
-	 }
-
-})
 
 .controller("Trouble", function( $scope, $rootScope, $http, $timeout, $ngBootbox,transformRequestAsFormPost, $q ) {
     $scope.customer = '';
@@ -2680,17 +2528,6 @@ $scope.setFiles = function(element) {
         } 
     };
 
-  $scope.$watch('request.impianti', function () {
-   
-    $scope.request.totRNI = 0; 
-    $scope.request.totRSL = 0;
-    for (var i in $scope.request.impianti) {
-       $scope.request.totRNI = $scope.request.totRNI + ($scope.request.rni[$scope.request.impianti[i]]*1);
-       $scope.request.totRSL = $scope.request.totRSL + ($scope.request.rsl[$scope.request.impianti[i]]*1);
-    }
-    
-  },true);
- 
    
    $scope.$watch('mode', function () {
 
@@ -3181,116 +3018,7 @@ $scope.setFiles = function(element) {
 	//$scope.changeView('agendaDay', 'myMemoCalendar');
 })
 
-.controller("Sopralluogo_onsite", function( $scope, $rootScope, $http, $timeout, $ngBootbox,transformRequestAsFormPost, $q ) {
-    $scope.status = null;
-    $scope.carichi_options = [];
-    $scope.utenze_options = [];
-    $scope.forms = [];
-    $scope.status_immobiliItemsDetail = false;
-    $scope.status_ImmobileDetailItemUtenze = false;
 
-    //$scope.forms[0].immobiliItemsDetail = [];
-
-    $scope.planning_id = $('#planning_id').val();
-
-    $scope.addImmobileDetailItem = function(index){
-        
-        if(!$scope.forms[index].immobiliItemsDetail)  $scope.forms[index].immobiliItemsDetail = [];
-        $scope.forms[index].immobiliItemsDetail.push($scope.forms[index].selectedModel);
-        $scope.status_immobiliItemsDetail = true;
-
-    }
-
-    $scope.addImmobileDetailItemUtenze= function(index){
-        if(!$scope.forms[index].immobiliItemsDetail)  $scope.forms[index].immobiliItemsDetail = [];
-        $scope.forms[index].immobiliItemsDetail.push($scope.forms[index].selectedModelUtenze);
-        $scope.status_ImmobileDetailItemUtenze = true;
-    }
-
-    $scope.removeImmobileDetail = function(act,$index){
-        $scope.forms[act].immobiliItemsDetail.splice($index,1);
-    }
-
-
-    $scope.$watch('status', function () {
- 
-        $scope.busy = true;
-        $http.get('/onsite/workorder/get_carichi_options').success(function (data, status, headers, config) {
-            // this callback will be called asynchronously
-            // when the response is available
-            $scope.carichi_options = data;
-            $scope.busy = false;
-        });
-
-        $scope.busy = true;
-        $http.get('/onsite/workorder/get_list_immobili_details').success(function (data, status, headers, config) {
-            // this callback will be called asynchronously
-            // when the response is available
-            $scope.utenze_options = data;
-            $scope.busy = false;
-        });
-
-        $scope.busy = true;
-        $http.get('/onsite/workorder/get_immobili_details/'+$scope.planning_id).success(function (data, status, headers, config) {
-            // this callback will be called asynchronously
-            // when the response is available
-            
-            if(data){
-                //$scope.forms.push([]);
-                $scope.forms[0] = {};
-                $scope.forms[0].immobiliItemsDetail = data;
-            }
-
-        
-
-            //$scope.forms[index].immobiliItemsDetail = data;
-            //console.log('after_call', $scope.forms[index].immobiliItemsDetail);
-            $scope.busy = false;
-        });
-
-    }, true);
-
-    $scope.saveForm = function(index,url,json) {
-     
-        window.onbeforeunload = null;
-
-        $scope.forms[index].planning_id = $scope.planning_id
-
-
-
-        if(json== true){
-            var form_request = $http({
-                method: "post",
-                url: url,
-                data: angular.toJson($scope.forms[index])
-            });
-
-        }else{
-            var form_request = $http({
-                method: "post",
-                url: url,
-                transformRequest: transformRequestAsFormPost,
-                data: $scope.forms[index]
-            });
-        }
-
-        form_request.success(function(data, status, headers, config) {
-            // this callback will be called asynchronously
-            // when the response is available
-            if(data.result === true){
-                //location.reload();
-            } else {
-                $scope.forms[index].errors = data.error;
-            }
-        }).
-        error(function(data, status, headers, config) {
-            // called asynchronously if an error occurs
-            // or server returns response with an error status.
-        });
-
-    };
-
-})
 
 /* memos calendar list end */
 
@@ -3624,61 +3352,6 @@ app.directive('greaterThan', function () {
     };
 });
 
-app.directive('producibilitaImpianto', function () {
-    return {
-	  require: 'ngModel',
-      link: function(scope, element, attrs, ctrl) {
-        var index = attrs["producibilitaImpianto"];
- 
-    	  scope.$watch(attrs.ngModel, function (v) {
-          scope.produc_error = false; //more data
-          scope.produc_error_text = "";
-          if(v == null) return;
-    		  var lines = [];
-    		  if(typeof v != "undefined"){
-    		   lines = v.trim().split(/\s*[\r\n]+\s*/g);
-    		  }
-    		  var not_number = false;
-    		  //check for numbers
-    		  for(var i=0;i<lines.length;i++){
-    			  lines[i] =lines[i].replace(",",".");
-      			  if(isNaN(lines[i]))
-      				not_number = true;
-      		}
-    		  
-    		  if(not_number){// not number
-    			  scope.produc_error = true; 
-    			  scope.produc_error_text = "Puoi solo inserire numeri";
-    		  } else {
-    			  if(lines.length >= 12){
-	    			  if(lines.length > 12){
-	      		  		scope.produc_error = true; //more data
-	      		  		scope.produc_error_text = "Hai inserito più di 12 righe";
-	      		  }else{
-	      		  		var total = 0; 
-	      		  		for(var i=0;i<lines.length;i++){
-                    lines[i] = lines[i].replace(",",".");
-                  
-		          			total = parseFloat(lines[i])+total;
-                  }
-                    if(total < 500 || total > 3000){
-                      scope.produc_error = true; //more data
-                      scope.produc_error_text = "La producibilità annua deve essere compresa tra 500 e 3000 kWh/kWp";
-                    }
-                    total = +total.toFixed(2);
-                    total = total.toString();
-                    scope.forms[index].total = total.replace('.',',');
-              }
-            }
-		      }
-
-    		      		               
-          });
-       
-      	}
-    };
-});
-
 app.controller('Tee', function($scope,$rootScope,$http,$timeout) {
   $scope.busy = true;
   $scope.request = {};
@@ -3698,28 +3371,8 @@ app.controller('Tee', function($scope,$rootScope,$http,$timeout) {
                    
   });
 
-  $scope.$watch('request.impianti', function () {
-    
-    $scope.request.totRNI = 0; 
-    $scope.request.totRSL = 0;
-    $scope.request.selectedPotenza = 0;
-    for (var i in $scope.request.impianti) {
-       $scope.request.totRNI = $scope.request.totRNI + ($scope.request.rni[$scope.request.impianti[i]]*1);
-       $scope.request.totRSL = $scope.request.totRSL + ($scope.request.rsl[$scope.request.impianti[i]]*1);
-       $scope.request.selectedPotenza = $scope.request.selectedPotenza + $scope.request.totpotenza[$scope.request.impianti[i]]*1;
-    }
-    
-  },true);
 
-  $scope.$watch('request.crea', function () {
-    $scope.request.totRNI = 0; 
-    $scope.request.totRSL = 0;
-    $scope.request.selectedPotenza = 0;
-    $scope.request.impianti = [];
-    $scope.request.tee_rich_num = '';
-    $scope.request.tee_rich_data = '';
-    $scope.request.tee_rich_note = '';
-  },true);
+
 
   $scope.createThread = function(){
 

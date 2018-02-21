@@ -53,6 +53,7 @@ class Businessentities extends Common_Controller {
 		$this->get ();
 	}
 	public function get() {
+
 		$data = array ();
 		
 		$data ['be'] = $this->be->get ( $this->config->item ( 'per_page' ), $this->uri->segment ( 5 ) );

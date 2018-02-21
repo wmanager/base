@@ -133,16 +133,12 @@ class Cases extends Common_Controller {
 			$statuses = $this->activity->get_transition_status ( $act->type, NULL, $act->id_process, $act->id );
 			$act->statuses = $statuses;
 			$customer = $this->activity->get_customer ( $act->id_thread );			
-			$immobile = $this->activity->get_immobile ( $act->id_thread );			
-			$impianti = $this->activity->get_impianti ( $act->id_thread );			
 			$act->indirizzi_cliente = $this->activity->get_indirizzi_cliente ( $customer->account_id );
 			$act->company = ''; // $company;
 			$act->customer = $customer;			
-			$act->immobile = $immobile;
-			$act->statuses = $statuses;			
-			$act->impianti = $impianti;			
-			$act->be = $this->activity->get_be_details ( $impianti->be_id );			
-			$act->contratti = $this->activity->get_contratti ( $impianti->be_id );
+			$act->statuses = $statuses;						
+			$act->be = $this->activity->get_be_details ( $act->be_id );			
+			$act->contratti = $this->activity->get_contratti ( $act->be_id );
 			$act->product = $this->activity->get_products ();
 			$act->magic_variables = $this->activity->get_magic_fields ( $act->form_id, $act->type, $act->id );
 		}
@@ -168,15 +164,9 @@ class Cases extends Common_Controller {
 			$sla = $this->sla->calculate ( $type->sla );
 			$remaining = $this->sla->time_remaining ( $sla );
 			
-			if ($this->input->post ( 'type' ) == 'RICHIESTA_TEE') {
-				$this->load->model ( 'impianto' );
-				
-				$tee = $this->impianto->get_tee ();
-				$province = $this->impianto->get_tee_province ();
-			} else {
-				$tee = array ();
-				$province = array ();
-			}
+			$tee = array ();
+			$province = array ();
+			
 			
 			log_message ( 'DEBUG', 'thread_created' );
 			$this->output->set_content_type ( 'application/json' )->set_output ( json_encode ( array (
@@ -265,18 +255,6 @@ class Cases extends Common_Controller {
 			
 			// Thread status change
 			$this->core_actions->Set_Satus_Thread ( $_POST ['thread_id'], 'CANCELED', $_POST ['reason'] );
-			
-			$be_impianti_details = $this->thread->get_be_impianti_ids ( $_POST ['thread_id'] );
-			
-			// Be status change
-			if ($be_impianti_details->be_id > 0) {
-				$this->core_actions->Set_Status_Be ( $be_impianti_details->be_id, 'CANCELED', $_POST ['reason'] );
-			}
-			
-			// Impianti status change
-			if ($be_impianti_details->impianti_id > 0) {
-				$this->core_actions->Set_Status_Impianto ( $be_impianti_details->impianti_id, 'CANCELED', $_POST ['reason'] );
-			}
 			
 			// Activities status change
 			// if(isset($_POST['cancel_activities']) && $_POST['cancel_activities'] !=''){
