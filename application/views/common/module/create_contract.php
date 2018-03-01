@@ -114,6 +114,12 @@
 												<input type="text" class="form-control" name="code" ng-model="form_data.account.code" validator="required">
 											</div>
 										</div>
+										<div class="form-group">
+											<div class="col-md-6">
+												<label>Tel</label>
+												<input type="text" class="form-control" name="code" ng-model="form_data.contact.tel">
+											</div>
+										</div>
 										<div class="clearfix"></div>
 										<br>			
 							<h3>B) Customer Address</h3>
@@ -155,7 +161,6 @@
 											<div class="form-group">
 											<div class="col-md-6">
 												<label>Product *</label>	
-																							
 												<select class="form-control"  ng-model="form_data.asset.product_id" name="product_id" validator="required">
 														<option ng-repeat="n in products" ng-value="n.id" ng-selected="form_data.asset.product_id == n.id">{{n.title}}</option>
 												</select>

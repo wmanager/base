@@ -81,7 +81,7 @@ class Attachments extends Common_Controller {
 	 * * INTEGER $thread_id
 	 * * INTEGER $activity_id (optional)
 	 */
-	public function upload($thread_id = NULL, $activity_id = NULL, $trouble_id = NULL, $legal_id = NULL) {
+	public function upload($thread_id = NULL, $activity_id = NULL, $trouble_id = NULL) {
 		if ($thread_id == 'null')
 			$thread_id = NULL;
 		if ($activity_id == 'null')
@@ -89,7 +89,7 @@ class Attachments extends Common_Controller {
 		if ($trouble_id == 'null')
 			$trouble_id = NULL;
 			// Get the account ID.
-		$account_id = $this->attachment->get_account_id ( $thread_id, $trouble_id, $legal_id );
+		$account_id = $this->attachment->get_account_id ( $thread_id, $trouble_id);
 		
 		// CHECK IF USER HAS RIGHT TO UPLOAD FILES TO THIS THREAD AND/OR ACTIVITY (BASED ON ROLE)
 		
@@ -97,15 +97,13 @@ class Attachments extends Common_Controller {
 		// UPLOADED FILES SHOULD BE PLACED INSIDE A SUBFOLDER WITH THIS STRUCTURE /UPLOAD_DIR/CONTRACT_CODE/THREAD_ID/ACTIVITY_ID/
 		// SAVE THE FILE WITH DESCRIPTION TAKEN FROM $_POST['description'] VARIABLE INTO ATTACHMENTS TABLE
 		$data_post = $this->input->post ();
-		$attachment_id = $this->attachment->add_attachment ( $data_post, $thread_id, $activity_id, $trouble_id, $legal_id );
+		$attachment_id = $this->attachment->add_attachment ( $data_post, $thread_id, $activity_id, $trouble_id);
 		if ($attachment_id && $attachment_id > 0) {
 			$upload_path = $this->config->item ( 'UPLOAD_DIR' );
 			$config ['upload_path'] = $upload_path . '/' . $account_id . '/' . $attachment_id;
 			
 			// get config from table
-			if ($legal_id) {
-				$attach_config = $this->attachment->get_attach_conf ( $this->config->item ( 'legal_attach_type' ) );
-			} else if ($trouble_id) {
+			if ($trouble_id) {
 				$attach_config = $this->attachment->get_attach_conf ( $this->config->item ( 'trouble_attach_type' ) );
 			} else if (isset ( $_POST ['attach_type'] ) && is_numeric ( $_POST ['attach_type'] )) {
 				$attach_config = $this->attachment->get_attach_conf ( $_POST ['attach_type'] );
@@ -142,7 +140,6 @@ class Attachments extends Common_Controller {
 				$result ['id_thread'] = $thread_id;
 				$result ['id_act'] = $activity_id;
 				$result ['id_trouble'] = $trouble_id;
-				$result ['legal_id'] = $legal_id;
 				$this->output->set_content_type ( 'application/json' )->set_output ( json_encode ( $result ) );
 			}
 		} else {
@@ -161,7 +158,7 @@ class Attachments extends Common_Controller {
 	 * * INTEGER $thread_id
 	 * * INTEGER $activity_id (optional)
 	 */
-	public function list_files($thread_id = NULL, $activity_id = NULL, $trouble_id = NULL, $legal_id = NULL) {
+	public function list_files($thread_id = NULL, $activity_id = NULL, $trouble_id = NULL) {
 		if ($thread_id == 'null')
 			$thread_id = NULL;
 		if ($activity_id == 'null')
@@ -169,7 +166,7 @@ class Attachments extends Common_Controller {
 		if ($trouble_id == 'null')
 			$trouble_id = NULL;
 			// MAKE THE QUERY ON ATTACHMENTS TABLE FILTERING BY THREAD_ID AND ACTIVITY_ID IF NOT NULL
-		$result ['result'] = $this->attachment->list_files ( $thread_id, $activity_id, $trouble_id, $legal_id );
+		$result ['result'] = $this->attachment->list_files ( $thread_id, $activity_id, $trouble_id);
 		// OUTPUT JSON OBJECT WITH RESULT
 		$this->output->set_content_type ( 'application/json' )->set_output ( json_encode ( $result ) );
 	}
@@ -180,7 +177,7 @@ class Attachments extends Common_Controller {
 	 * *
 	 * * INTEGER $attachment_id
 	 */
-	public function delete_file($attachment_id, $thread_id, $activity_id = NULL, $legal_id = NULL) {
+	public function delete_file($attachment_id, $thread_id, $activity_id = NULL) {
 		/*
 		 * $contract_code = 2;
 		 * $thread_id = 3;
@@ -191,7 +188,7 @@ class Attachments extends Common_Controller {
 		if ($activity_id == 'null')
 			$activity_id = NULL;
 			// MAKE THE QUERY ON ATTACHMENTS TABLE FILTERING BY ATTACHMENT ID
-		$result ['result'] = $this->attachment->delete_file ( $attachment_id, $thread_id, $activity_id, $legal_id );
+		$result ['result'] = $this->attachment->delete_file ( $attachment_id, $thread_id, $activity_id);
 		// OUTPUT JSON OBJECT WITH RESULT
 		$this->output->set_content_type ( 'application/json' )->set_output ( json_encode ( $result ) );
 	}

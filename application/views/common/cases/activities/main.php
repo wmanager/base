@@ -36,7 +36,7 @@
 		<div class="clearfix"></div>
 		<br>
 		<div class="form-group">
-			<label class="col-md-3 control-label" for="title">Descrizione</label>
+			<label class="col-md-3 control-label" for="title">Description</label>
 			<div class="col-md-9">
 				<input type="text" class="form-control" label="Description"
 					id="description" name="description" ng-model="filedata.description">
@@ -56,7 +56,7 @@
 		<div class="form-group">
 			<div class="col-md-12">
 				<button type="submit" class="btn btn-success"
-					ng-click="upload(activity.id_thread,activity.id)">Carica</button>
+					ng-click="upload(activity.id_thread,activity.id)">Upload</button>
 			</div>
 		</div>
 		<div class="clearfix"></div>
@@ -92,11 +92,6 @@
 	style="width: 100px; height: 50px; margin: auto;">
 	<i class="fa fa-4x fa-spinner fa-pulse"></i>
 </div>
-</tab> <!--<tab heading="Annulla attività" ng-if="thread.draft=='t'">
-		<p><b>Vuoi annullare l'attività?</b><br>Procedendo tutti i dati inseriti verranno eliminati definitivamente.</p>
-		<button type="button" class="btn btn-danger" ng-click="annullaThread(thread.id)">Annulla attività</button>
-	</tab>--> <tab heading="Pending">
-<div ng-include="activity_pending"></div>
 </tab> <tab heading="Note">
 <div ng-include="activity_followup"></div>
 </tab> <tab heading="Trouble" ng-if="trouble_id">

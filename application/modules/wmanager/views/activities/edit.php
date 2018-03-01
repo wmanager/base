@@ -30,14 +30,12 @@
 				</ul>
 				<div class="tab-content">
 					<div class="tab-pane active fade in" id="general">
-						<div id="is_workorder_message" class="alert"></div>
 		            	<?= $form_general; ?>
 		            	<div class="form-group">
 							<div class="col-md-offset-2 col-md-8">
 								<button type="submit" class="btn btn-success">Save</button>
 								<a href="<?=site_url('/admin/setup_activities/'.$id_process);?>"
 									class="btn btn-default">Cancel</a>
-								<!-- <button id="is_workorder_create_button" class="btn btn-info">Create Onsite Report</button> -->
 							</div>
 						</div>
 					</div>

@@ -26,8 +26,7 @@
 					<li class="disabled"><a href="javascript:void(0);">Exit scenarios</a></li>
 				</ul>
 				<div class="tab-content">
-					<div class="tab-pane active fade in" id="general">
-						<div id="is_workorder_message" class="alert"></div>
+					<div class="tab-pane active fade in" id="general">						
 	            	<?= $form_general; ?>
 	            	<div class="form-group">
 							<div class="col-md-offset-2 col-md-8">

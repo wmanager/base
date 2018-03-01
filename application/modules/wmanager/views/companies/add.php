@@ -4,7 +4,7 @@
 		<div class="widget-header">
 			<i class="icon-pencil"></i>
 			<h3>
-				<i class="fa fa-building-o"></i> Nuova azienda
+				<i class="fa fa-building-o"></i> New Company
 			</h3>
 		</div>
 		<!-- /.widget-header -->
@@ -19,10 +19,10 @@
 						?>
 						<?= $this->form_builder->open_form(array('action' => '','enctype' => 'multipart/form-data')); ?>
 						<ul id="myTab" class="nav nav-tabs">
-					<li class="active"><a href="#general" data-toggle="tab">Generale</a></li>
-					<li class=""><a href="#billing" data-toggle="tab">Fatturazione</a></li>
-					<li class=""><a href="#shipping" data-toggle="tab">Spedizione</a></li>
-					<li class="disabled"><a href="javascript:void(0);">Utenti</a></li>
+					<li class="active"><a href="#general" data-toggle="tab">General</a></li>
+					<li class=""><a href="#billing" data-toggle="tab">Billing</a></li>
+					<li class=""><a href="#shipping" data-toggle="tab">Shipping</a></li>
+					<li class="disabled"><a href="javascript:void(0);">Users</a></li>
 				</ul>
 				<div class="tab-content">
 					<div class="tab-pane active fade in" id="general">
@@ -38,8 +38,8 @@
 								<?= $form_general; ?>
 								<div class="form-group">
 							<div class="col-md-offset-2 col-md-8">
-								<button type="submit" class="btn btn-success">Salva</button>
-								<a href="/admin/companies" class="btn btn-default">Annulla</a>
+								<button type="submit" class="btn btn-success">Save</button>
+								<a href="/admin/companies" class="btn btn-default">Cancel</a>
 							</div>
 						</div>
 					</div>
@@ -47,8 +47,8 @@
 								<?= $form_billing; ?>	
 								<div class="form-group">
 							<div class="col-md-offset-2 col-md-8">
-								<button type="submit" class="btn btn-success">Salva</button>
-								<a href="/admin/companies" class="btn btn-default">Annulla</a>
+								<button type="submit" class="btn btn-success">Save</button>
+								<a href="/admin/companies" class="btn btn-default">Cancel</a>
 							</div>
 						</div>
 					</div>
@@ -56,8 +56,8 @@
 								<?= $form_shipping; ?>	
 								<div class="form-group">
 							<div class="col-md-offset-2 col-md-8">
-								<button type="submit" class="btn btn-success">Salva</button>
-								<a href="/admin/companies" class="btn btn-default">Annulla</a>
+								<button type="submit" class="btn btn-success">Save</button>
+								<a href="/admin/companies" class="btn btn-default">Cancel</a>
 							</div>
 						</div>
 					</div>

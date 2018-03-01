@@ -57,43 +57,6 @@
 							</div>
 						</div>
 						<div class="form-group">
-							<div class="col-md-2"></div>
-							<div class="col-md-8">
-								<div class="checkbox">
-									<?php
-									if ($this->input->post ( 'trouble_type_check_credito' )) {
-										$trouble_type_check_credito = $this->input->post ( 'trouble_type_check_credito' );
-									} else {
-										$trouble_type_check_credito = $trouble_type->bloccante_credito;
-									}
-									?>	
-									<label><input type="checkbox" name="trouble_type_check_credito"
-										value="t" class="checkbox"
-										<?php echo $trouble_type_check_credito == 't' ? 'checked' :''; ?>>
-										Bloccante Credito</label>
-								</div>
-							</div>
-						</div>
-						<div class="form-group">
-							<div class="col-md-2"></div>
-							<div class="col-md-8">
-								<div class="checkbox">
-									<?php
-									if ($this->input->post ( 'trouble_type_check_manutenzione' )) {
-										$trouble_type_check_manutenzione = $this->input->post ( 'trouble_type_check_manutenzione' );
-									} else {
-										$trouble_type_check_manutenzione = $trouble_type->bloccante_tecnico;
-									}
-									?>
-									<label><input type="checkbox"
-										name="trouble_type_check_manutenzione" value="t"
-										class="checkbox"
-										<?php echo $trouble_type_check_manutenzione == 't' ? 'checked' :''; ?>>
-										Bloccante Manutenzione</label>
-								</div>
-							</div>
-						</div>
-						<div class="form-group">
 							<label class="col-md-2 control-label">Severity*</label>
 							<div class="col-md-8">
 								<input type="number" min="1" id="trouble_type_severity"

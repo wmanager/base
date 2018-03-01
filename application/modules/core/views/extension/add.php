@@ -30,7 +30,8 @@
 		      			<span class="glyphicon glyphicon-search"></span>
 					</span>
 				</div> -->
-		    </div>		   
+		    </div>		
+		       
 		        <br>		      
 		        <div class="row">		        
 		        	<div class="col-md-12">			
@@ -120,7 +121,7 @@
 						      					<h4><b>{{selected_item.name}} </b> is paid extension.</h4>
 						      				</label>
 						      				<div>
-						      					<a href="http://marketplace/extensions/details/{{selected_item.id}}" target="_blank"><span class="badge badge-btn badge-primary"> Buy Now</span></a>
+						      					<a href="<?php echo $this->config->item('api_url'); ?>extensions/details/{{selected_item.id}}" target="_blank"><span class="badge badge-btn badge-primary"> Buy Now</span></a>
 						      				</div>
 						      			</div>
 									<div class="col-sm-2 or">OR</div>

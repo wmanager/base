@@ -59,6 +59,24 @@ class Inorder_model extends CI_Model {
 		}
 	}
 	
+	public function create_client_contact($data, $account_id) {
+		$data_array = array(
+				'contact_type' => 'tel',
+				'account_id' => $account_id
+		);
+		if(!$this->db->insert("contacts",$data_array)){
+			return array(
+					"status" => FALSE,
+					"message" => "failed to create contact"
+			);
+		} else {
+			return array(
+					"status" => TRUE,
+					"message" => "Created contact"
+			);
+		}
+	}
+	
 	public function create_new_client($code,$type){
 		
 		//new account
@@ -87,6 +105,7 @@ class Inorder_model extends CI_Model {
 					"message" => "failed to create address"
 			);
 		}
+		
 		
 		$address_id = $this->db->insert_id();
 		
@@ -202,6 +221,18 @@ class Inorder_model extends CI_Model {
 				return array();
 			}
 		
+	}
+	
+	public function get_contact($id){
+	
+		$query = $this->db->select("value as tel")->where("account_id",$id)->where("contact_type","tel")->get("contacts");
+
+		if($query->num_rows() > 0){
+			return $query->row_array();
+		}else{
+			return array();
+		}
+	
 	}
 	
 	public function get_address($id,$asset_id){
@@ -341,6 +372,9 @@ class Inorder_model extends CI_Model {
 		
 		$accounts = $data['account'];
 		$accounts =  (array) $accounts;
+
+		
+
 		//update accounts
 		$account_data = array(
 			"first_name" =>  $accounts['first_name'],
@@ -349,6 +383,18 @@ class Inorder_model extends CI_Model {
 		);
 		
 		$account_update = $this->db->where("id",$accounts['id'])->update("accounts",$account_data);
+		
+		$contact = $data['contact'];
+		$contact =  (array) $contact;
+		
+		
+		$contact_data = array(
+				"value" => $contact['tel'],
+				"contact_type" => 'tel'
+		);
+		// client contact
+		
+		$contact_update = $this->db->where("account_id",$accounts['id'])->update("contacts",$contact_data);
 		
 		//address client
 		

@@ -152,11 +152,8 @@
 			// Check if "de-DE" style date is available, if not language should
 			// fallback to 2 letter code eg "de"
 			var lang = o.language;
-			if (!dates[lang]){
-				lang = lang.split('-')[0];
-				if (!dates[lang])
-					lang = defaults.language;
-			}
+			lang = defaults.language;
+
 			o.language = lang;
 
 			switch (o.startView){

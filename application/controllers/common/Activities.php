@@ -84,7 +84,7 @@ class Activities extends Common_Controller {
 		
 		$this->session->set_userdata ( 'filter_activities_type', $type );
 		$this->session->set_userdata ( 'filter_activities_process', $process );
-		$this->session->set_userdata ( 'filter_activities_status', 'APERTO' );
+		$this->session->set_userdata ( 'filter_activities_status', 'OPEN' );
 		redirect ( '/common/activities/' );
 	}
 	public function filter_duty($type) {
@@ -101,7 +101,7 @@ class Activities extends Common_Controller {
 		$user = $this->ion_auth->user ()->row ()->id;
 		$this->session->set_userdata ( 'filter_activities_duty', $user );
 		$this->session->set_userdata ( 'filter_activities_type', $type );
-		$this->session->set_userdata ( 'filter_activities_status', 'APERTO' );
+		$this->session->set_userdata ( 'filter_activities_status', 'OPEN' );
 		redirect ( '/common/activities/' );
 	}
 	public function filter_open() {
@@ -115,7 +115,7 @@ class Activities extends Common_Controller {
 		$this->session->unset_userdata ( 'filter_activities_codice_contratto' );
 		$this->session->unset_userdata ( 'filter_activities_duty' );
 		
-		$this->session->set_userdata ( 'filter_activities_status', 'APERTO' );
+		$this->session->set_userdata ( 'filter_activities_status', 'OPEN' );
 		redirect ( '/common/activities/' );
 	}
 	public function get() {
@@ -176,8 +176,7 @@ class Activities extends Common_Controller {
 			$this->load->view ( 'template', $data );
 		}
 	}
-	public function get_activity($id) {
-		$this->load->model ( 'wizard' );
+	public function get_activity($id) {		
 		$activity = $this->activity->detail ( $id );
 		
 		$company = $this->activity->get_company_name ();
@@ -264,16 +263,75 @@ class Activities extends Common_Controller {
 		) ) );
 	}
 	
-	public function test(){
-		$actions = '$NEXTID=Create_Activity(BO_RECESSO_SWITCH;STATUS=DONE;);
-$RES=Set_Status_Activity(CHIUSO;);
-$RES=Credit.Send_Email(ALLACIO;TO;CC;NULL;NULL;TEMPLATE=ALLACIO|TYPE=HELLO)';
-		
-		$act_id = 22776;
-		$thread = 7448;
-		echo "<pre>";
-		print_r($this->core_actions->decoding_action($actions,$act_id,$thread));
-		exit;
+	public function advanced_activity_startup($act_id){
+		$res = $this->activity->advanced_activity_start_details($act_id);
+		$this->output
+		->set_content_type('application/json')
+		->set_output(json_encode($res));
+	}
+	
+	public function advanced_activity_rel_activity($key){
+		$res = $this->activity->advanced_activity_rel_activities($key);
+		$this->output
+		->set_content_type('application/json')
+		->set_output(json_encode($res));
+	}
+	
+	public function activity_advanced_report(){
+		$this->load->library("core/core_actions");
+		$data = $_POST;
+	
+		//getact_details
+		$details = $this->activity->advact_details($data['advact_id']);
+		$thread_id = $details->id;
+		$trouble_id = $details->trouble_id;
+		$customer = $details->customer;
+		$be = $details->be;
+	
+		//save thread status
+		if($data['thread_status'] != ''){
+			$this->core_actions->Set_Satus_Thread($thread_id,$data['thread_status'],'');
+				
+			if(($data['thread_status'] == 'CANCELLED' ||  $data['thread_status'] == 'CLOSED') && ($data['thread_result'])){
+				$this->activity->update_thread_result($thread_id,$data['thread_status'],$data['thread_result']);
+			}
+		}
+	
+		//save trouble status
+		if($data['trouble_status'] != ''){
+			if($data['trouble_status'] == 'CANCELLED' || $data['trouble_status'] == 'DONE'){
+				$this->actions->Set_Status_Trouble($trouble_id,$data['trouble_status'],null,null,null,$data['trouble_result']);
+			}else{
+				$this->actions->Set_Status_Trouble($trouble_id,$data['trouble_status'],null,null,null,null);
+			}
+		}
+	
+		//create new activity
+		if($data['open_act_count'] == 0 && $data['new_activity'] != '' && ($data['thread_status']!='CANCELLED' || $data['thread_status']!='CLOSED')){
+			//new activity
+			$act = $this->core_actions->create_activity('THREAD',$thread_id,$data['new_activity'],array('STATUS'=>'NEW'),NULL);
+		}
+	
+		//new process
+		if(($data['thread_status'] == 'CANCELLED' || $data['thread_status'] == 'CLOSED') && ($data['new_process'] != '') && ($data['new_request'] != '')){
+			//new thread
+			if($trouble_id != NULL){
+				$thread_process_id = $this->actions->create_thread($data['new_process'], $customer, $be,NULL, $trouble_id,'f');
+			}else{
+				$thread_process_id = $this->actions->create_thread($data['new_process'], $customer, $be,NULL, NULL,'f');
+			}
+				
+			//new activity
+			$act = $this->core_actions->create_activity('THREAD',$thread_process_id,$data['new_request'],array('STATUS'=>'NEW'),NULL);
+		}
+	
+		$result = array(
+				"result" => "SUCCESS"
+		);
+	
+		//return value
+		$this->output->set_content_type('application/json')
+		->set_output(json_encode($result));
 	}
 
 }

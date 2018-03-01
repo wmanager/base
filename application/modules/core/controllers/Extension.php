@@ -104,40 +104,40 @@ class Extension extends Common_Controller {
 		unlink($tmpFile);
 	}
 	
-	public function extension_installer(){
+	public function extension_installer($local = NULL){
 
 		ini_set('upload_max_filesize', '10M');
 		$return_array  = array();
-		$extension_details = NULL;
+
 		if (isset($_FILES['file'])) {	
 			// for extention
 			$filename = $_FILES['file']['name'];
 			$ext = substr($filename, strpos($filename,'.'), strlen($filename)-1);
-			// cheking the file 
-			//get extension details
 		
 			if(isset($_POST['key'])) {
 				$key = $_POST['key'];
 	
-			$extension_details = $this->extension_model->get_extension_details($key);
-			$id = $extension_details->id;
-			if($extension_details->file_name == $filename) {
+			// Check for the extion if already installed
+			if($local) {
+				$ext_installed = $this->extension_model->check_extension_installed($key);
+				if($ext_installed) {
+					$this->session->set_flashdata ( 'message', array('result' => 'failed', 'message'=>'Failed to install extention.'));
+					redirect ( "core/extension" );
+				}
+			}
+
+			$key_file = $key.'.zip';
+			if($key_file == $filename) {
 				if($ext == '.zip') {
 					$tempdir = $this->createTmpDir();		
 					
 					
 					if(move_uploaded_file($_FILES['file']['tmp_name'], $tempdir.'/'.$_FILES['file']['name'])) {
 						if(isset($_POST['key']) && !empty($_POST['key'])) {
-								
-							if($extension_details === FALSE){
-								$this->extension_model->add_install_log($id,"GET_EXTENSION","SOME ERROR","FAILED");
-							}else{
-								$this->extension_model->add_install_log($id,"GET_EXTENSION","Fetched Details","success");
-							}
 							$installed_result = false;
 							$folder = $tempdir;
 						
-							$zip_path = $folder.'/'.$extension_details->file_name;
+							$zip_path = $folder.'/'.$filename;
 
 							chmod($zip_path, 0777);
 							$zip = new ZipArchive();
@@ -148,13 +148,12 @@ class Extension extends Common_Controller {
 								$zip->extractTo($folder);
 								$zip->close();
 								$installed_result = true;
-								$this->extension_model->add_install_log($id,"UNZIP","Unzipped Files","SUCCESS");
+								$this->extension_model->add_install_log($key,"UNZIP","Unzipped Files","SUCCESS");
 							}else{
 								$installed_result = false;
-								$this->extension_model->add_install_log($id,"UNZIP","File Issue","FAILED");
+								$this->extension_model->add_install_log($key,"UNZIP","File Issue","FAILED");
 							}
 								
-							$filename = $extension_details->file_name;
 							$ext_folder = substr($filename, 0, strrpos($filename, "."));
 								
 							$source_folder = $tempdir."/".$ext_folder."/";
@@ -164,45 +163,64 @@ class Extension extends Common_Controller {
 							$file_path = $tempdir."/".$ext_folder."/importer.txt";
 							if(file_exists($file_path)){
 								$installed_result = true;
-								$this->extension_model->add_install_log($id,"READ_INSTRUCTION","Read File successfully","SUCCESS");
+								$this->extension_model->add_install_log($key,"READ_INSTRUCTION","Read File successfully","SUCCESS");
 								$file = fopen($file_path,'r');
 								$inport_string = fread($file,filesize($file_path));
 								fclose($file);
 							}else{
 								$installed_result = false;
-								$this->extension_model->add_install_log($id,"READ_INSTRUCTION","Failed to read instruction file","FAILED");
+								$this->extension_model->add_install_log($key,"READ_INSTRUCTION","Failed to read instruction file","FAILED");
 							}
 								
 							if(count($inport_string) == 0){
 								$installed_result = false;
-								$this->extension_model->add_install_log($id,"READ_INSTRUCTION","Instruction file empty","FAILED");
+								$this->extension_model->add_install_log($key,"READ_INSTRUCTION","Instruction file empty","FAILED");
 							}
 								
 							//Step3: instruction decode
 							$instruction_array = $this->decode_instruction($inport_string);
 							if(count($instruction_array)==0){
 								$installed_result = false;
-								$this->extension_model->add_install_log($id,"DECODE_INSTRUCTION","Instruction Decode fail","FAILED");
+								$this->extension_model->add_install_log($key,"DECODE_INSTRUCTION","Instruction Decode fail","FAILED");
 							}else{
-								$this->extension_model->add_install_log($id,"DECODE_INSTRUCTION",serialize($instruction_array),"SUCCESS");
+								$this->extension_model->add_install_log($key,"DECODE_INSTRUCTION",serialize($instruction_array),"SUCCESS");
 							}
 							
 							if($installed_result) {
 								//step4: execute instruction
-								$execution_result = $this->execute_instructions($instruction_array,$source_folder);
+								$execution_result = $this->execute_instructions($instruction_array,$source_folder,$key);
 								
+								$extension_install_array = array(
+										'name' => $_POST['name'],
+										'key' => $_POST['key'],
+										'file_name' => 'file_name'
+								);
+								$result = $this->extension_model->insert_extension($extension_install_array);
 								//step5 : updating the extention table
-								$result = $this->extension_model->updated_extension_details($id);
+								$result = $this->extension_model->updated_extension_details($key);
+								
+								if($local) {
+									$this->session->set_flashdata ( 'message', array('result' => 'success', 'message'=>'Extention installed successfully'));
+									redirect ( "core/extension" );
+								}
 								$this->output
 								->set_content_type('application/json')
 								->set_output(json_encode(array('result' => 'success', 'message'=>'Extention installed successfully')));
 							} else {
+								if($local) {
+									$this->session->set_flashdata ( 'message', array('result' => 'failed', 'message'=>'Failed to install extention'));
+									redirect ( "core/extension" );
+								}
 								$this->output
 								->set_content_type('application/json')
 								->set_output(json_encode(array('result' => 'failed', 'message'=>'Failed to install extention')));
 							}
 							
 						} else {
+							if($local) {
+								$this->session->set_flashdata ( 'message', array('result' => 'failed', 'message'=>'Failed to install extention'));
+								redirect ( "core/extension" );
+							}
 							$this->output
 							->set_content_type('application/json')
 							->set_output(json_encode(array('result' => 'failed', 'message'=>'Failed to install extention')));
@@ -211,16 +229,28 @@ class Extension extends Common_Controller {
 					}
 				
 				} else {
+					if($local) {
+						$this->session->set_flashdata ( 'message', array('result' => 'failed', 'message'=>'Invalid file'));
+						redirect ( "core/extension" );
+					}
 					$this->output
 					->set_content_type('application/json')
 					->set_output(json_encode(array('result' => 'failed', 'message'=>'Invalid file')));
 				}
 			} else {
-			$this->output
-			->set_content_type('application/json')
-			->set_output(json_encode(array('result' => 'failed', 'message'=>'Invalid file')));	
+				if($local) {
+					$this->session->set_flashdata ( 'message', array('result' => 'failed', 'message'=>'Invalid file'));
+					redirect ( "core/extension" );
+				}
+				$this->output
+				->set_content_type('application/json')
+				->set_output(json_encode(array('result' => 'failed', 'message'=>'Invalid file')));	
 			}
 			} else {
+				if($local) {
+					$this->session->set_flashdata ( 'message', array('result' => 'failed', 'message'=>'Invalid file'));
+					redirect ( "core/extension" );
+				}
 				$this->output
 				->set_content_type('application/json')
 				->set_output(json_encode(array('result' => 'failed', 'message'=>'Invalid file')));
@@ -254,7 +284,7 @@ class Extension extends Common_Controller {
 		return $instruction_array;
 	}
 	
-	public function execute_instructions($instruction_array,$source_folder){
+	public function execute_instructions($instruction_array,$source_folder,$key){
 		
 		if(!is_array($instruction_array) || count($instruction_array)==0){
 			return false;
@@ -266,7 +296,7 @@ class Extension extends Common_Controller {
 				case "new": $execution_result[] = $this->import_new_file($item,$source_folder);
 							break;
 					
-				case "sql": $execution_result[] = $this->execute_sql($item,$source_folder);
+				case "sql": $execution_result[] = $this->execute_sql($item,$source_folder, $key);
 							break;
 							
 				case "mkdir": $execution_result[] = $this->new_dir($item);
@@ -348,8 +378,8 @@ class Extension extends Common_Controller {
 	
 	}
 	
-	public function execute_sql($instruction,$source_folder){
-		
+	public function execute_sql($instruction,$source_folder, $key){
+		 
 		if(!is_array($instruction) || count($instruction)==0){
 			return array(
 					"Instruction_type:"=>$instruction[0]."-".$instruction[2],
@@ -384,19 +414,23 @@ class Extension extends Common_Controller {
 			}else{
 				$execute = $this->extension_model->execute_query($query);
 				if($execute){
+					$this->extension_model->add_install_log($key,"SQL_EXECUTION","Sql added successfully","SUCCESS");
 					return array(
 							"Instruction_type:" => $instruction[0]."-".$instruction[2],
 							"Status" => "SUCCESS",
 							"dest_path" => $instruction[1],
 							"message" => "SQL Added Successfully"
 					);
+
 				}else{
+					$this->extension_model->add_install_log($key,"SQL_EXECUTION","Sql execution failed","FAILED");
 					return array(
 							"Instruction_type:"=>$instruction[0]."-".$instruction[2],
 							"Status" => "FAILED",
 							"dest_path" => $instruction[1],
 							"message" => "SQL Failed"
 					);
+					
 				}
 			}
 		}

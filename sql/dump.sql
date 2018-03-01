@@ -69,7 +69,7 @@ CREATE TABLE activities (
     payload text,
     form_id integer,
     closed_date timestamp(6) without time zone,
-    status character varying(100) DEFAULT 'APERTO'::character varying,
+    status character varying(100) DEFAULT 'OPEN'::character varying,
     status_modified timestamp without time zone,
     status_detail character varying(100),
     description text
@@ -278,9 +278,7 @@ CREATE TABLE attachments (
     created_by integer,
     modified timestamp(6) without time zone,
     modified_by integer,
-    trouble_id integer,
-    onsite_report_id numeric,
-    campaign_id integer
+    trouble_id integer
 );
 
 
@@ -689,7 +687,7 @@ ALTER SEQUENCE email_template_id_seq OWNED BY email_template.id;
 
 CREATE TABLE extension_installer_log (
     id integer NOT NULL,
-    extension_id integer,
+    extension_key character varying(100),
     instruction character varying(255),
     message character varying,
     status character varying(100)
@@ -725,8 +723,6 @@ ALTER SEQUENCE extension_installer_log_id_seq OWNED BY extension_installer_log.i
 
 CREATE TABLE extensions (
     id integer NOT NULL,
-    description character varying,
-    storage_path character varying(255),
     status character varying(10),
     created timestamp without time zone,
     module_name character varying(255),
@@ -971,47 +967,6 @@ CREATE TABLE list_cause_annullamento (
 
 
 ALTER TABLE public.list_cause_annullamento OWNER TO install_host_username;
-
---
--- Name: list_loans_companies; Type: TABLE; Schema: public; Owner: install_host_username; Tablespace: 
---
-
-CREATE TABLE list_loans_companies (
-    id integer NOT NULL,
-    title character varying,
-    description character varying,
-    email character varying,
-    attachment_id character varying,
-    disabled boolean,
-    rettifiche_attachment_id character varying,
-    codice character varying(30),
-    management_results_massive boolean DEFAULT false,
-    months integer DEFAULT 0 NOT NULL,
-    type_order character varying(30)
-);
-
-
-ALTER TABLE public.list_loans_companies OWNER TO install_host_username;
-
---
--- Name: list_loans_companies_id_seq; Type: SEQUENCE; Schema: public; Owner: install_host_username
---
-
-CREATE SEQUENCE list_loans_companies_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.list_loans_companies_id_seq OWNER TO install_host_username;
-
---
--- Name: list_loans_companies_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: install_host_username
---
-
-ALTER SEQUENCE list_loans_companies_id_seq OWNED BY list_loans_companies.id;
 
 
 --
@@ -1454,11 +1409,8 @@ CREATE TABLE setup_activities (
     form_id integer,
     is_request boolean,
     be_required boolean,
-    is_workorder boolean DEFAULT false,
-    onsite_report_type_id integer,
     entry_scenario character varying,
     duty_company numeric,
-    reportizzazione_avanzata boolean,
     help text
 );
 
@@ -2027,11 +1979,7 @@ CREATE TABLE setup_processes (
     modified timestamp(6) without time zone DEFAULT now(),
     modified_by integer,
     form_id integer,
-    bloccante_credito boolean,
-    bloccante_tecnico boolean,
-    wiki_url character varying(255),
-    fast_thread boolean DEFAULT false,
-    fast_thread_view character varying(255)
+    wiki_url character varying(255)
 );
 
 
@@ -2211,8 +2159,6 @@ CREATE TABLE setup_troubles_types (
     title character varying(255),
     description character varying(255),
     active boolean,
-    bloccante_credito boolean,
-    bloccante_tecnico boolean,
     severity integer,
     area character varying(255),
     manual boolean,
@@ -2360,7 +2306,7 @@ CREATE TABLE threads (
     creator_company integer,
     duty_company integer,
     duty_user integer,
-    status character varying(100) DEFAULT 'APERTO'::character varying,
+    status character varying(100) DEFAULT 'OPEN'::character varying,
     status_modified timestamp without time zone,
     status_detail character varying(100),
     comunica_chiusura_ts timestamp(6) without time zone,
@@ -2458,7 +2404,8 @@ CREATE TABLE troubles (
     res_duty_company integer,
     res_duty_user integer,
     res_role character varying(255),
-    subtype character varying(255)
+    subtype character varying(255),
+    contratti integer
 );
 
 
@@ -3311,9 +3258,6 @@ SELECT pg_catalog.setval('setup_actions_id_seq', 1, false);
 -- Data for Name: setup_activities; Type: TABLE DATA; Schema: public; Owner: install_host_username
 --
 
-INSERT INTO setup_activities VALUES (1, 1, 'STANDARD', 'ACT', 'testing_act', NULL, 'ADMIN', NULL, NULL, false, NULL, '2017-12-05 12:24:12.188161', NULL, '2017-12-05 16:20:12', 1, 2, false, true, false, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO setup_activities VALUES (2, 1, 'STANDARD', 'TEST2', 'test2', NULL, 'ADMIN', NULL, NULL, false, NULL, '2017-12-05 18:45:58.160608', NULL, '2017-12-05 18:45:58.160608', NULL, 1, false, true, false, NULL, NULL, NULL, NULL, NULL);
-
 
 --
 -- Data for Name: setup_activities_attachments; Type: TABLE DATA; Schema: public; Owner: install_host_username
@@ -3329,15 +3273,6 @@ SELECT pg_catalog.setval('setup_activities_attachments_id_seq', 1, false);
 
 
 --
--- Data for Name: setup_activities_exits; Type: TABLE DATA; Schema: public; Owner: install_host_username
---
-
-INSERT INTO setup_activities_exits VALUES (1, 1, 887066, 'exit_test', '', '$ACTID.STATUS=DONE;
-$ACTID.RESULT=OK;', '$NEXTID=Create_Activity(TEST2;);
-$RES=Set_Status_Activity(CHIUSO;);', false, NULL, '2017-12-05 18:45:03.017349', 1, '2017-12-05 19:22:43', 1);
-
-
---
 -- Name: setup_activities_exits_id_seq; Type: SEQUENCE SET; Schema: public; Owner: install_host_username
 --
 
@@ -3348,22 +3283,21 @@ SELECT pg_catalog.setval('setup_activities_exits_id_seq', 1, true);
 -- Name: setup_activities_id_seq; Type: SEQUENCE SET; Schema: public; Owner: install_host_username
 --
 
-SELECT pg_catalog.setval('setup_activities_id_seq', 2, true);
+SELECT pg_catalog.setval('setup_activities_id_seq', 1, true);
 
 
 --
 -- Data for Name: setup_attachments; Type: TABLE DATA; Schema: public; Owner: install_host_username
 --
 
-INSERT INTO setup_attachments VALUES (1, 'attachment test', NULL, false, '2017-12-06 11:33:07.0204', NULL, '2017-12-06 11:33:07.0204', NULL, 'pdf,doc,jpg,jpeg,png', 5000, 1, NULL, NULL);
-INSERT INTO setup_attachments VALUES (2, 'test legal', 'testing', false, '2017-12-13 14:20:39.033113', NULL, '2017-12-13 14:20:39.033113', NULL, 'pdf,doc', 5000, 18, NULL, NULL);
+INSERT INTO setup_attachments VALUES (1, 'attachment unknown', NULL, false, '2017-12-06 11:33:07.0204', NULL, '2017-12-06 11:33:07.0204', NULL, 'pdf,doc,jpg,jpeg,png', 5000, 1, NULL, NULL);
 
 
 --
 -- Name: setup_attachments_id_seq; Type: SEQUENCE SET; Schema: public; Owner: install_host_username
 --
 
-SELECT pg_catalog.setval('setup_attachments_id_seq', 2, true);
+SELECT pg_catalog.setval('setup_attachments_id_seq', 1, true);
 
 
 --
@@ -3416,9 +3350,9 @@ INSERT INTO setup_config VALUES (5, 'email_to', 'clienti@wmanager.org', 'text', 
 INSERT INTO setup_config VALUES (6, 'email_cc', '', 'text', 'email', NULL, false);
 INSERT INTO setup_config VALUES (7, 'loop_check_max_records', '50', 'text', 'core', NULL,false);
 INSERT INTO setup_config VALUES (8, 'loop_check_period', '3', 'text', 'core', NULL,false);
-INSERT INTO setup_config VALUES (1, 'UPLOAD_DIR', 'assets/uploads', 'text', 'core', NULL,true);
+INSERT INTO setup_config VALUES (1, 'UPLOAD_DIR', 'assets/uploads/', 'text', 'core', NULL,true);
 INSERT INTO setup_config VALUES (9, 'log_path', 'application/logs', 'text', 'core', NULL,true);
-INSERT INTO setup_config VALUES (10, 'api_url', 'http://marketplace/', 'text', 'core', NULL, false);
+INSERT INTO setup_config VALUES (10, 'api_url', 'http://repo.wmanager.org/', 'text', 'core', NULL, false);
 
 --
 -- Name: setup_config_id_seq; Type: SEQUENCE SET; Schema: public; Owner: install_host_username
@@ -3452,8 +3386,8 @@ SELECT pg_catalog.setval('setup_default_vars_id_seq', 9, false);
 -- Data for Name: setup_forms; Type: TABLE DATA; Schema: public; Owner: install_host_username
 --
 
-INSERT INTO setup_forms VALUES (2, 'ACTIVITY', 'MAGIC_FORM', '/common/cases/activity_detail/all/all/magic_form', false, '2017-12-05 16:19:27.72142', 1, '2017-12-05 18:07:11', 1, true, false, NULL);
-INSERT INTO setup_forms VALUES (1, 'THREAD', 'test_thread_form', '/common/cases/activity_detail/all/all/magic_form', false, '2017-12-05 12:00:34.602342', 1, '2017-12-06 11:24:06', 1, true, false, NULL);
+INSERT INTO setup_forms VALUES (2, 'ACTIVITY', 'MAGIC_FORM', '/common/cases/activity_detail/magic_form/magic_form', false, '2017-12-05 16:19:27.72142', 1, '2017-12-05 18:07:11', 1, true, false, NULL);
+INSERT INTO setup_forms VALUES (1, 'THREAD', 'unknown_thread_form', '/common/cases/activity_detail/plain_form/plain_description', false, '2017-12-05 12:00:34.602342', 1, '2017-12-06 11:24:06', 1, true, false, NULL);
 
 
 --
@@ -3508,6 +3442,9 @@ INSERT INTO setup_master_status VALUES (3, 'DONE', 'Completed', 3);
 SELECT pg_catalog.setval('setup_master_status_id_seq', 3, false);
 
 
+
+INSERT INTO products VALUES (1, 'Unknown', 'UNKNOWN', 'UNKNOWN', NULL, NULL, '2018-02-16 15:12:56.655679', NULL, NULL, NULL);
+
 --
 -- Data for Name: setup_menu; Type: TABLE DATA; Schema: public; Owner: install_host_username
 --
@@ -3532,14 +3469,12 @@ SELECT pg_catalog.setval('setup_menu_id_seq', 9, true);
 -- Data for Name: setup_mps; Type: TABLE DATA; Schema: public; Owner: install_host_username
 --
 
-INSERT INTO setup_mps VALUES (1, 'TEST_MP', false, '2017-12-05 11:27:47.358463', NULL, '2017-12-05 11:27:47.358463', NULL);
+INSERT INTO setup_mps VALUES (1, 'UNKNOWN_MP', false, '2017-12-05 11:27:47.358463', NULL, '2017-12-05 11:27:47.358463', NULL);
 
 
 --
 -- Data for Name: setup_processes; Type: TABLE DATA; Schema: public; Owner: install_host_username
 --
-
-INSERT INTO setup_processes VALUES (1, 1, 'MANUAL', 'TESTING', 'test', 'test', 'ADMIN', NULL, NULL, false, '2017-12-05 11:28:45.102671', 1, '2017-12-05 12:04:40', 1, 1, false, false, NULL, false, '');
 
 
 --
@@ -3563,7 +3498,7 @@ SELECT pg_catalog.setval('setup_roles_id_seq', 1, true);
 INSERT INTO setup_troubles_status VALUES (1, 'NEW', 'New', 1);
 INSERT INTO setup_troubles_status VALUES (2, 'WIP', 'In Progress', 2);
 INSERT INTO setup_troubles_status VALUES (3, 'DONE', 'Completed', 3);
-INSERT INTO setup_troubles_status VALUES (4, 'CANCELED', 'Canceled', 4);
+INSERT INTO setup_troubles_status VALUES (4, 'CANCELLED', 'Cancelled', 4);
 
 
 --
@@ -3577,8 +3512,6 @@ SELECT pg_catalog.setval('setup_troubles_status_id_seq', 4, true);
 -- Data for Name: setup_troubles_subtypes; Type: TABLE DATA; Schema: public; Owner: install_host_username
 --
 
-INSERT INTO setup_troubles_subtypes VALUES (1, 1, 'SUBTYPE1', 'subtype1');
-
 
 --
 -- Name: setup_troubles_subtypes_id_seq; Type: SEQUENCE SET; Schema: public; Owner: install_host_username
@@ -3590,9 +3523,6 @@ SELECT pg_catalog.setval('setup_troubles_subtypes_id_seq', 1, true);
 --
 -- Data for Name: setup_troubles_types; Type: TABLE DATA; Schema: public; Owner: install_host_username
 --
-
-INSERT INTO setup_troubles_types VALUES (1, 'trouble_test', 'testing trouble', true, true, false, 1, NULL, true, 'TEST');
-
 
 --
 -- Data for Name: setup_troubles_types_2_processes_types; Type: TABLE DATA; Schema: public; Owner: install_host_username

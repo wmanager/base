@@ -88,17 +88,6 @@ class Setup_activities extends Admin_Controller {
 				$_POST ['is_request'] = 't';
 			}
 			
-			if (! isset ( $_POST ['is_workorder'] )) {
-				$_POST ['is_workorder'] = 'f';
-			} else {
-				$_POST ['is_workorder'] = 't';
-			}
-			
-			if (! isset ( $_POST ['reportizzazione_avanzata'] )) {
-				$_POST ['reportizzazione_avanzata'] = 'f';
-			} else {
-				$_POST ['reportizzazione_avanzata'] = 't';
-			}
 			
 			if ($this->setup_activity->add ()) {
 				redirect ( '/admin/setup_activities/get/' . $pid, 'refresh' );
@@ -106,28 +95,12 @@ class Setup_activities extends Admin_Controller {
 		}
 		
 		$activity_type = array (
-				'STANDARD' => 'STANDARD',
-				'GATE' => 'GATE' 
+				'STANDARD' => 'STANDARD'
 		);
 		
 		$duty_company_list = $this->setup_activity->get_duty_company ();
 		
-		/**
-		 * Onsite report
-		 *
-		 * Report list array
-		 */
-// 		$this->load->model ( 'onsite_report' );
-		
-// 		$workorder_report_list_result = $this->onsite_report->get_workorder_report_list ();
-		
-		$workorder_report_list = array (
-				'-' => 'Select report type' 
-		);
-		
-// 		foreach ( $workorder_report_list_result as $key => $value ) {
-// 			$workorder_report_list [$value->id] = $value->key;
-// 		}
+
 		
 		$array_form_general = array (
 				array(/* DROP DOWN  default processes*/
@@ -202,28 +175,7 @@ class Setup_activities extends Admin_Controller {
 						'id' => 'id_process',
 						'type' => 'hidden',
 						'value' => $pid 
-				)//,
-// 				array (
-// 						'id' => 'is_workorder',
-// 						'type' => 'checkbox',
-// 						'class' => 'checkbox',
-// 						'label' => 'Is workorder?',
-// 						'default_value' => 'f' 
-// 				),
-// 				array (
-// 						'id' => 'onsite_report_type_id',
-// 						'label' => 'Report Type',
-// 						'type' => 'dropdown',
-// 						'class' => 'form-control report-type-toggle',
-// 						'options' => $workorder_report_list 
-// 				),
-// 				array (
-// 						'id' => 'reportizzazione_avanzata',
-// 						'type' => 'checkbox',
-// 						'label' => 'Rapporto avanzato',
-// 						'default_value' => 'f',
-// 						'class' => 'checkbox' 
-// 				) 
+				)
 		)
 		;
 		$autorize_data = $this->setup_activity->get_authorized_role ();
@@ -300,17 +252,6 @@ class Setup_activities extends Admin_Controller {
 				$_POST ['is_request'] = 't';
 			}
 			
-			if (! isset ( $_POST ['is_workorder'] )) {
-				$_POST ['is_workorder'] = 'f';
-			} else {
-				$_POST ['is_workorder'] = 't';
-			}
-			
-			if (! isset ( $_POST ['reportizzazione_avanzata'] )) {
-				$_POST ['reportizzazione_avanzata'] = 'f';
-			} else {
-				$_POST ['reportizzazione_avanzata'] = 't';
-			}
 			
 			if ($this->setup_activity->edit ( $id )) {
 				redirect ( '/admin/setup_activities/edit/' . $pid . '/' . $id, 'refresh' );
@@ -321,38 +262,11 @@ class Setup_activities extends Admin_Controller {
 		if (! $data ['activity'])
 			redirect ( '/admin/setup_activities/' . $pid, 'refresh' );
 		$activity_type = array (
-				'STANDARD' => 'STANDARD',
-				'GATE' => 'GATE' 
+				'STANDARD' => 'STANDARD'
 		);
 		
 		$duty_company_list = $this->setup_activity->get_duty_company ();
 		
-		/**
-		 * Onsite report
-		 *
-		 * Report list array
-		 */
-// 		$this->load->model ( 'onsite_report' );
-		
-// 		$workorder_report_list_result = $this->onsite_report->get_workorder_report_list ();
-		
-		$workorder_report_list = array (
-				'-' => 'Select report type' 
-		);
-		
-// 		foreach ( $workorder_report_list_result as $key => $value ) {
-// 			$workorder_report_list [$value->id] = $value->key;
-// 		}
-		
-		$is_workorder_status = 'f';
-		if ($activity->is_workorder == 't') {
-			$is_workorder_status = 't';
-		}
-		
-		$is_advance = 'f';
-		if ($activity->reportizzazione_avanzata == 't') {
-			$is_advance = 't';
-		}
 		
 		$array_form_general = array (
 				array(/* DROP DOWN  default processes*/
@@ -424,34 +338,7 @@ class Setup_activities extends Admin_Controller {
 						'class' => 'checkbox',
 						'label' => 'Disabled',
 						'default_value' => 'f' 
-				),
-				array (
-						'id' => 'is_workorder',
-						'type' => 'checkbox',
-						'class' => 'checkbox',
-						'label' => 'Is workorder?',
-						'default_value' => $is_workorder_status 
-				)//,
-// 				array (
-// 						'id' => 'onsite_report_type_id',
-// 						'label' => 'Report Type',
-// 						'type' => 'dropdown',
-// 						'class' => 'form-control report-type-toggle',
-// 						'options' => $workorder_report_list 
-// 				),
-// 				array (
-// 						'id' => 'setup_activity_id',
-// 						'type' => 'hidden',
-// 						'value' => $id 
-// 				),
-// 				array (
-// 						'id' => 'reportizzazione_avanzata',
-// 						'type' => 'checkbox',
-// 						'label' => 'Rapporto avanzato',
-// 						'default_value' => 'f',
-// 						'class' => 'checkbox',
-// 						'value' => $is_advance 
-// 				) 
+				)
 		);
 		$autorize_data = $this->setup_activity->get_authorized_role ();
 		$autorize_role = array ();
@@ -829,53 +716,7 @@ class Setup_activities extends Admin_Controller {
 		redirect ( '/admin/setup_activities/' . $pid, 'refresh' );
 	}
 	
-	/**
-	 * set_workorder
-	 *
-	 * @return string
-	 *
-	 * @author Sumesh
-	 */
-	public function set_workorder() {
-		$post = $this->input->post ();
-		
-		$result = $this->setup_activity->set_workorder ( $post );
-		
-		if ($result === true) {
-			die ( 'success' );
-		} else {
-			die ( 'failed' );
-		}
-	}
 	
-	/**
-	 * create_onsite_report
-	 *
-	 * @return string
-	 *
-	 * @author Sumesh
-	 */
-	public function create_onsite_report() {
-		$this->load->model ( 'onsite_report' );
-		
-		$post = $this->input->post ();
-		
-		$setup_activty_id = $post ['setup_activty_id'];
-		
-		$dummy_report_flag = true;
-		
-		$result = $this->onsite_report->create_onsite_report ( $setup_activty_id, $dummy_report_flag );
-		
-		if ($result == 1) {
-			die ( 'success' );
-		} else if ($result == 2) {
-			die ( 'failed' );
-		} else if ($result == 3) {
-			die ( 'workorder_status_disabled' );
-		} else if ($result == 4) {
-			die ( 'onsite_report_already_exist' );
-		}
-	}
 	
 	/**
 	 * add_transition

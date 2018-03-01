@@ -581,7 +581,7 @@ body{
 	height: 10px;
 }
 
-.onsite-modal-header, .modal-header {
+.modal-header {
 	background-color: #295190;
 	border: 1px solid #295190;
 	background-image: none;
@@ -605,8 +605,7 @@ body{
 
 #checklist_message, #chiusura_report_message, #ins_sopralluogo_message,
 	#ins_installazione_message, #attachment_message,
-	#lettura_contatori_message, #create_onsite_message,
-	#create_onsite_message_calendar, #plan_message,
+	#lettura_contatori_message,
 	#attivita_correlate_message, #aggiungi_lettura_message_popup,
 	#misuratore_campione_message, #update_quotation_order_message,
 	#quotation_order_edit_back, #update_invoice_message, #invoice_edit_back,
@@ -616,10 +615,9 @@ body{
 	display: none;
 }
 
-#is_workorder_message, #checklist_message, #chiusura_report_message,
+#checklist_message, #chiusura_report_message,
 	#ins_sopralluogo_message, #ins_installazione_message,
-	#attachment_message, #lettura_contatori_message, #create_onsite_message,
-	#create_onsite_message_calendar, #plan_message,
+	#attachment_message, #lettura_contatori_message, #plan_message,
 	#aggiungi_lettura_message_popup, #misuratore_campione_message,
 	#plan_popup_message, #delete_plan_popup_message,
 	#update_quotation_order_message, #update_invoice_message,
@@ -659,9 +657,6 @@ body{
 	margin-bottom: 10px;
 }
 
-#onsite-report-attachment-submit-block {
-	display: none;
-}
 
 .plan-set-default {
 	margin-right: 5px !important;
@@ -675,7 +670,7 @@ body{
 	margin-bottom: 5px;
 }
 
-.related-workorders-header, .planning-list-header {
+.planning-list-header {
 	float: left;
 	width: 100%;
 	padding: 10px 0 10px 0;
@@ -1067,7 +1062,7 @@ table .dropdown-toggle i {
 	color: black;
 }
 
-.onsite-report-tab-list .page_session_reset>a {
+.page_session_reset>a {
 	padding: 7px 10px;
 }
 
@@ -1098,11 +1093,6 @@ table .dropdown-toggle i {
 	margin-bottom: 5px !important;
 }
 
-.onsite-radio-filter-text {
-	position: relative !important;
-	bottom: 4px;
-	left: 4px;
-}
 
 .btn-margin-right {
 	margin-right: 5px !important;

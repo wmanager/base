@@ -6,18 +6,17 @@
 				<b>{{activity.description}}</b>
 			</h5>
 			<p>
-				<b>{{activity.title}}</b><br> <small>Creata da
-					{{activity.creator_first_name}} {{activity.creator_last_name}} il
+				<b>{{activity.title}}</b><br> <small>Created by
+					{{activity.creator_first_name}} {{activity.creator_last_name}} on
 					{{activity.created | dateToISO | date : "dd-MM-yyyy H:mm"}}</small><br>
-				<small ng-if="activity.modified_by">Modificata da
-					{{activity.modifier_first_name}} {{activity.modifier_last_name}} il
+				<small ng-if="activity.modified_by">Modified by
+					{{activity.modifier_first_name}} {{activity.modifier_last_name}} on
 					{{activity.modified | dateToISO | date : "dd-MM-yyyy H:mm" :
 					'GMT+1'}}</small>
 			</p>
 			<p>
 				<span
-					ng-if="activity.duty_operator && activity.duty_operator!='<?=$this->ion_auth->user()->row()->id?>'"><small>In
-						carico a:<br>{{activity.duty_first_name}}
+					ng-if="activity.duty_operator && activity.duty_operator!='<?=$this->ion_auth->user()->row()->id?>'"><small>Created by :<br>{{activity.duty_first_name}}
 						{{activity.duty_last_name}}
 				</small></span>
 				<!--<span ng-if="!activity.duty_operator || activity.duty_operator=='<?=$this->ion_auth->user()->row()->id?>'"><label><input type="checkbox" ng-model="forms[$index].duty_operator" ng-value="'<?=$this->ion_auth->user()->row()->id?>'"> Assegna a me</label></span>-->
@@ -27,19 +26,19 @@
 			<a
 				ng-if="activity.is_request=='f' && (roles.indexOf(activity.role) != -1 || roles.indexOf('ADMIN') != -1)"
 				href="/common/activities/detail/{{activity.id}}"
-				class="btn btn-sm btn-primary">Dettaglio attività</a> <a
+				class="btn btn-sm btn-primary">Activity detail</a> <a
 				ng-if="activity.is_request=='t' && !is_thread_view && (roles.indexOf(activity.role) != -1 || roles.indexOf('ADMIN') != -1)"
 				href="/common/cases/edit/{{activity.id_thread}}"
-				class="btn btn-sm btn-primary">Dettaglio processo</a>
+				class="btn btn-sm btn-primary">Process detail</a>
 		</div>
 		<div class="col-md-3">
 			<p>
 				<span class="label label-primary">Status {{activity.status}}</span>
 			</p>
 			<p>
-				<span ng-if="activity.result" class="label label-primary">Esito
+				<span ng-if="activity.result" class="label label-primary">Result
 					{{activity.result}}</span> <span ng-if="!activity.result"
-					class="label label-default">Esito N/D</span>
+					class="label label-default">Result N/D</span>
 			</p>
 			<p>
 			

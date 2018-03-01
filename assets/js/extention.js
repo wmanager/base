@@ -160,96 +160,6 @@ var extentionCtr = myApp.controller('extentionCtrl', function ($scope, $filter, 
     	$scope.selected_item = item;
     }
     
-/*   $scope.download_file = function(filename, item, key) {    		
-    		$('#spinner_'+item.id).show();
-    		$('#install_'+item.id).hide();
-    		$('#downloding_'+item.id).hide();
-    		$('#downloaded_'+item.id).hide();
-    	    var page_url = '/api/service/download_file/'+key+'/'+$('#token').val();    	
-    	    var req = new XMLHttpRequest();
-    	    req.open("GET", page_url, true);
-    	    function transfer_complete(e) {
-    	    	
-    	    	console.log("The transfer is complete.");   
-    	    }
-    	    
-        	function transfer_failed(e){console.log("An error occurred while transferring the file.");}
-        	function transfer_canceled(e){console.log("The transfer has been canceled by the user.");}
-        	
-        	req.addEventListener("load", transfer_complete, false);
-        	req.addEventListener("error", transfer_failed, false);
-        	req.addEventListener("abort", transfer_canceled, false);	  	
-    	    req.addEventListener("progress", function (evt) {
-    	    	if (evt.lengthComputable)
-    	    	  {
-    	    	    var percentage = Math.round((evt.loaded/evt.total)*100);    	    	    
-
-    	    	    console.log("percent " + percentage + '%' );
-    	    	  }
-    	    	  else 
-    	    	  {
-    	    	  	console.log("Unable to compute progress information since the total size is unknown");
-    	    	  }
-    	    }, false);
-
-    	    req.responseType = "blob";
-    	    req.onreadystatechange = function () {
-    	        if (req.readyState === 4 && req.status === 200) {    
-    	        	$('#spinner_'+item.id).hide();    	        	    	        	
-        	    	$('#install_'+item.id).show();
-        	    	$('#downloding_'+item.id).hide();
-    	            if (typeof window.chrome !== 'undefined') {
-    	                // Chrome version
-    	                var link = document.createElement('a');
-    	                link.href = window.URL.createObjectURL(req.response);
-    	                link.download = filename;
-    	                link.click();
-    	            } else if (typeof window.navigator.msSaveBlob !== 'undefined') {
-    	                // IE version
-    	                var blob = new Blob([req.response], { type: 'application/force-download' });
-    	                window.navigator.msSaveBlob(blob, filename);
-    	            } else {
-    	                // Firefox version
-    	                var file = new File([req.response], filename, { type: 'application/force-download' });
-    	                window.open(URL.createObjectURL(file));
-    	            }
-    	            $http({
-    		    		method: "post",
-    		    		url: '/core/extension/add_extention', 	    		
-    		    		data: {'formData' : item}
-    				}).then(function mySuccess(response) {
-    					$http({
-        		    		method: "post",
-        		    		url: '/core/extension/get_all_extention', 	    		
-        		    		data: {'formData' : item}
-        				}).then(function mySuccess(response) {
-        					$scope.allExtention = response.data;
-        					console.log($scope.allExtention)
-		    	        	angular.forEach($scope.allItems, function(item, key) {
-		    	        		angular.forEach($scope.allExtention, function(ext, k) {
-		    	            		if($scope.allItems[key].key == ext.key) {		    	            			
-		    	            			$scope.allItems[key].ext_id = ext.id;	
-		    	            		}
-		    	            	});    	        	
-		    	        	});
-        				});
-  
-    				}, function myError(response) {
-    				   
-    				});
-    	        } else {    	        	
-    	        	$('#spinner_'+item.id).hide();
-    	        	$('#downloding_'+item.id).show();
-    	        	if(req.status === 404) {
-    	        		$('#error_'+item.id).show();
-   		        	 	$('#error_'+item.id).html("Error While downloading the file");	
-    	        	}
-    	        	
-    	        }
-    	    };
-    	    req.send();
-    	
-    }*/
     
     $scope.download_file = function(selected_item) {    		
     	$(".download").hide();
@@ -305,7 +215,11 @@ var extentionCtr = myApp.controller('extentionCtrl', function ($scope, $filter, 
 	  getExtension.async = function() {
 	    $http.get('/api/service/allextention')
 	    .success(function (d) {
-	      data = d;
+	      if(d.status == false) {
+	    	  data = '';
+	      } else {
+	    	  data = d;
+	      }
 	      deffered.resolve();
 	    });
 	    return deffered.promise;
@@ -352,6 +266,8 @@ function triggerFileChange(oInput, item) {
 	                    blnValid = true;
 	                    var fdata = new FormData();
 	                    fdata.append("key",item.key);
+	                    fdata.append("name",item.name);
+	                    fdata.append("file_name",item.file_name);
 	                    
 	                    if($("#upload_"+item.id)[0].files.length>0)
 	                       fdata.append("file",$("#upload_"+item.id)[0].files[0])
@@ -366,19 +282,19 @@ function triggerFileChange(oInput, item) {
 							         if(data.result == "success") {
 							        	 $(".install_"+item.id).hide();
 							        	 $(".installed_"+item.id).show();
-							 	    	 $(".install_spinner").hide();
 							        	 $('.install_error').hide();
 							        	 $('.install_success').hide().html(data.message).fadeIn('slow').delay(1000).hide('slow');
+							        	 $(".install_spinner").hide();
 							        	 window.setTimeout(function () {
-							        		 location.href = "/admin/extension/add";
+							        		location.href = "/admin/extension/add";
 							        	    }, 2000);
 							         }  else {
-							        	 $(".install_spinner").hide();
 							        	 $(".installed_"+item.id).hide();
 							        	 $('.install_'+item.id).show();
 							        	 $('.success').hide();
 							        	 $('.install_error').show();
 							        	 $('.install_error').hide().html(data.message).fadeIn('slow').delay(1000).hide('slow');;
+							        	 $(".install_spinner").hide();
 							         }
 						        }
 						    })	                   

@@ -118,18 +118,6 @@ class Engine_debug extends Admin_Controller {
 							}
 							$$each_action ['res'] = $response;
 							break;
-						case "export_billing" :
-							$query = $this->db->select ( 'threads.be, threads.customer' )->join ( 'threads', 'threads.id = activities.id_thread' )->where ( 'activities.id', $each_action ['caller_id'] )->get ( 'activities' );
-							$client = $query->row ();
-							$each_action ['target_type'] = 'MODIFICA_DATI_CLIENTE';
-							$each_action ['target_id'] = date ( 'd-m-Y' );
-							$response = $this->actions->export_billing ( $client->customer, $client->be, $each_action ['caller_id'], $each_action ['target_type'], $each_action ['target_id'] );
-							if ($response <= 0) {
-								$error = true;
-								break;
-							}
-							$$each_action ['res'] = $response;
-							break;
 					}
 				}
 			}
@@ -145,43 +133,6 @@ class Engine_debug extends Admin_Controller {
 		$data_new ['thread_vars'] = $thread_vars;
 		$data_new ['history_data'] = $history_data;
 		$data ['content'] = $this->load->view ( 'engine', $data_new, true );
-		$this->load->view ( 'template', $data );
-	}
-	public function be_debug($account_id) {
-		$this->load->model ( 'account' );
-		$data ['be'] = $this->account->be ( $account_id );
-		$data ['account_id'] = $account_id;
-		if (count ( $_POST ) > 0) {
-			$input_data = $_POST;
-			$date = DateTime::createFromFormat ( 'd/m/Y', $input_data ['date'] );
-			$d_decorrenza = $date->format ( 'Y-m-d' );
-			$export_billing_id = $this->actions->export_billing ( $input_data ['account_id'], $input_data ['be'], '1234', "TEST", $d_decorrenza );
-			$data ['message'] = "One row in export billing was created with id= " . $export_billing_id;
-		}
-		
-		$data ['content'] = $this->load->view ( 'be_debug', $data, true );
-		$this->load->view ( 'template', $data );
-	}
-	public function multiple_be_debug() {
-		$this->load->model ( 'account' );
-		
-		if (count ( $_POST ) > 0) {
-			$be_ids = explode ( ",", $_POST ['be_ids'] );
-			$be_details = $this->account->get_be_details ( $be_ids );
-			
-			$date = DateTime::createFromFormat ( 'd/m/Y', $_POST ['date'] );
-			$d_decorrenza = $date->format ( 'Y-m-d' );
-			
-			if (count ( $be_details ) > 0) {
-				foreach ( $be_details as $item ) {
-					$export_billing_id [] = $this->actions->export_billing ( $item->cliente_id, $item->be_id, '1234', "TEST", $d_decorrenza );
-				}
-			}
-			
-			$data ['message'] = "Export billing created for " . count ( $export_billing_id ) . " out of " . count ( $be_ids ) . " be id's.";
-		}
-		
-		$data ['content'] = $this->load->view ( 'multiple_be_debug', $data, true );
 		$this->load->view ( 'template', $data );
 	}
 }

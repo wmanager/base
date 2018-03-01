@@ -1,13 +1,10 @@
 <div class="clearfix"></div>
-
-
-
 <div class="row-fluid">
 	<div class="col-md-12">
 		<div class="form-group">
-			<label>Note</label>
+			<label>Description</label>
 			<textarea ng-readonly="activity.status=='DONE'" class="form-control"
-				ng-model="forms[$index].nota_risolutiva"></textarea>
+				ng-model="forms[$index].description"></textarea>
 		</div>
 	</div>
 </div>
@@ -18,7 +15,7 @@
 <!-- ACTIVITY STATUS -->
 <div class="row-fluid" ng-if="activity.status!='DONE'">
 	<div class="col-md-12">
-		<tabset> <tab heading="Ho finito">
+		<tabset> <tab heading="Final Status">
 		<div class="row-fluid">
 			<div class="col-md-12">
 				<label class="radio"
@@ -28,7 +25,7 @@
 				</label>
 			</div>
 		</div>
-		</tab> <tab heading="Non ho finito">
+		</tab> <tab heading="In Progress Status">
 		<div class="row-fluid">
 			<div class="col-md-12">
 				<label class="radio"
@@ -48,9 +45,9 @@
 <div class="row-fluid" ng-if="activity.status!='DONE'">
 	<div class="col-md-12">
 		<button type="button" class="btn btn-success"
-			ng-click="saveForm($index,'/actions/generica',activity.id)">Salva</button>
+			ng-click="saveForm($index,'/actions/plain_description',activity.id)">Save</button>
 		<button type="button" class="btn btn-default"
-			ng-click="resetForm($index)">Annulla</button>
+			ng-click="resetForm($index)">Cancel</button>
 	</div>
 </div>
 <!-- ACTION BUTTONS -->

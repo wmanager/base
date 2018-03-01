@@ -200,6 +200,7 @@ class Actions_model extends CI_Model {
 			}
 		}
 		
+		
 		$var_check = $this->check_variable ( $data_varval, $target_type );
 		if ($var_check < 0) {
 			return $var_check;
@@ -776,7 +777,7 @@ class Actions_model extends CI_Model {
 				'modified' => date ( 'Y-m-d H:i:s' ) 
 		);
 		
-		if ($status == 'CANCELED') {
+		if ($status == 'CANCELLED') {
 			$data ['result'] = 'KO';
 		}
 		if ($status_result) {
@@ -837,7 +838,7 @@ class Actions_model extends CI_Model {
 		return $res->id;
 	}
 	public function get_thread_details($trouble_id = NULL) {
-		$thread_fetch = $this->db->select ( "threads.id,threads.status,threads.process,threads.type" )->where ( "trouble_id", $trouble_id )->where ( "status = 'APERTO'" )->get ( "threads" );
+		$thread_fetch = $this->db->select ( "threads.id,threads.status,threads.process,threads.type" )->where ( "trouble_id", $trouble_id )->where ( "status = 'OPEN'" )->get ( "threads" );
 		$res = $thread_fetch->result_array ();
 		if (count ( $res ) > 0) {
 			foreach ( $res as $key => $item ) {
@@ -870,7 +871,7 @@ class Actions_model extends CI_Model {
 		}
 	}
 	public function get_all_thread_details($thread_id = NULL) {
-		$thread_fetch = $this->db->select ( "threads.id,threads.status,threads.process,threads.type,threads.trouble_id" )->where ( "id", $thread_id )->where ( "status = 'APERTO'" )->get ( "threads" );
+		$thread_fetch = $this->db->select ( "threads.id,threads.status,threads.process,threads.type,threads.trouble_id" )->where ( "id", $thread_id )->where ( "status = 'OPEN'" )->get ( "threads" );
 		$res = $thread_fetch->row ();
 		
 		if (isset ( $res->id ) && $res->id != '') {
@@ -883,7 +884,15 @@ class Actions_model extends CI_Model {
 	public function auto_activity_master_update($activity_id = NULL) {
 		
 		// step 1: get thread and process
-		$get_thread_details = $this->db->select ( "threads.id,threads.type as thread_type,vars.value as status,activities.type as act_type,setup_processes.id as process_id,setup_activities.id as act_type_id" )->join ( "threads", "threads.id = activities.id_thread" )->join ( "vars", "vars.id_activity = activities.id", "left" )->join ( "setup_processes", "setup_processes.key = threads.type" )->join ( "setup_activities", "setup_activities.id_process = setup_processes.id" )->where ( "setup_activities.key = activities.type" )->where ( "vars.key = 'STATUS'" )->where ( "activities.id", $activity_id )->get ( "activities" );
+		$get_thread_details = $this->db->select ( "threads.id,threads.type as thread_type,vars.value as status,activities.type as act_type,setup_processes.id as process_id,setup_activities.id as act_type_id" )
+									->join ( "threads", "threads.id = activities.id_thread" )
+									->join ( "vars", "vars.id_activity = activities.id", "left" )
+									->join ( "setup_processes", "setup_processes.key = threads.type" )
+									->join ( "setup_activities", "setup_activities.id_process = setup_processes.id" )
+									->where ( "setup_activities.key = activities.type" )
+									->where ( "vars.key = 'STATUS'" )
+									->where ( "activities.id", $activity_id )
+									->get ( "activities" );
 		
 		$thread_details = $get_thread_details->row ();
 		
@@ -895,7 +904,13 @@ class Actions_model extends CI_Model {
 		}
 		
 		// step 2: get vars status from setup_vars_values
-		$get_vars_details = $this->db->select ( "setup_vars.id,setup_vars_values.key,setup_vars_values.initial,setup_vars_values.final" )->join ( "setup_vars_values", "setup_vars_values.id_var = setup_vars.id" )->where ( "setup_vars.id_process", $thread_details->process_id )->where ( "setup_vars.id_activity", $thread_details->act_type_id )->where ( "setup_vars.key = 'STATUS'" )->where ( "setup_vars_values.key", $thread_details->status )->get ( "setup_vars" );
+		$get_vars_details = $this->db->select ( "setup_vars.id,setup_vars_values.key,setup_vars_values.initial,setup_vars_values.final" )
+							->join ( "setup_vars_values", "setup_vars_values.id_var = setup_vars.id" )
+							->where ( "setup_vars.id_process", $thread_details->process_id )
+							->where ( "setup_vars.id_activity", $thread_details->act_type_id )
+							->where ( "setup_vars.key = 'STATUS'" )
+							->where ( "setup_vars_values.key", $thread_details->status )
+							->get ( "setup_vars" );
 		
 		$vars_details = $get_vars_details->row ();
 		
@@ -907,24 +922,20 @@ class Actions_model extends CI_Model {
 		}
 		
 		// step 3: select status
-		$status = '';
+		$status = 'OPEN';
 		if ($vars_details->initial == 't') {
-			$status = 'APERTO';
+			$status = 'OPEN';
 		}
 		
 		if ($vars_details->final == 't') {
-			$status = 'CHIUSO';
-		}
-		
-		if ($vars_details->final != 't' && $vars_details->initial != 't') {
-			$status = 'WIP';
+			$status = 'CLOSED';
 		}
 		
 		// step 4: update
 		$data_array = array (
 				"status" => $status 
 		);
-		$update = $this->db->where ( "activities.status != 'CANCELED'" )->where ( "activities.id", $activity_id )->update ( "activities", $data_array );
+		$update = $this->db->where ( "activities.status != 'CANCELLED'" )->where ( "activities.id", $activity_id )->update ( "activities", $data_array );
 		
 		if ($update) {
 			return array (
@@ -937,7 +948,9 @@ class Actions_model extends CI_Model {
 					"errors" => "update failed as cancelled" 
 			);
 		}
+
 	}
+	
 	public function get_setup_activities($activity_id = NULL) {
 		if ($activity_id == NULL) {
 			return false;
@@ -1047,7 +1060,7 @@ class Actions_model extends CI_Model {
 		}
 		$trouble_id = $result->trouble_id;
 		
-		if ($status == 'CHIUSO')
+		if ($status == 'CLOSED')
 			$status = 'DONE';
 		if ($status == 'DONE') {
 			$trouble = $this->get_trouble_details ( $THREADID, $trouble_id );
@@ -1082,7 +1095,7 @@ class Actions_model extends CI_Model {
 		
 		$trouble_id = $result->trouble_id;
 		$trouble_status = $result->status;
-		if ($trouble_status == 'DONE' || $trouble_status == 'ANNULATO') {
+		if ($trouble_status == 'DONE' || $trouble_status == 'CANCELLED') {
 			$res = true;
 			$data = array (
 					'result' => $status,

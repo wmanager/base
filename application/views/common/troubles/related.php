@@ -33,9 +33,9 @@
 				<td>{{rel.status}}</td>
 				<td>{{rel.created}}</td>
 				<td><a class="btn btn-sm btn-primary"
-					href="/common/cases/edit/{{rel.id}}">Dettaglio processo</a></td>
+					href="/common/cases/edit/{{rel.id}}">Process Detail</a></td>
 			</tr>
-			<tr>
+			<tr ng-show="related_threads.length == 0">
 				<td colspan="5">
 					<span>No Record Found</span>
 				</td>

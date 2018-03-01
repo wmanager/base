@@ -88,6 +88,10 @@ class Contracts{
 		//get account id
 		if($data['account'] == 'NEW'){
 			$account_id = $this->new_client($data);
+			$contact = $this->CI->inorder_model->create_client_contact($data, $account_id);			
+			if($contact['status'] == FALSE) {
+				return $contact;		
+			}
 		}else if($data['account'] == 'OLD'){
 			$account_id = $this->CI->inorder_model->get_client_id($data['code'],$data['account_type']);
 		}

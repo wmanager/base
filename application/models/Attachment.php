@@ -45,33 +45,29 @@ class Attachment extends CI_Model {
 		
 		return $query->result ();
 	}
-	public function add_attachment($data_post, $thread_id = NULL, $activity_id = NULL, $trouble_id = NULL, $legal_id = NULL) {
+	public function add_attachment($data_post, $thread_id = NULL, $activity_id = NULL, $trouble_id = NULL) {
 		$data_attachments ['thread_id'] = $thread_id;
 		$data_attachments ['activity_id'] = $activity_id;
 		$data_attachments ['trouble_id'] = $trouble_id;
-		//$data_attachments ['legal_id'] = $legal_id;
+
 		$data_attachments ['description'] = $data_post ['description'];
 		if ($trouble_id)
-			$data_post ['attach_type'] = $this->config->item ( 'trouble_attach_type' );
-			// if($legal_id) $data_post['attach_type'] = $this->config->item('legal_attach_type');
+			$data_post ['attach_type'] = $this->config->item ( 'trouble_attach_type' );			
 		$data_attachments ['attach_type'] = $data_post ['attach_type'];
 		$data_attachments ['created_by'] = $this->ion_auth->user ()->row ()->id;
-		// $data_attachments['filename'] = $data['upload_data']['file_name'];
-		// $encode_name = base64_encode($data['upload_data']['file_name']);
-		// $data_attachments['url'] = $data['upload_data']['file_path'].$encode_name;
+
 		if ($this->db->insert ( 'attachments', $data_attachments )) {
 			log_message ( 'DEBUG', $this->db->last_query () );
-			$this->session->set_flashdata ( 'growl_success', ' è stata inserita correttamente.' );
+			$this->session->set_flashdata ( 'growl_success', ' Record has been inserted correctly.' );
 			$insert_id = $this->db->insert_id ();
 			return $insert_id;
 		} else {
 			log_message ( 'ERROR', $this->db->last_query () );
-			$this->session->set_flashdata ( 'growl_error', 'Si è verificato un errore, preghiamo di riprovare.' );
+			$this->session->set_flashdata ( 'growl_error', ' There was an error, please try again.' );
 			return false;
 		}
 	}
-	public function list_files($thread_id = NULL, $activity_id = NULL, $trouble_id = NULL, $legal_id = NULL) {
-		$onsite_attach_array = array ();
+	public function list_files($thread_id = NULL, $activity_id = NULL, $trouble_id = NULL) {		
 		if ($thread_id) {
 			$this->db->where ( 'thread_id', $thread_id );
 		}
@@ -83,10 +79,7 @@ class Attachment extends CI_Model {
 		if ($trouble_id) {
 			$this->db->where ( 'trouble_id', $trouble_id );
 		}
-		
-		if ($legal_id) {
-			$this->db->where ( 'legal_id', $legal_id );
-		}
+
 		
 		$query = $this->db->select ( 'attachments.*,
 					setup_attachments.title as attachment_type, 
@@ -113,10 +106,10 @@ class Attachment extends CI_Model {
 		$query = $this->db->where ( 'id', $id )->get ( 'attachments_archive' );
 		return $query->row ();
 	}
-	public function delete_file($attachment_id, $thread_id, $activity_id = NULL, $legal_id = NULL) {
+	public function delete_file($attachment_id, $thread_id, $activity_id = NULL) {
 		$data = $this->get_single ( $attachment_id );
 		if (count ( $data ) > 0) {
-			$res = $this->delete_attachment ( $thread_id, $attachment_id, $data->filename, $legal_id );
+			$res = $this->delete_attachment ( $thread_id, $attachment_id, $data->filename);
 			if ($res) {
 				if ($this->db->where ( 'id', $attachment_id )->delete ( 'attachments' )) {
 					log_message ( 'DEBUG', $this->db->last_query () );
@@ -134,8 +127,8 @@ class Attachment extends CI_Model {
 			return false;
 		}
 	}
-	public function delete_attachment($thread_id, $attachment_id, $filename, $legal_id = NULL) {
-		$account_id = $this->get_account_id ( $thread_id, NULL, $legal_id );
+	public function delete_attachment($thread_id, $attachment_id, $filename) {
+		$account_id = $this->get_account_id ( $thread_id, NULL);
 		$upload_path = $this->config->item ( 'UPLOAD_DIR' );
 		$path = $upload_path . '/' . $account_id . '/' . $attachment_id . '/' . $filename;
 		
@@ -170,13 +163,11 @@ class Attachment extends CI_Model {
 		$query = $this->db->select ( 'exts,max_size' )->where ( 'id', $attach_id )->get ( 'setup_attachments' );
 		return $query->row ();
 	}
-	function get_account_id($thread_id = NULL, $trouble_id = NULL, $legal_id = NULL) {
+	function get_account_id($thread_id = NULL, $trouble_id = NULL) {
 		if ($thread_id != NULL) {
 			$query = $this->db->select ( 'customer as account_id' )->where ( 'id', $thread_id )->get ( 'threads' );
 		} else if ($trouble_id != NULL) {
 			$query = $this->db->select ( 'customer_id as account_id' )->where ( 'id', $trouble_id )->get ( 'troubles' );
-		} else {
-			$query = $this->db->select ( 'customer as account_id' )->where ( 'id', $legal_id )->get ( 'legal_cases' );
 		}
 		return $query->row ()->account_id;
 	}
@@ -186,11 +177,11 @@ class Attachment extends CI_Model {
 		$data_attachments ['url'] = $file_path . $encode_name;
 		if ($this->db->where ( 'id', $attachment_id )->update ( 'attachments', $data_attachments )) {
 			log_message ( 'DEBUG', $this->db->last_query () );
-			$this->session->set_flashdata ( 'growl_success', ' è stata inserita correttamente.' );
+			$this->session->set_flashdata ( 'growl_success', ' Record has been inserted correctly.' );
 			return true;
 		} else {
 			log_message ( 'ERROR', $this->db->last_query () );
-			$this->session->set_flashdata ( 'growl_error', 'Si è verificato un errore, preghiamo di riprovare.' );
+			$this->session->set_flashdata ( 'growl_error', 'There was an error, please try again.' );
 			return false;
 		}
 	}
@@ -257,11 +248,7 @@ class Attachment extends CI_Model {
 			$query = $this->db->where ( "id", $values->trouble_id )->get ( "troubles" );
 			$result = $query->row ();
 			return $result->customer_id;
-		} else if ($values->legal_id) {
-			$query = $this->db->where ( "id", $values->legal_id )->get ( "legal_cases" );
-			$result = $query->row ();
-			return $result->customer;
-		} else {
+		}  else {
 			return false;
 		}
 	}

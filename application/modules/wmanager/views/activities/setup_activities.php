@@ -46,11 +46,8 @@
 					</thead>
 					<tbody>
 					    		<?php
-											$tf_array = array (
-													't' => 'ATTIVO',
-													'f' => 'DISATTIVO' 
-											);
-											if (is_array ( $activities )) {
+
+											if ((is_array ( $activities )) && !empty($activities)) {
 												foreach ( $activities as $key => $activity ) {
 													$index = intval ( $key ) + 1;
 													echo '<tr class="OrderingField" id="actvity' . $activity->id . '">';
@@ -73,8 +70,7 @@
 													echo '<div class="dropdown">';
 													echo '<a href="#" data-toggle="dropdown" class="dropdown-toggle"><i class="fa fa-list"></i></a>';
 													echo '<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">';
-													echo '<li role="presentation"><a role="menuitem" tabindex="-1" href="' . site_url ( 'admin/setup_activities/edit/' . $process_id . '/' . $activity->id ) . '">Edit</a></li>';
-													echo '<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Add new activity here</a></li>';
+													echo '<li role="presentation"><a role="menuitem" tabindex="-1" href="' . site_url ( 'admin/setup_activities/edit/' . $process_id . '/' . $activity->id ) . '">Edit</a></li>';													
 													echo '<li role="presentation"><a role="menuitem" tabindex="-1" href="' . base_url () . 'admin/setup_activities/delete/' . $process_id . '/' . $activity->id . '" class="delete-confirm" data-message="Are you sure you want to delete the record?">Delete</a></li>';
 													echo '</ul>';
 													echo '</div>';
@@ -82,8 +78,15 @@
 													
 													echo '</tr>';
 												}
+											} else {
+												echo '<tr>';
+												echo '<td colspan="11">';
+												echo 'No Record Found';
+												echo '</td>';
+												echo '</tr>';
 											}
 											?>
+											
 					    	</tbody>
 
 				</table>

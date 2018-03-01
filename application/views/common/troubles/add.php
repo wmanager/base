@@ -49,10 +49,10 @@
 					</p>
 
 					<label><b>Select business entity</b></label>
+					
 					<div class="radio" ng-repeat="contract in contracts">
 						<label> <input type="radio" name="contract"
 							ng-model="selected.contract" ng-value="contract.be_id" />{{contract.be_code}}
-							- {{contract.address}} {{contract.city}} {{contract.state}}
 						</label>
 					</div>
 					<!--<div class="radio">
@@ -66,12 +66,12 @@
 						class="delete-confirm"
 						data-message=" Are you sure you want to cancel?"><span
 						class="label label-warning ng-binding"
-						ng-if="trouble_status && trouble_status == 'NEW'">Annulla trouble</span></a>
-					<br> <span class="label label-info" ng-show="campagne_name">{{campagne_name}}</span>
+						ng-if="trouble_status && trouble_status == 'NEW'">Cancel trouble</span></a>
+					<br>
 				</div>
 				<div class="clearfix"></div>
 				<hr>
-				<div ng-if="selected.status == 'CANCELED'">
+				<div ng-if="selected.status == 'CANCELLED'">
 					<div class="alert alert-warning alert-dismissable">
 						<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
 						<strong>Warning!</strong> This trouble was cancelled therefore you
@@ -128,7 +128,7 @@
 								<select class="form-control" ng-required="false"
 									ng-options="item.key as item.key for item in setup_roles"
 									ng-model="selected.res_roles">
-									<option value="">Seleziona role</option>
+									<option value="">Select role</option>
 								</select>
 							</div>
 							<div class="clearfix"></div>
@@ -159,7 +159,7 @@
 										ng-model="selected.deadline" name="start_data"> <span
 										class="input-group-addon"><i class="fa fa-calendar"></i></span>
 								</div>
-							</div>
+							</div>							
 							<div class="clearfix"></div>
 							<div class="form-group col-md-6">
 								<label><b>Status</b></label> <select class="form-control"
@@ -171,9 +171,9 @@
 
 							<div class="clearfix"></div>
 							<div class="form-group col-md-6" ng-if="selected.status=='DONE'">
-								<label><b>Esito</b></label> <select class="form-control"
+								<label><b>Result</b></label> <select class="form-control"
 									ng-model="selected.result" ng-required="true">
-									<option value="">Seleziona esito</option>
+									<option value="">Select Result</option>
 									<option value="OK">OK</option>
 									<option value="KO">KO</option>
 								</select>
@@ -181,7 +181,7 @@
 							<div class="form-group col-md-12">
 								<button type="button" class="btn btn-success" id="save_trouble"
 									ng-click="saveTrouble();" ng-disabled="troubleForm.$invalid"
-									ng-hide="trouble_status == 'DONE' || trouble_status == 'CANCELED'">Save</button>
+									ng-hide="trouble_status == 'DONE' || trouble_status == 'CANCELLED'">Save</button>
 							</div>
 						</div>
 						</tab> <tab heading="Attachments" disable="locked"> <alert
@@ -222,7 +222,7 @@
 									<div class="col-md-12">
 										<button type="submit" class="btn btn-success"
 											ng-click="upload(activity.id_thread)"
-											ng-hide="selected.status == 'CANCELED' || selected.status == 'DONE'">Save</button>
+											ng-hide="selected.status == 'CANCELLED' || selected.status == 'DONE'">Save</button>
 									</div>
 								</div>
 								<div class="clearfix"></div>
@@ -238,8 +238,8 @@
 										<p>
 											<a href="{{file.link}}">{{file.filename}}</a>
 										</p>
-										<small>{{file.description}}<br> Caricato il
-											{{file.created.substring(0,16)}} da {{file.first_name}}
+										<small>{{file.description}}<br> Created on
+											{{file.created.substring(0,16)}} by {{file.first_name}}
 											{{file.last_name}}
 										</small>
 									</div>
@@ -255,7 +255,11 @@
 							<i class="fa fa-4x fa-spinner fa-pulse"></i>
 						</div>
 
-						</tab> <tab heading="Process Correlated" disable="locked">
+						</tab> 
+						<tab heading="Task" disable="locked || trouble_status  == 'DRAFT'">
+							<div ng-include="manual_process"></div>
+						</tab>
+						<tab heading="Related Process" disable="locked">
 						<div ng-include="activity_related"></div>
 						</tab> <tab heading="Note" disable="locked">
 						<div ng-include="activity_followup"></div>

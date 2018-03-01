@@ -31,9 +31,7 @@
 				<label> <input type="radio" name="related[$parent.$index]"
 					id="related{{$index}}" ng-value="item.id"
 					ng-model="request.pending_related"
-					ng-checked="request.pending_parent_thread == item.id"> <span
-					ng-if="item.type!='INORDER'">{{item.title}} #{{item.id}}</span> <span
-					ng-if="item.type=='INORDER'">Inorder #{{item.id}}</span>
+					ng-checked="request.pending_parent_thread == item.id">
 				</label>
 			</div>
 

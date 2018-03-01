@@ -67,16 +67,9 @@ class Process extends CI_Model {
 		$general_data ['disabled'] = $data ['disabled'];
 		$general_data ['created_by'] = $this->ion_auth->user ()->row ()->id;
 		$general_data ['modified_by'] = $this->ion_auth->user ()->row ()->id;
+
 		
-		/**
-		 * onsite report : process blocking
-		 */
-		$general_data ['bloccante_credito'] = $data ['bloccante_credito'];
-		$general_data ['bloccante_tecnico'] = $data ['bloccante_tecnico'];
-		$general_data ['fast_thread'] = $data ['fast_thread'];
-		
-		$general_data = clean_array_data ( $general_data );
-		$general_data ['fast_thread_view'] = $data ['fast_thread_view'];
+		$general_data = clean_array_data ( $general_data );		
 		if ($this->db->insert ( 'setup_processes', $general_data )) {
 			$insert_id = $this->db->insert_id ();
 			
@@ -96,11 +89,11 @@ class Process extends CI_Model {
 				$this->set_default_status_value ( $status_varid );
 			}
 			log_message ( 'DEBUG', $this->db->last_query () );
-			$this->session->set_flashdata ( 'growl_success', ' è stata inserita correttamente.' );
+			$this->session->set_flashdata ( 'growl_success', 'Record has been inserted correctly.' );
 			return true;
 		} else {
 			log_message ( 'ERROR', $this->db->last_query () );
-			$this->session->set_flashdata ( 'growl_error', 'Si è verificato un errore, preghiamo di riprovare.' );
+			$this->session->set_flashdata ( 'growl_error', 'There was an error, please try again.' );
 			return false;
 		}
 	}
@@ -196,15 +189,8 @@ class Process extends CI_Model {
 		$general_data ['modified_by'] = $this->ion_auth->user ()->row ()->id;
 		$general_data ['modified'] = date ( 'Y-m-d H:i:s' );
 		
-		/**
-		 * onsite report : process blocking
-		 */
-		$general_data ['bloccante_credito'] = $data ['bloccante_credito'];
-		$general_data ['bloccante_tecnico'] = $data ['bloccante_tecnico'];
-		$general_data ['fast_thread'] = $data ['fast_thread'];
 		
-		$general_data = clean_array_data ( $general_data );
-		$general_data ['fast_thread_view'] = $data ['fast_thread_view'];
+		$general_data = clean_array_data ( $general_data );		
 		if ($this->db->where ( 'id', $id )->update ( 'setup_processes', $general_data )) {
 			
 			/* Get variable ID */
@@ -244,7 +230,7 @@ class Process extends CI_Model {
 			$values_data ['created_by'] = $this->ion_auth->user ()->row ()->id;
 			$values_data ['modified_by'] = $this->ion_auth->user ()->row ()->id;
 			$values_data ['modified'] = date ( 'Y-m-d H:i:s' );
-			
+
 			if ($valid == '') {
 				$values_data ['id_var'] = $varid;
 				$this->db->insert ( 'setup_vars_values', $values_data );
@@ -289,7 +275,7 @@ class Process extends CI_Model {
 	public function delete_status($id) {
 		if ($this->db->where ( 'id', $id )->delete ( 'setup_vars_values' )) {
 			log_message ( 'DEBUG', $this->db->last_query () );
-			$this->session->set_flashdata ( 'growl_success', ' It has been deleted successfully' );
+			$this->session->set_flashdata ( 'growl_success', ' Record has been deleted successfully' );
 			return true;
 		} else {
 			log_message ( 'ERROR', $this->db->last_query () );
@@ -357,7 +343,7 @@ class Process extends CI_Model {
 			log_message ( 'DEBUG', $this->db->last_query () );
 			$this->db->where ( 'id_var', $id )->delete ( 'setup_vars_values' );
 			log_message ( 'DEBUG', $this->db->last_query () );
-			$this->session->set_flashdata ( 'growl_success', ' It has been deleted successfully' );
+			$this->session->set_flashdata ( 'growl_success', ' Record has been deleted successfully' );
 			return true;
 		} else {
 			log_message ( 'ERROR', $this->db->last_query () );
@@ -390,7 +376,7 @@ class Process extends CI_Model {
 		if ($this->db->where ( 'id', $process_id )->delete ( 'setup_processes' )) {
 			
 			log_message ( 'DEBUG', $this->db->last_query () );
-			$this->session->set_flashdata ( 'growl_success', ' It has been deleted successfully' );
+			$this->session->set_flashdata ( 'growl_success', ' Record has been deleted successfully' );
 			return true;
 		} else {
 			log_message ( 'ERROR', $this->db->last_query () );

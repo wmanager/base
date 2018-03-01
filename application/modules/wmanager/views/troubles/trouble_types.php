@@ -28,8 +28,6 @@
 						<tr>
 							<th>Title</th>
 							<th>Description</th>
-							<th>Block Credit</th>
-							<th>Block Maintenance</th>
 							<th>Severity</th>
 							<th>Manual</th>
 							<th>Active</th>
@@ -44,8 +42,6 @@
 									<tr>
 							<td><?php echo $result['title'];?></td>
 							<td><?php echo $result['description'] ?></td>
-							<td><?php echo ($result['bloccante_credito'] == 't') ? 'true' : 'false'; ?></td>
-							<td><?php echo ($result['bloccante_tecnico'] == 't') ? 'true' : 'false'; ?></td>
 							<td><?php echo $result['severity']; ?></td>
 							<td><?php if($result['manual'] == 't'){ echo 'Yes';} else { echo 'No';} ?></td>
 							<td><?php if($result['active'] == 't'){ echo 'Active';} else { echo 'Inactive';} ?></td>
@@ -70,7 +66,7 @@
 									} else {
 										echo "<tr>";
 										echo "<td colspan='7'>";
-										echo "No reports found";
+										echo "No records found";
 										echo "</td>";
 										echo "</tr>";
 									}

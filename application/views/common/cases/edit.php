@@ -45,7 +45,7 @@
 							<h4 style="color: #419641">
 								<span class="label label-info ng-binding">Status
 									{{thread.master_status}}</span>&nbsp; &nbsp;<span
-									class="label label-info ng-binding">Esito {{thread.result}}</span>
+									class="label label-info ng-binding">Result {{thread.result}}</span>
 							</h4>
 							<small>{{thread.status}}</small> <br>
 							<h5>{{activities.length}} Related Activities</h5>
@@ -58,8 +58,9 @@
 									class="label label-warning ng-binding">Trouble
 										#{{('00000'+thread.trouble_id).slice(-'00000'.length)}}</span></a>
 							</h4>
+							
 							<h4 style="color: #419641"
-								ng-if="(thread.type.indexOf('INORDER') < 0) && (thread.master_status != 'ANNULATO') && (thread.master_status != 'CHIUSO')">
+								ng-if="(thread.master_status != 'CANCELLED') && (thread.master_status != 'CLOSED')">
 								<a href="/common/cases/thread_cancel/{{thread.id}}"><span
 									class="label label-warning ng-binding">Cancel request</span></a>
 							</h4>
@@ -182,6 +183,95 @@
 							ng-if="activity.sidebar=='t' && activity.is_request=='t'"></div>
 					</div>
 				</div>
+				<!-- Modal for Advanced Attivita -->
+						<div class="modal fade" id="attivita-advanced-report" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+							<div class="modal-dialog" role="document">
+						    	<div class="modal-content">
+						    		<div class="modal-header onsite-modal-header">
+						        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						          			<span aria-hidden="true">&times;</span>
+						        		</button>
+						        		<h4 class="modal-title" id="myModalLabel">Advanced Activity</h4>
+						      		</div>      
+						      		<div class="modal-body" style="margin:0px;">
+						      			<form action="" name="advanced_activity" id="advanced_activity">
+						      			<div class="row">
+						      				<div class="col-md-12">
+							      				<div class="col-md-6" id="advact_thread_status">
+												  <label><b>Thread Status</b></label>
+												  	<select name="thread_status" ng-model="advact_thread_status" class="form-control">
+												  		<option value="OPEN" selected>Open</option>
+												  		<option value="CLOSED">Closed</option>
+												  		<option value="CANCELLED">Cancelled</option>
+												  	</select>
+												</div>
+												<div class="col-md-6" ng-show="advact_thread_status=='CLOSED' || advact_thread_status=='CANCELLED'" id="advact_thread_status">
+												  <label><b>Thread Result</b></label>
+												  	<select name="thread_status" ng-model="advact_thread_result" class="form-control">
+												  		<option value="OK" selected>OK</option>
+												  		<option value="KO">KO</option>
+												  	</select>
+												</div>
+											</div>
+											<div class="col-md-12">
+												<hr />
+											</div>
+											<div class="col-md-12" ng-show="advact_trouble_exist == 'YES'">
+							      				<div class="col-md-6" id="advact_thread_status">
+												  <label><b>Trouble Status (<a target="_blank" href="/common/troubles/edit/{{advact_trouble_id}}">{{"#"+advact_trouble_id+' - '+advact_trouble_title}}</a>)</b></label>
+												  	<select name="thread_status" ng-model="advact_trouble_status" class="form-control">
+												  		<option value="NEW" selected>New</option>
+												  		<option value="DONE">Done</option>
+												  		<option value="WIP">WIP</option>
+												  		<option value="CANCELLED">Cancelled</option>
+												  	</select>
+												</div>
+												<div class="col-md-6" ng-show="advact_trouble_status == 'DONE' || advact_trouble_status == 'CANCELLED'" id="advact_trouble_status">
+												  <label><b>Trouble Result</b></label>
+												  	<select name="thread_status" ng-model="advact_trouble_result" class="form-control">
+												  		<option value="OK" selected>OK</option>
+												  		<option value="KO">KO</option>
+												  	</select>
+												</div>
+											</div>
+											<div class="col-md-12" ng-show="advact_trouble_exist == 'YES'">
+												<hr />
+											</div>
+											<div class="col-md-12">
+												<div class="col-md-6" ng-show="(advact_thread_status!='CLOSED' && advact_thread_status!='CANCELLED') && (advact_open_activities_count == 0)">
+													<div class="col-md-12">
+														<label><b>Would you like to create a activity</b></label>
+													  	<select name="activity" class="form-control"  ng-model="new_activity" >
+													  		<option ng-repeat="process in advact_current_activities" value="{{process.key}}">{{process.value}}</option>
+													  	</select>
+													</div>
+												</div>
+												<div class="col-md-6" ng-show="(advact_thread_status=='CLOSED' || advact_thread_status=='CANCELLED') && ( advact_trouble_status != 'DONE' && advact_trouble_status != 'CANCELLED')">
+													<div class="col-md-12">	
+													  	<label><b>Would you like to create a new process</b></label>
+													  	<select name="process" class="form-control" ng-model="new_process" ng-change="reloadProcessActivity()" >
+													  		<option ng-repeat="process in advact_processes" value="{{process.key}}">{{process.value}}</option>
+													  	</select>
+													</div>	
+													<div class="col-md-12">	
+													  	<label><b>Request</b></label>
+													  	<select name="activity" class="form-control"  ng-model="new_request" >
+													  		<option ng-repeat="process in advact_process_rel_activity" value="{{process.key}}">{{process.value}}</option>
+													  	</select>
+													</div>	
+												</div>
+											</div>
+						      			</div>
+						      			<br>
+						      				<div class="col-md-12">
+												<button class="btn btn-primary pull-left" type="button" name="advact_save" ng-disabled="((advact_thread_status == undefined) || ((advact_thread_status == 'CANCELLED' || advact_thread_status == 'CLOSED') && advact_thread_result == undefined) || ((advact_trouble_status == 'CANCELLED' || advact_trouble_status == 'DONE') && advact_trouble_result == undefined) || (new_process!=undefined && new_request==undefined))" ng-click="saveAdvancedActivity()">Done</button>
+												<button class="btn btn-primary pull-right" type="button" name="advact_exit" ng-click="exitAdvancedActivity()">Do Nothing</button>
+											</div>
+						      			</form>
+						      		</div>
+						      	</div>
+						    </div>
+						</div>
 
 			</section>
 		</div>

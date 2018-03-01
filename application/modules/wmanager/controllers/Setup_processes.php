@@ -73,29 +73,7 @@ class Setup_processes extends Admin_Controller {
 			} else {
 				$_POST ['role_can_create'] = implode ( ",", $_POST ['role_can_create'] );
 			}
-			
-			/**
-			 * onsite report : process blocking
-			 */
-			if (! isset ( $_POST ['bloccante_credito'] )) {
-				$_POST ['bloccante_credito'] = 'f';
-			} else {
-				$_POST ['bloccante_credito'] = 't';
-			}
-			
-			if (! isset ( $_POST ['bloccante_tecnico'] )) {
-				$_POST ['bloccante_tecnico'] = 'f';
-			} else {
-				$_POST ['bloccante_tecnico'] = 't';
-			}
-			
-			if (! isset ( $_POST ['fast_thread'] )) {
-				$_POST ['fast_thread'] = 'f';
-				$_POST ['fast_thread_view'] = '';
-			} else {
-				$_POST ['fast_thread'] = 't';
-			}
-			
+						
 			if ($this->process->add ()) {
 				redirect ( '/admin/setup_processes', 'refresh' );
 			}
@@ -175,31 +153,7 @@ class Setup_processes extends Admin_Controller {
 						'class' => 'checkbox',
 						'default_value' => 'f',
 						'label' => 'Disabled' 
-				),
-				/**
-				 * onsite report : process blocking
-				 */
-				array (
-						'id' => 'bloccante_credito',
-						'type' => 'checkbox',
-						'class' => 'checkbox',
-						'default_value' => 'f',
-						'label' => 'Bloccante credito' 
-				),
-				array (
-						'id' => 'bloccante_tecnico',
-						'type' => 'checkbox',
-						'class' => 'checkbox',
-						'default_value' => 'f',
-						'label' => 'Bloccante manutenzione' 
-				),
-				array (
-						'id' => 'fast_thread',
-						'type' => 'checkbox',
-						'class' => 'checkbox',
-						'default_value' => 'f',
-						'label' => 'Fast thread' 
-				) 
+				)
 		);
 		$autorize_data = $this->process->get_authorized_role ();
 		$form_types = $this->process->get_form_types ();
@@ -253,6 +207,7 @@ class Setup_processes extends Admin_Controller {
 		$this->breadcrumb->append ( $process->title, '' );
 		
 		if ($this->input->post ()) {
+
 			if (! $this->input->post ( 'disabled' )) {
 				$_POST ['disabled'] = 'f';
 			} else {
@@ -262,28 +217,6 @@ class Setup_processes extends Admin_Controller {
 				$_POST ['role_can_create'] = NULL;
 			} else {
 				$_POST ['role_can_create'] = implode ( ",", $_POST ['role_can_create'] );
-			}
-			
-			/**
-			 * onsite report : process blocking
-			 */
-			if (! isset ( $_POST ['bloccante_credito'] )) {
-				$_POST ['bloccante_credito'] = 'f';
-			} else {
-				$_POST ['bloccante_credito'] = 't';
-			}
-			
-			if (! isset ( $_POST ['bloccante_tecnico'] )) {
-				$_POST ['bloccante_tecnico'] = 'f';
-			} else {
-				$_POST ['bloccante_tecnico'] = 't';
-			}
-			
-			if (! isset ( $_POST ['fast_thread'] )) {
-				$_POST ['fast_thread'] = 'f';
-				$_POST ['fast_thread_view'] = '';
-			} else {
-				$_POST ['fast_thread'] = 't';
 			}
 			
 			if ($this->process->edit ( $id )) {
@@ -307,20 +240,6 @@ class Setup_processes extends Admin_Controller {
 		} else if ($checked_bpm == 'AUTOMATIC') {
 			$pchecked = true;
 			$mchecked = false;
-		}
-		
-		$bloccante_credito = 'f';
-		if ($data ['process']->bloccante_credito == 't') {
-			$bloccante_credito = 't';
-		}
-		$bloccante_tecnico = 'f';
-		if ($data ['process']->bloccante_tecnico == 't') {
-			$bloccante_tecnico = 't';
-		}
-		
-		$fast_thread = 'f';
-		if ($data ['process']->fast_thread == 't') {
-			$fast_thread = 't';
 		}
 		
 		$array_form_general = array (
@@ -394,31 +313,7 @@ class Setup_processes extends Admin_Controller {
 						'class' => 'checkbox',
 						'default_value' => 'f',
 						'label' => 'Disabled' 
-				),
-				/**
-				 * onsite report : process blocking
-				 */
-				array (
-						'id' => 'bloccante_credito',
-						'type' => 'checkbox',
-						'class' => 'checkbox',
-						'default_value' => $bloccante_credito,
-						'label' => 'Bloccante credito' 
-				),
-				array (
-						'id' => 'bloccante_tecnico',
-						'type' => 'checkbox',
-						'class' => 'checkbox',
-						'default_value' => $bloccante_tecnico,
-						'label' => 'Bloccante manutenzione' 
-				),
-				array (
-						'id' => 'fast_thread',
-						'type' => 'checkbox',
-						'class' => 'checkbox',
-						'default_value' => $fast_thread,
-						'label' => 'Fast thread' 
-				) 
+				)
 		);
 		$autorize_data = $this->process->get_authorized_role ();
 		$form_types = $this->process->get_form_types ();
@@ -460,6 +355,7 @@ class Setup_processes extends Admin_Controller {
 			array_push ( $array_form_form, $authorized_role );
 		}
 		$status_data ['status_data'] = $this->process->get_status ( $id, 1, $vid = NULL );
+
 		$other_data ['other_data'] = $this->process->get_other_variables ( $id, $source = 'CUSTOM' );
 		$other_data ['process_id'] = $status_data ['process_id'] = $id;
 		$data ['process_id'] = $id;

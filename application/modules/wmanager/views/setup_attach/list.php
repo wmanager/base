@@ -32,7 +32,7 @@
 					</thead>
 					<tbody>
 					    		<?php
-											if (is_array ( $attach_type )) {
+											if ((is_array ( $attach_type )) && !empty($attach_type)) {
 												foreach ( $attach_type as $attach ) {
 													echo '<tr>';
 													echo "<td width='40'></td>";
@@ -52,6 +52,12 @@
 													
 													echo '</tr>';
 												}
+											}  else {
+												echo '<tr>';
+												echo '<td colspan="6">';
+												echo 'No Record Found';
+												echo '</td>';
+												echo '</tr>';
 											}
 											?>
 					    	</tbody>

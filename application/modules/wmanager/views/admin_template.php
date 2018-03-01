@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="author" content="Wmanager">
-    <link rel="icon" href="../../favicon.ico">
+    <link rel="icon" href="/../../favicon.ico">
 
     <title>Wmanager</title>
 	<script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
@@ -63,8 +63,7 @@
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Process <span class="caret"></span></a>
               <ul class="dropdown-menu">
                 <li><a href="/admin/setup_processes">Setup Process</a></li>
-                <li><a href="/admin/setup_form">Setup Forms</a></li>
-                <li><a href="/admin/setup_processes/process">Process Importer</a></li>
+                <li><a href="/admin/setup_form">Setup Forms</a></li>                
               </ul>
             </li>
             <li class="dropdown <?php if(strpos($current_url,'setup_attach') > 0 || strpos($current_url,'setup_collection') > 0) echo "active";?>">

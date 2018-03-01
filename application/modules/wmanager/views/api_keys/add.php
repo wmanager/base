@@ -14,7 +14,7 @@
 						<div class="form-group">
 							<div class="col-md-2"></div>
 							<div class="col-md-9">
-								<button type="submit" class="btn btn-success">Salva</button> <a href="/admin/api_keys/" class="btn btn-default">Annulla</a>
+								<button type="submit" class="btn btn-success">Save</button> <a href="/admin/api_keys/" class="btn btn-default">Cancel</a>
 							</div>
 						</div>
 					</section>

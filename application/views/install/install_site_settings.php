@@ -63,7 +63,7 @@
 						<div class="form-group">
 							<label for="logo">Logo</label>
 								<input type="file" class="form-control-file" id="logo" name="logo" accept=".png">
-								<p class="help-block">This will be logo for wmanager (300 X 86) pixel and should be less thenn 1MB</p>							
+								<p class="help-block">This logo will replace wmanager logo. Should be of size (300 X 86) pixel and should be less than 1MB.</p>							
 						</div>
 					</div>
 				</div><!-- .row -->

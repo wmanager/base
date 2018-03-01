@@ -85,17 +85,7 @@ class Memos {
 							->get ( 'troubles' );
 				$cliente = $query->row ();
 				break;
-				case "LEGAL":
-					$memo_data['legal_id'] = $rel_id;
-					$query = $this->CI->db->select("accounts.*, address.*")
-					->where('legal_cases.id',$rel_id)
-					->join('be','be.id = legal_cases.be','left')
-					->join('accounts','accounts.id = be.account_id','left')
-					->join ( 'address', 'address.id = accounts.address_id' )
-					->where ( "address.type = 'CLIENT'" )	
-					->get('legal_cases');
-					$cliente = $query->row();
-					break;				
+				
 		}
 		
 		$memo_data ['start_day'] = (isset ( $data ['start_data'] )) ? $data ['start_data'] : '';

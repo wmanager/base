@@ -222,11 +222,7 @@ class email_notification_library {
 		$CI = & get_instance ();
 		$CI->load->model ( 'email_template' );
 		$email_array = array ();
-		switch ($email_type) {
-			case "LEGAL_NOTIFICATION" :
-				$email_array = $CI->email_template->get_legal_notif_template_data ( $type_ids );
-				break;
-		}
+		//EMAIL DATA ARRAY
 		
 		return $email_array;
 	}

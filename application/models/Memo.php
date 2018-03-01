@@ -50,7 +50,7 @@ class Memo extends CI_Model {
 		
 		return false;
 	}
-	public function get_followup($activity = NULL, $thread = NULL, $trouble = NULL, $legal = NULL) {
+	public function get_followup($activity = NULL, $thread = NULL, $trouble = NULL) {
 		if (($activity) && ($thread)) {
 			$query_activity = $this->db->select ( 'activities.type' )->where ( 'activities.id', $activity )->where ( 'activities.id_thread', $thread )->get ( 'activities' );
 			$result = $query_activity->row_array ();
@@ -69,15 +69,10 @@ class Memo extends CI_Model {
 				$this->db->where ( 'memos.thread_id', $thread );
 			if ($trouble)
 				$this->db->where ( 'memos.trouble_id', $trouble );
-			if ($legal)
-				$this->db->where ( 'memos.legal_id', $legal );
 		}
 		
 		$query = $this->db->select ( 'memos.*, users.first_name, users.last_name' );
-		if ($legal)
-			$query = $this->db->where ( 'memos.type', 'LEGAL' );
-		else
-			$query = $this->db->where ( 'memos.type', 'FOLLOWUP' );
+		$query = $this->db->where ( 'memos.type', 'FOLLOWUP' );
 		$query = $this->db->join ( 'users', "users.id = memos.created_by", 'left' );
 		$query = $this->db->order_by ( 'memos.id', 'ASC' )->get ( 'memos' );
 		

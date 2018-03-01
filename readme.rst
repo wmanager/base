@@ -57,7 +57,7 @@ agreement <https://github.com/xxx>`_.
 *******
 Version
 *******
-1.0.1v
+Since 1.0.0v
 
 *********
 Resources

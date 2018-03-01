@@ -135,7 +135,7 @@ class Company extends CI_Model {
 		if ($this->db->insert ( 'companies', $data )) {
 			$company_id = $this->db->insert_id ();
 			log_message ( 'DEBUG', $this->db->last_query () );
-			$this->session->set_flashdata ( 'growl_success', 'L\'azienda ' . $data ['name'] . ' è stata inserita correttamente.' );
+			$this->session->set_flashdata ( 'growl_success', 'The company' . $data ['name'] . ' has been inserted correctly.' );
 			/**
 			 * Insert company_id to setup company roles table *
 			 */
@@ -153,7 +153,7 @@ class Company extends CI_Model {
 			return true;
 		} else {
 			log_message ( 'ERROR', $this->db->last_query () );
-			$this->session->set_flashdata ( 'growl_error', 'Si è verificato un errore, non è stato possibile inserire  ' . $data ['name'] . ', ti preghiamo di riprovare.' );
+			$this->session->set_flashdata ( 'growl_error', 'An error occurred, could not be inserted ' . $data ['name'] . ', please try again.' );
 			return false;
 		}
 	}
@@ -236,7 +236,7 @@ class Company extends CI_Model {
 		}
 	}
 	public function get_single($id) {
-		$query = $this->db->select ( 'companies.*, c.name as holding_autocomplete, cr.role_key as company_role' )->join ( 'companies c', 'c.id = companies.holding', 'left' )->join ( 'setup_company_roles cr', 'cr.company_id = companies.id', 'left' )->where ( 'companies.domain', get_domain () )->where ( 'companies.id', $id )->get ( 'companies' );
+		$query = $this->db->select ( 'companies.*, c.name as holding_autocomplete, cr.role_key as company_role' )->join ( 'companies c', 'c.id = companies.holding', 'left' )->join ( 'setup_company_roles cr', 'cr.company_id = companies.id', 'left' )->where ( 'companies.id', $id )->get ( 'companies' );
 		$company = $query->row ();
 		$query = $this->db->where ( 'company_id', $id )->get ( 'setup_company_roles' );
 		$companyrole = $query->result ();
@@ -617,11 +617,11 @@ class Company extends CI_Model {
 		
 		if ($this->db->insert ( 'keys', $data )) {
 			log_message ( 'DEBUG', $this->db->last_query () );
-			$this->session->set_flashdata ( 'growl_success', 'La chiava è stata creata correttamente.' );
+			$this->session->set_flashdata ( 'growl_success', 'The key was created correctly.' );
 			return $this->db->insert_id ();
 		} else {
 			log_message ( 'ERROR', $this->db->last_query () );
-			$this->session->set_flashdata ( 'growl_error', 'Si è verificato un errore, non è stato possibile creare la chiave, ti preghiamo di riprovare.' );
+			$this->session->set_flashdata ( 'growl_error', 'There was an error, the key could not be created, please try again.' );
 			return false;
 		}
 	}
@@ -636,11 +636,11 @@ class Company extends CI_Model {
 		
 		if ($this->db->where ( 'id', $id )->where ( 'id_company', $customer )->update ( 'keys', $data )) {
 			log_message ( 'DEBUG', $this->db->last_query () );
-			$this->session->set_flashdata ( 'growl_success', 'La chiave è stata modificata con successo.' );
+			$this->session->set_flashdata ( 'growl_success', 'The key has been changed successfully.' );
 			return true;
 		} else {
 			log_message ( 'ERROR', $this->db->last_query () );
-			$this->session->set_flashdata ( 'growl_error', 'Si è verificato un errore, non è stato possibile modificare la chiave, ti preghiamo di riprovare.' );
+			$this->session->set_flashdata ( 'growl_error', 'There was an error, the key could not be changed, please try again.' );
 			return false;
 		}
 	}
@@ -658,7 +658,7 @@ class Company extends CI_Model {
 	public function company_list() {
 		$query = $this->db->get ( 'companies' );
 		$cs = $query->result ();
-		$arr_rs [0] = 'Seleziona parent company';
+		$arr_rs [0] = 'Select parent company';
 		foreach ( $cs as $c ) {
 			$arr_rs [$c->id] = $c->name;
 		}
@@ -676,7 +676,7 @@ class Company extends CI_Model {
 		if ($role_id->id > 0) {
 			$this->db->where ( 'setup_users_roles.role_id', $role_id->id );
 		}
-		$query = $this->db->select ( "users.*, users.first_name || ' ' || users.last_name as user_name" );
+		$query = $this->db->distinct('users.id')->select ( "users.*, users.first_name || ' ' || users.last_name as user_name" );
 		$query = $this->db->join ( 'setup_users_roles', 'users.id=setup_users_roles.user_id', 'left	' );
 		$query = $this->db->where ( 'active', '1' )->where ( 'id_company', $id_company );
 		$query = $this->db->order_by ( 'user_name' )->get ( 'users' );

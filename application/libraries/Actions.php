@@ -51,7 +51,7 @@ class Actions {
 	/**
 	 * get_setup_activity_details
 	 *
-	 * call from controllers/common/case. function create_related_activity(). Action Aggiungi attività correlate-popup
+	 * call from controllers/common/case. function create_related_activity(). 
 	 *
 	 * @param integer $thread_id        	
 	 * @param string $setup_activity_key        	
@@ -62,7 +62,7 @@ class Actions {
 	 */
 	public function get_setup_activity_details($thread_id, $setup_activity_key) {
 		$CI = & get_instance ();
-		$CI->load->model ( 'setup_activity' );
+		$CI->load->model ( 'wmanager/setup_activity' );
 		
 		$result = $CI->setup_activity->get_setup_activity_details ( $thread_id, $setup_activity_key );
 		
@@ -193,10 +193,11 @@ class Actions {
 	
 	public function create_thread_tree($process_key, $account_id, $be_id, $duty = NULL, $trouble_id = NULL, $draft = 'f', $request_key) {
 		$thread_id = $this->create_thread ( $process_key, $account_id, $be_id, $duty, $trouble_id, $draft );
-		
+
 		$CI = & get_instance ();
+		$CI->load->library ( "core/core_actions" );
 		$CI->load->model ( 'core/actions_model' );
-		$CI->load->model ( 'setup_activity' );
+		$CI->load->model ( 'wmanager/setup_activity' );
 		
 		$request_activity_id = $CI->actions_model->get_activity_id ( $request_key );
 		$initial_status_key = $this->get_activity_initial_status ( $request_key, $process_key );
@@ -204,7 +205,7 @@ class Actions {
 		$vars = array (
 				'STATUS' => $initial_status_key 
 		);
-		$this->create_activity ( 'THREAD', $thread_id, $request_key, $vars );
+		$CI->core_actions->create_activity ( 'THREAD', $thread_id, $request_key, $vars );
 		
 		return $thread_id;
 	}
@@ -220,7 +221,7 @@ class Actions {
 		$return_array = array ();
 		// check count of threads
 		if (count ( $thread_details ) == 0 || $thread_details == '') {
-			$trouble_reset = $this->Set_Status_Trouble ( $trouble_id, "CANCELED" );
+			$trouble_reset = $this->Set_Status_Trouble ( $trouble_id, "CANCELLED" );
 			$return_array [$i] ["trouble_id"] = $trouble_id;
 			return $return_array;
 		}
@@ -228,8 +229,8 @@ class Actions {
 		foreach ( $thread_details as $thread ) {
 			// check activity count for thread
 			if (count ( $thread ["act_details"] ) == 0) {
-				$thread_reset = $CI->core_core_actions->Set_Satus_Thread ( $thread ["id"], "CANCELED", "Alarm was Fixed" );
-				$trouble_reset = $this->Set_Status_Trouble ( $trouble_id, "CANCELED" );
+				$thread_reset = $CI->core_actions->Set_Satus_Thread ( $thread ["id"], "CANCELLED", "Alarm was Fixed" );
+				$trouble_reset = $this->Set_Status_Trouble ( $trouble_id, "CANCELLED" );
 				
 				$return_array [$i] ["thread_id"] = $thread ["id"];
 				$return_array [$i] ["trouble_id"] = $trouble_id;
@@ -245,15 +246,15 @@ class Actions {
 			if (count ( $thread ["act_details"] ) == 1) {
 				// check weather it is in initial status
 				$initial_status = $this->get_activity_initial_status ( $thread ["act_details"] [0] ["type"], $thread ["type"] );
-				if ($initial_status == $thread ["act_details"] [0] ["vars_status"] && $thread ["act_details"] [0] ["master_status"] == 'APERTO') {
+				if ($initial_status == $thread ["act_details"] [0] ["vars_status"] && $thread ["act_details"] [0] ["master_status"] == 'OPEN') {
 					// close the activity
-					$act_reset = $CI->core_core_actions->Set_Status_Activity ( $thread ["act_details"] [0] ["id"], "CANCELED", "Alarm was Fixed" );
+					$act_reset = $CI->core_actions->Set_Status_Activity ( $thread ["act_details"] [0] ["id"], "CANCELLED", "Alarm was Fixed" );
 					
 					// close the thread
-					$thread_reset = $CI->core_core_actions->Set_Satus_Thread ( $thread ["id"], "CANCELED", "Alarm was Fixed" );
+					$thread_reset = $CI->core_actions->Set_Satus_Thread ( $thread ["id"], "CANCELLED", "Alarm was Fixed" );
 					
 					// close the thread
-					$trouble_reset = $this->Set_Status_Trouble ( $trouble_id, "CANCELED" );
+					$trouble_reset = $this->Set_Status_Trouble ( $trouble_id, "CANCELLED" );
 					
 					$return_array [$i] ["thread_id"] = $thread ["id"];
 					$return_array [$i] ["activity_id"] = $thread ["act_details"] [0] ["id"];
@@ -288,92 +289,25 @@ class Actions {
 			return TRUE;
 		}
 		
-		if ($thread_details->status == 'APERTO') {
+		if ($thread_details->status == 'OPEN') {
 			if (count ( $thread_details->act_details ) == 1) {
 				$act_details = $thread_details->act_details;
 				
 				$initial_status = $this->get_activity_initial_status ( $act_details [0] ["type"], $thread->type );
-				if ($initial_status != $act_details [0] ["vars_status"] && $act_details [0] ["master_status"] == 'APERTO') {
+				if ($initial_status != $act_details [0] ["vars_status"] && $act_details [0] ["master_status"] == 'OPEN') {
 					$trouble_reset = $this->Set_Status_Trouble ( $thread_details->trouble_id, "WIP" );
 				}
 			} else if (count ( $thread_details->act_details ) > 1) {
 				$trouble_reset = $this->Set_Status_Trouble ( $thread_details->trouble_id, "WIP" );
 			}
-		} else if ($thread_details->status == 'CHIUSO') {
+		} else if ($thread_details->status == 'CLOSED') {
 			// close the thread
 			$trouble_reset = $this->Set_Status_Trouble ( $thread_details->trouble_id, "DONE" );
-		} else if ($thread_details->status == 'CANCELED') {
+		} else if ($thread_details->status == 'CANCELLED') {
 			// cancel the thread
-			$trouble_reset = $this->Set_Status_Trouble ( $thread_details->trouble_id, "CANCELED" );
+			$trouble_reset = $this->Set_Status_Trouble ( $thread_details->trouble_id, "CANCELLED" );
 		}
 		
 		return TRUE;
-	}
-	
-	public function autoActivityStatusUpdate($activity_id = NULL) {
-		$CI = & get_instance ();
-		$CI->load->model ( 'core/actions_model' );
-		
-		if ($activity_id == NULL) {
-			return FALSE;
-		}
-		
-		// update the status
-		$update = $CI->actions_model->auto_activity_master_update ( $activity_id );
-		return true;
-	}
-	
-	public function create_campagne_trouble_tree($type, $trouble_sub_type, $tro_role, $company, $users, $description, $status, $customer_id, $be_id, $cmp_id) {
-		$CI = & get_instance ();
-		$CI->load->model ( 'core/actions_model' );
-		
-		// CHECK IF TROUBLE IS CLOSED FOR THE CUSTOMER
-		$result = $CI->actions_model->get_trouble_customer ( $customer_id, $be_id, $cmp_id );
-		// IF STATUS IS CLOSED THEN CREATE THE TROUBLE
-		if (count ( $result ) == 0) {
-			$trouble_id = $this->create_trouble ( $type, $description, $status, $customer_id, $be_id, $cmp_id, $trouble_sub_type, $tro_role, $company, $users );
-			$autocreate_process = $CI->actions_model->get_process_for_trouble_types ( $type );
-			if (count ( $autocreate_process ) > 0) {
-				foreach ( $autocreate_process as $process ) {
-					$thread_id = $this->create_thread_tree ( $process->process_key, $customer_id, $be_id, $duty = NULL, $trouble_id, 'f', $process->request_key );
-				}
-			}
-			return $trouble_id;
-		}
-		
-		if ((count ( $result ) >= 0) && (isset ( $result->status ) && ($result->status == 'CLOSE'))) {
-			$trouble_id = $this->create_trouble ( $type, $description, $status, $customer_id, $be_id, $cmp_id, $trouble_sub_type, $tro_role, $company, $users );
-			$autocreate_process = $CI->actions_model->get_process_for_trouble_types ( $type );
-			if (count ( $autocreate_process ) > 0) {
-				foreach ( $autocreate_process as $process ) {
-					$thread_id = $this->create_thread_tree ( $process->process_key, $customer_id, $be_id, $duty = NULL, $trouble_id, 'f', $process->request_key );
-				}
-			}
-			return $trouble_id;
-		}
-	}
-	
-	public function reopen_thread($billing_id = NULL) {
-		$CI = & get_instance ();
-		$CI->load->model ( 'core/actions_model' );
-		
-		// update billing table
-		$billing_data = array (
-				"status" => 'READY_FOR_BILLING',
-				"billing_esito" => NULL,
-				"billing_d_esito" => NULL,
-				"billing_esito_note" => NULL,
-				"return_value" => NULL 
-		);
-		$update_billing = $CI->actions_model->reopen_export_billing ( $billing_id, $billing_data );
-		
-		if ($update_billing) {
-			// open activity and thread
-			$activity_update = $CI->actions_model->reopen_activity_export_billing ( $billing_id );
-			
-			return $activity_update;
-		} else {
-			return FALSE;
-		}
 	}
 }

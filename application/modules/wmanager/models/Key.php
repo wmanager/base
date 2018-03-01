@@ -58,11 +58,11 @@ class Key extends CI_Model {
 		
 		if ($this->db->insert ( 'api_keys', $data )) {
 			log_message ( 'DEBUG', $this->db->last_query () );
-			$this->session->set_flashdata ( 'growl_success', 'La chiave è stata inserita correttamente.' );
+			$this->session->set_flashdata ( 'growl_success', 'The key has been entered correctly.' );
 			return true;
 		} else {
 			log_message ( 'ERROR', $this->db->last_query () );
-			$this->session->set_flashdata ( 'growl_error', 'Si è verificato un errore, non è stato possibile inserire la chiave, ti preghiamo di riprovare.' );
+			$this->session->set_flashdata ( 'growl_error', 'There was an error, the key could not be entered, please try again.' );
 			return false;
 		}
 	}
@@ -81,11 +81,11 @@ class Key extends CI_Model {
 		
 		if ($this->db->where ( 'id', $id )->update ( 'api_keys', $data )) {
 			log_message ( 'DEBUG', $this->db->last_query () );
-			$this->session->set_flashdata ( 'growl_success', 'La chiave è stata modifica correttamente.' );
+			$this->session->set_flashdata ( 'growl_success', 'The key has been modified correctly.' );
 			return true;
 		} else {
 			log_message ( 'ERROR', $this->db->last_query () );
-			$this->session->set_flashdata ( 'growl_error', 'Si è verificato un errore, non è stato possibile modificare la chiave, ti preghiamo di riprovare.' );
+			$this->session->set_flashdata ( 'growl_error', 'There was an error, the key could not be changed, please try again.' );
 			return false;
 		}
 	}

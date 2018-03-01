@@ -24,14 +24,12 @@
 		</div>
 		<div class="form-group">
 			<input type="hidden" name="cancel_activities" value="yes"
-				ng-model="wheelbase" ng-init="wheelbase='yes'">
-			<!--<input type="checkbox" name="cancel_activities" value="yes" ng-model="wheelbase">
-		    <label>Annulla anche le corrispondenti attivita non chiuse</label>  	-->
+				ng-model="wheelbase" ng-init="wheelbase='yes'">			
 		</div>
 	</form>
 	<div class="clearfix"></div>
 </div>
 <div class="modal-footer">
 	<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-	<button type="button" class="btn btn-primary" name="salva">Proceed</button>
+	<button type="button" class="btn btn-primary" name="Save">Proceed</button>
 </div>

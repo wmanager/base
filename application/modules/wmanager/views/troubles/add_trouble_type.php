@@ -55,25 +55,6 @@
 							</div>
 						</div>
 						<div class="form-group">
-							<div class="col-md-2"></div>
-							<div class="col-md-8">
-								<div class="checkbox">
-									<label><input type="checkbox" name="trouble_type_check_credito"
-										value="t" class="checkbox"> Bloccante Credito</label>
-								</div>
-							</div>
-						</div>
-						<div class="form-group">
-							<div class="col-md-2"></div>
-							<div class="col-md-8">
-								<div class="checkbox">
-									<label><input type="checkbox"
-										name="trouble_type_check_manutenzione" value="t"
-										class="checkbox"> Bloccante Manutenzione</label>
-								</div>
-							</div>
-						</div>
-						<div class="form-group">
 							<label class="col-md-2 control-label">Severity*</label>
 							<div class="col-md-8">
 								<input type="number" min="1" id="trouble_type_severity"

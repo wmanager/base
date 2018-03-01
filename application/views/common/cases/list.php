@@ -89,7 +89,7 @@
 								<div class="input-group">
 									<select class="form-control" name="search_esito"
 										onchange="this.form.submit()">
-										<option value="">Select Esito Result</option>
+										<option value="">Select Result</option>
 										<option value="OK"
 											<?php if($this->session->userdata('filter_esito_result') =='OK'){ echo 'selected';}?>>OK</option>
 										<option value="KO"
@@ -146,7 +146,7 @@
 							<th>Process</th>
 							<th>Activities</th>
 							<th>State</th>
-							<th>Esito</th>
+							<th>Result</th>
 							<th>d_integration</th>
 							<th></th>
 						</tr>
@@ -160,11 +160,9 @@
 														$reclamo = "<i title='Reclamo' class='fa fa-bell-o red'></i> ";
 													echo '<tr>';
 													
-													if ($thread->fast_thread == 't') {
-														echo "<td><a href='/common/cases/fast_thread/$thread->id'>THREAD #$thread->id</a></td>";
-													} else {
-														echo "<td><a href='/common/cases/edit/$thread->id'>THREAD #$thread->id</a></td>";
-													}
+
+													echo "<td><a href='/common/cases/edit/$thread->id'>THREAD #$thread->id</a></td>";
+													
 													// echo "<td>$thread->process<br><small>$thread->type</small></td>";												
 														echo "<td><a href='/common/accounts/detail/$thread->user' target='_blank'>$thread->first_name $thread->last_name</a></td>";
 													
@@ -179,17 +177,12 @@
 													} else {
 														$thread_name = $thread->type;
 													}
-													if ($thread->fast_thread == 't') {
-														echo "<td>$reclamo  <a href='/common/cases/fast_thread/$thread->id'>$thread_name</a> $info_link <br><small>Creato da $thread->first_name $thread->last_name  il " . date ( 'd/m/Y H:i', datait2ts ( $thread->created ) ) . "</small></td>";
-													} else {
-														echo "<td>$reclamo  <a href='/common/cases/edit/$thread->id'>$thread_name</a> $info_link <br><small>Creato da $thread->first_name $thread->last_name  il " . date ( 'd/m/Y H:i', datait2ts ( $thread->created ) ) . "</small></td>";
-													}
+
+													echo "<td>$reclamo  <a href='/common/cases/edit/$thread->id'>$thread_name</a> $info_link <br><small>Created by $thread->first_name $thread->last_name  on " . date ( 'd/m/Y H:i', datait2ts ( $thread->created ) ) . "</small></td>";
+
+
+													echo "<td><a href='/common/cases/set_thread/$thread->id'>$thread->act_count</a></td>";
 													
-													if ($thread->fast_thread == 't') {
-														echo "<td>0</td>";
-													} else {
-														echo "<td><a href='/common/cases/set_thread/$thread->id'>$thread->act_count</a></td>";
-													}
 													echo "<td><span class='label label-primary'>$thread->status</span></td>";
 													echo "<td>$thread->result<br>$thread->result_note</td>";
 													// echo "<td width='100'><div class='progress'><div class='progress-bar' role='progressbar' aria-valuenow='".$thread->progress."' aria-valuemin='0' aria-valuemax='100' style='width: ".$thread->progress."%;'>".$thread->progress."%</div></div></td>";
@@ -204,7 +197,7 @@
 													echo '<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">';
 													echo '<li role="presentation"><a role="menuitem" tabindex="-1" href="/common/cases/edit/' . $thread->id . '">Details</a></li>';
 													
-													if ($thread->status != 'CHIUSO' && $thread->status != 'CANCELED') {
+													if ($thread->status != 'CLOSED' && $thread->status != 'CANCELLED') {
 														echo '<li role="presentation"><a role="menuitem" tabindex="-1" href="/common/cases/cancel/' . $thread->id . '" data-toggle="modal" data-target="#cancelThreadItem">Cancel</a></li>';
 													}
 													echo '</ul>';

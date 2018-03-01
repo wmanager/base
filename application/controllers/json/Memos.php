@@ -67,14 +67,14 @@ class Memos extends CI_Controller {
 		
 		$this->output->set_content_type ( 'application/json' )->set_output ( json_encode ( $memos_data ) );
 	}
-	public function followup($thread = NULL, $activity = NULL, $trouble = NULL, $legal = NULL) {
+	public function followup($thread = NULL, $activity = NULL, $trouble = NULL) {
 		if ($thread == 'null')
 			$thread = NULL;
 		if ($activity == 'null')
 			$activity = NULL;
 		if ($trouble == 'null')
 			$trouble = NULL;
-		$memos_data = $this->memo->get_followup ( $activity, $thread, $trouble, $legal );
+		$memos_data = $this->memo->get_followup ( $activity, $thread, $trouble);
 		
 		$this->output->set_content_type ( 'application/json' )->set_output ( json_encode ( $memos_data ) );
 	}

@@ -5,7 +5,7 @@
 			<div class="col-xs-2" ng-class-odd="'col-xs-push-10'">
 				<p class="text-muted creator" ng-class-even="'pull-right'"
 					ng-class-odd="'pull-left'">
-					<small>Written by {{c.first_name}} {{c.last_name}} the
+					<small>Written by <b> {{c.first_name}} {{c.last_name}}</b> on
 						{{c.created.substring(0,16)}}</small>
 				</p>
 			</div>
@@ -23,10 +23,7 @@
 							<br>
 						<i class="fa fa-envelope-o" ng-if="c.notification_date"></i> <span
 							ng-if="c.notification_date" class="label label-info">{{c.notification_date}}</span>
-						</span> <!-- <span class="pull-right" ng-if="formTypeMemos == 'LEGAL'"><a
-							href="#" data-toggle="modal" data-target="#responseModal"
-							ng-click="setEditMemoPopup(c)"> <i class="fa fa-pencil"
-								aria-hidden="true"></a></i></span> -->
+						</span> 
 					</div>
 				</div>
 			</div>
@@ -73,28 +70,12 @@
 					ng-model="followup.time">
 			</div>
 			<div class="clearfix"></div>
-			<div class="col-md-4"
-				ng-show="followup.scheduler && formTypeMemos == 'LEGAL'">
-				<label>Notification date</label>
-				<div data-date-viewmode="days" data-date-format="dd/mm/yyyy"
-					data-date-end-date="" data-date="" class="input-group date"
-					new-calendar>
-					<input type="text" class="form-control"
-						column="col-sm-6 col-md-6 col-lg-6" placeholder="dd/mm/yyyy"
-						value="" name="notification_date"
-						ng-model="followup.notification_date"> <span
-						class="input-group-addon"><i class="fa fa-envelope-o"
-						aria-hidden="true"></i></i></span>
-				</div>
-
-			</div>
-			<div class="clearfix"></div>
 		</div>
 		<div class="form-group">
 			<button type="button" class="btn btn-success"
 				ng-click="insertFollowup()" id="save_followup_button"
 				ng-disabled="!followup.description || (followup.scheduler && !followup.day) || followup_process == true;"
-				ng-hide="selected.status == 'CANCELED' || selected.status == 'DONE'">Save</button>
+				ng-hide="selected.status == 'CANCELLED' || selected.status == 'DONE'">Save</button>
 		</div>
 	</div>
 </div>
@@ -138,21 +119,6 @@
 								<label>Schedule for the time</label> <input type="text"
 									placeholder="hh:mm" class="form-control" id="followupPop-time"
 									ng-model="followupPop.time">
-							</div>
-							<div class="clearfix"></div>
-							<div class="col-md-4"
-								ng-show="followupPop.scheduler && formTypeMemos == 'LEGAL'">
-								<label>Notification date</label>
-								<div data-date-viewmode="days" data-date-format="dd/mm/yyyy"
-									data-date-end-date="" data-date="" class="input-group date"
-									new-calendar>
-									<input type="text" class="form-control"
-										column="col-sm-6 col-md-6 col-lg-6" placeholder="dd/mm/yyyy"
-										value="" ng-model="followupPop.notification_date"> <span
-										class="input-group-addon"><i class="fa fa-envelope-o"
-										aria-hidden="true"></i></span>
-								</div>
-
 							</div>
 							<div class="clearfix"></div>
 						</div>

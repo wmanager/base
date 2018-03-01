@@ -27,7 +27,7 @@
 					    	</thead>
 					    	<tbody>
 					    		<?php
-					    			if(is_array($collections)){
+					    			if((is_array($collections)) && !empty($collections)) {
 					    				foreach($collections as $collection){
 						    				echo '<tr>';						    					
 						    					echo "<td width='40'></td>";
@@ -46,7 +46,13 @@
 						    					
 						    				echo '</tr>';
 						    			}
-						    		}
+						    		} else {
+												echo '<tr>';
+												echo '<td colspan="4">';
+												echo 'No Record Found';
+												echo '</td>';
+												echo '</tr>';
+											}
 					    		?>
 					    	</tbody>
 

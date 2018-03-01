@@ -41,16 +41,16 @@ if (! defined ( 'BASEPATH' ))
 	exit ( 'No direct script access allowed' );
 class Extension_model extends CI_Model {
 	public function get_extensions() {
-		$query = $this->db->select ( "*" )->get ( "extensions" );
+		$query = $this->db->select ( "*" )->order_by('id','DESC')->get ( "extensions" );
 		$result = $query->result ();
 		
 		return $result;
 	}
 	
-	public function add_install_log($extension_id,$instruction,$message,$status){
+	public function add_install_log($key,$instruction,$message,$status){
 		
 		$data_array = array(
-				"extension_id" => $extension_id,
+				"extension_key" => $key,
 				"instruction"  => $instruction,
 				"message"	   => $message,
 				"status"		=> $status,
@@ -75,11 +75,22 @@ class Extension_model extends CI_Model {
 		}
 	}
 	
-	public function updated_extension_details($id){
+	public function check_extension_installed($key){
+	
+		$query = $this->db->where("status = 'installed'")->where("key",$key)->get("extensions");
+	
+		if($query->num_rows() > 0){
+			return true;
+		}else{
+			return false;
+		}
+	}
+	
+	public function updated_extension_details($key){
 		$data = array(
 				'status' => 'installed'
 		);
-		$this->db->where("id",$id);
+		$this->db->where("key",$key);
 		$this->db->update('extensions',$data);
 		return true;
 	}
@@ -98,7 +109,6 @@ class Extension_model extends CI_Model {
 	
 	public function insert_extension($data) {
 		$data_array = array(
-				"title" => $data['title'],
 				"status"  => 'downloaded',
 				"key" => $data['key'],
 				"file_name" => $data['file_name'],

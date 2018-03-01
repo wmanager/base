@@ -1,5 +1,5 @@
 <div class="row-fluid">
-	<div ng-if="selected.status == 'CANCELED'">
+	<div ng-if="selected.status == 'CANCELLED'">
 		<div class="alert alert-warning alert-dismissable">
 			<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
 			<strong>Warning!</strong> This trouble was cancelled therefore you
@@ -40,7 +40,7 @@
 	</div>
 
 	<div class="form-group col-md-12">
-		<label class="control-label"><b>Descrizione</b></label>
+		<label class="control-label"><b>Description</b></label>
 		<textarea class="form-control" ng-required="true"
 			ng-model="selected.description" disabled></textarea>
 	</div>
@@ -49,14 +49,14 @@
 			class="form-control" ng-required="true"
 			ng-options="item.id as item.name for item in crm_companies"
 			ng-model="selected.duty_company_crm" disabled>
-			<option value="">Seleziona azienda</option>
+			<option value="">Select company</option>
 		</select>
 	</div>
 	<div class="form-group col-md-6">
 		<br> <select class="form-control" ng-required="false"
 			ng-options="item.id as item.user_name for item in crm_users"
 			ng-model="selected.duty_user_crm" disabled>
-			<option value="">Seleziona utente</option>
+			<option value="">Select company user</option>
 		</select>
 	</div>
 	<div class="clearfix"></div>
@@ -65,7 +65,7 @@
 		<select class="form-control" ng-required="false"
 			ng-options="item.key as item.key for item in setup_roles"
 			ng-model="selected.res_roles" disabled>
-			<option value="">Seleziona role</option>
+			<option value="">Select role</option>
 		</select>
 	</div>
 	<div class="clearfix"></div>
@@ -74,14 +74,14 @@
 			ng-required="false"
 			ng-options="item.id as item.name for item in resolution_companies"
 			ng-model="selected.duty_company_resolution" disabled>
-			<option value="">Seleziona azienda</option>
+			<option value="">Select company</option>
 		</select>
 	</div>
 	<div class="form-group col-md-6" ng-show="selected.show_role_company">
 		<br> <select class="form-control" ng-required="false"
 			ng-options="item.id as item.user_name for item in resolution_users"
 			ng-model="selected.duty_user_resolution" disabled>
-			<option value="">Seleziona utente</option>
+			<option value="">Select user</option>
 		</select>
 	</div>
 	<div class="clearfix"></div>
@@ -106,9 +106,9 @@
 
 	<div class="clearfix"></div>
 	<div class="form-group col-md-6" ng-if="selected.status=='DONE'">
-		<label><b>Esito</b></label> <select class="form-control"
+		<label><b>Result</b></label> <select class="form-control"
 			ng-model="selected.result" ng-required="true" disabled>
-			<option value="">Seleziona esito</option>
+			<option value="">Select Result</option>
 			<option value="OK">OK</option>
 			<option value="KO">KO</option>
 		</select>
@@ -117,7 +117,7 @@
 		<a type="button" target="_blank"
 			ng-href="/common/troubles/edit/{{trouble_id}}"
 			class="btn btn-primary"
-			ng-hide="trouble_status == 'DONE' || trouble_status == 'CANCELED'">Edit
+			ng-hide="trouble_status == 'DONE' || trouble_status == 'CANCELLED'">Edit
 			Trouble</a>
 	</div>
 	<div>

@@ -47,7 +47,7 @@
 					<thead>
 						<tr>
 							<th></th>
-							<th>Nome</th>
+							<th>Name</th>
 							<th>Status</th>
 							<th>Nation</th>
 							<th>Contact</th>
@@ -58,8 +58,8 @@
 					<tbody>
 					    		<?php
 											$tf_array = array (
-													't' => 'ATTIVO',
-													'f' => 'DISATTIVO' 
+													't' => 'Active',
+													'f' => 'Inactive' 
 											);
 											if (is_array ( $companies )) {
 												foreach ( $companies as $company ) {

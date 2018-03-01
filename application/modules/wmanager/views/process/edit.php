@@ -21,22 +21,7 @@
 				<div class="tab-content">
 					<div class="tab-pane active fade in" id="general">
 				            	<?= $form_general; ?>
-				            	<?php if($process->fast_thread == 't'){?>
-				            	<div class="form-group" id="fast_thread_view_container">
-				            	<?php }else{?>
-				            	<div class="form-group hidden"
-								id="fast_thread_view_container">
-				            	<?php }?>
-				            		<div class="col-md-offset-2 col-md-8">
-									<label for="fast_thread_view" class="col-md-2 control-label">View</label>
-									<div class="col-md-9">
-										<input name="fast_thread_view" id="fast_thread_view"
-											label="Fast thread view" placeholder="Fast thread view"
-											class="form-control" type="text"
-											value="<?= $process->fast_thread_view; ?>">
-									</div>
-								</div>
-							</div>
+
 							<div class="form-group">
 								<div class="col-md-offset-2 col-md-8">
 									<button type="submit" class="btn btn-success">Save</button>

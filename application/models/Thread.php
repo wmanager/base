@@ -79,9 +79,9 @@ class Thread extends CI_Model {
 		} else if ($this->input->post ( 'status' ) == '-') {
 			$this->session->unset_userdata ( 'filter_threads_status' );
 			// $this->session->set_userdata('filter_threads_status_all','all');
-			$this->session->set_userdata ( 'filter_threads_status', 'APERTO' );
+			$this->session->set_userdata ( 'filter_threads_status', 'OPEN' );
 		} else if ($this->input->post ( 'status' ) == '' && $this->session->userdata ( 'filter_activities_status' ) == '') {
-			$this->session->set_userdata ( 'filter_threads_status', 'APERTO' );
+			$this->session->set_userdata ( 'filter_threads_status', 'OPEN' );
 		}
 		
 		if ($this->input->post ( 'search_esito' ) != '') {
@@ -413,14 +413,7 @@ class Thread extends CI_Model {
 		
 		return false;
 	}
-	
-	/*
-	 * update_status_exb_exa_exr
-	 * function to update the status of export billing, export_autoletture and export_rettifiche table
-	 * $act_id int, $thread_id int
-	 * Raghavendra Naik
-	 */
-	
+
 	/*
 	 * get_thread_integration
 	 * function to get the date from integrations

@@ -74,11 +74,11 @@ class Collection extends CI_Model
 			
 			$attach_check = $this->insert_attachment($data['attach'],$collection_id);
 			
-			$this->session->set_flashdata('growl_success', ' è stata inserita correttamente.');
+			$this->session->set_flashdata('growl_success', 'Record has been inserted correctly.');
 			return true;
 		} else {
 			log_message('ERROR',$this->db->last_query());
-			$this->session->set_flashdata('growl_error', 'Si è verificato un errore, preghiamo di riprovare.');
+			$this->session->set_flashdata('growl_error', 'There was an error, please try again.');
 			return false;
 		}
 	}

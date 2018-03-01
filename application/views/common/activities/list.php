@@ -134,7 +134,7 @@
 							<div class="input-group">
 								<select class="form-control" name="search_esito"
 									onchange="this.form.submit()">
-									<option value="">Select Esito Result</option>
+									<option value="">Select Result</option>
 									<option value="OK"
 										<?php if($this->session->userdata('filter_esito_result') =='OK'){ echo 'selected';}?>>OK</option>
 									<option value="KO"
@@ -160,6 +160,7 @@
 			
 				<div class="clearfix"></div>
 				<hr></hr>
+				<?php ?>
 
 				<a href="/common/activities/export"
 					class="btn btn-success pull-right">Export</a>
@@ -172,7 +173,7 @@
 							<th>Activity</th>
 							<th>Status</th>
 							<th></th>
-							<th>Esito</th>
+							<th>Result</th>
 							<th></th>
 						</tr>
 					</thead>
@@ -204,9 +205,10 @@
 														$reclamo = "<i title='Reclamo' class='fa fa-bell-o red'></i> ";
 													if ($activity->thread_status == 'PENDING')
 														$pending = "<i class='fa fa-hourglass-start'></i> ";
-													echo "<td>" . $reclamo . "" . $pending . "<a href='$link'>$activity->activity_title</a> <small style='font-size:70%'>($activity->role)</small> $thread <br><small>Created by $activity->company_name<br>$activity->first_name $activity->last_name  the " . date ( 'd-m-Y H:i', strtotime ( str_replace ( '/', '-', $activity->created ) ) ) . "</small><br><small> Assigned to $activity->duty_company</small>$deadline</td>";
-													//$statuses = $this->activity->get_statuses ( $activity->type, $activity->status_value );
-													echo "<td><span class='label label-primary'>$activity->activity_status</span><br><small></small>";										
+													echo "<td>" . $reclamo . "" . $pending . "<a href='$link'>$activity->activity_title</a> <small style='font-size:70%'>($activity->role)</small> $thread <br><small>Created by $activity->company_name<br>$activity->first_name $activity->last_name  on " . date ( 'd-m-Y H:i', strtotime ( str_replace ( '/', '-', $activity->created ) ) ) . "</small><br><small> Assigned to $activity->duty_company</small>$deadline</td>";
+													$statuses = $this->activity->get_statuses ( $activity->type, $activity->status_value );
+											
+													echo "<td><b>".$statuses[0]->key."</b><br><span class='label label-primary'>$activity->activity_status</span><br><small></small>";										
 													echo "</td>";
 													if ($activity->reminder != '')
 														echo "<td><small><i class='fa fa-comment'></i> $activity->followup<br><i class='fa fa-calendar'></i> $activity->reminder</small></td>";

@@ -85,13 +85,14 @@ class Troubles extends Common_Controller {
 	}
 	public function create_trouble() {
 		$input_data = json_decode ( trim ( file_get_contents ( 'php://input' ) ), true );
+
 		
 		if ($id = $this->trouble->add ( $input_data )) {
 			$processes = $this->trouble->fetch_process ( $input_data ['type'] );
 			
 			if (count ( $processes ) > 0) {
 				foreach ( $processes as $process ) {
-					$this->actions->create_thread_tree ( $process->process_key, $input_data ['customer'] ['account_id'], $input_data ['contract'], $duty = NULL, $id, 'f', $process->request_key );
+					$this->actions->create_thread_tree ( $process->process_key, $input_data ['customer'] ['id'], $input_data ['contract'], $duty = NULL, $id, 'f', $process->request_key );
 				}
 			}
 			$this->output->set_content_type ( 'application/json' )->set_output ( json_encode ( array (
@@ -204,7 +205,42 @@ class Troubles extends Common_Controller {
 		redirect ( "/common/troubles" );
 	}
 	
-
+	public function manual_process(){
+		$this->load->view('common/troubles/manual_process');
+	}
+	public function get_request_activities($id) {
+		return $this->output
+		->set_content_type('application/json')
+		->set_output(json_encode($this->trouble->get_request_activities($id)));
+	}
+	public function get_request($id) {
+		return $this->output
+		->set_content_type('application/json')
+		->set_output(json_encode($this->trouble->get_request($id)));
+	}
+	public function get_all_setup_process($id = NULL) {
+		return $this->output
+		->set_content_type('application/json')
+		->set_output(json_encode($this->trouble->get_all_setup_process($id)));
+	}
+	public function manual_process_save() {
+		$CI = & get_instance ();
+		$CI->load->library ( "core/core_actions" );
+		
+		if(isset($_POST)) {
+				
+			if(isset($_POST['activity_save']) && !empty($_POST['activity_save'])) {
+				$thread_process_id = $this->actions->create_thread($_POST['thread_type'], $_POST['customer_id'], $_POST['be_id'] ,NULL, $_POST['trouble_id'],'f');
+				$act = $CI->core_actions->create_activity('THREAD',$thread_process_id,$_POST['request_activity'],array('STATUS'=>'NEW'),NULL);
+	
+			} else {
+				$thread_process_id = $this->actions->create_thread($_POST['process'], $_POST['customer_id'], $_POST['be_id'] ,NULL, $_POST['trouble_id'],'f');
+				$act = $CI->core_actions->create_activity('THREAD',$thread_process_id,$_POST['request'],array('STATUS'=>'NEW'),NULL);
+					
+			}
+			redirect('/common/troubles/edit/'.$_POST['trouble_id']);
+		}
+	}
 	public function export_troubles() {
 		
 		$view_details = $this->trouble->export_trouble ();

@@ -1,0 +1,4 @@
+WManager Version
+
+Current version: 1.0.1v
+

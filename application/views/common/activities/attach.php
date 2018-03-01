@@ -12,7 +12,7 @@
 			<p>
 				<a href="{{file.link}}">{{file.filename}}</a>
 			</p>
-			<small> Caricato il {{file.created.substr(0,10)}} da
+			<small> Created on {{file.created.substr(0,10)}} by
 				{{file.first_name}} {{file.last_name}} </small>
 		</div>
 

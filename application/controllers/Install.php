@@ -56,6 +56,7 @@ class Install extends CI_Controller {
 		
 		parent::__construct();
 		$this->load->model('install_model');
+		$this->load->model('version');
 		$this->load->helper(array('form', 'cookie', 'url'));
 		$this->load->library(array('form_validation', 'session'));
 		
@@ -69,7 +70,10 @@ class Install extends CI_Controller {
 	public function index() {	
 /*  		$step= 1;
 		$this->install_model->reset_configs($step); */
+		
+		
 		$data = (object)[];
+		$data->version = $this->version->fetch_current_version();
 		$data->content = $this->load->view ( 'install/install', $data, true );
 		$this->load->view ( 'install/install_template', $data );
 		return;
@@ -374,7 +378,8 @@ class Install extends CI_Controller {
 						'first_name'   => $first_name,
 						'last_name'   => $last_name,
 						'company'     => $company,
-						'id_company'  => $id_company
+						'id_company'  => $id_company,
+						'role1' => 'CONTROLLER'
 				);
 				
 				$user_id = $this->ion_auth->register ( $username, $password, $email, $additional_data);

@@ -54,7 +54,7 @@ class Setup_attach extends Admin_Controller {
 		$config ['base_url'] = '/admin/setup_attach/get/page/';
 		$config ['total_rows'] = $this->attach->total ();
 		$this->pagination->initialize ( $config );
-		$data ['content'] = $this->load->view ( 'admin/setup_attach/list', $data, true );
+		$data ['content'] = $this->load->view ( 'wmanager/setup_attach/list', $data, true );
 		$this->load->view ( 'wmanager/admin_template', $data );
 	}
 	public function add() {
@@ -125,7 +125,7 @@ class Setup_attach extends Admin_Controller {
 		;
 		
 		$data ['form_attachment'] = $this->form_builder->build_form_horizontal ( $array_form_attachment );
-		$data ['content'] = $this->load->view ( 'admin/setup_attach/add', $data, true );
+		$data ['content'] = $this->load->view ( 'wmanager/setup_attach/add', $data, true );
 		$this->load->view ( 'wmanager/admin_template', $data );
 	}
 	public function edit($id = NULL) {
@@ -203,7 +203,7 @@ class Setup_attach extends Admin_Controller {
 		);
 		
 		$data ['form_attachment'] = $this->form_builder->build_form_horizontal ( $array_form_attachment, $data ['attachment'] );
-		$data ['content'] = $this->load->view ( 'admin/setup_attach/edit', $data, true );
+		$data ['content'] = $this->load->view ( 'wmanager/setup_attach/edit', $data, true );
 		$this->load->view ( 'wmanager/admin_template', $data );
 	}
 	public function delete($id = NULL) {

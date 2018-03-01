@@ -68,7 +68,7 @@ class Core_actions {
 				log_message ( 'DEBUG', 'trigger engine 123' );
 				log_message ( 'DEBUG', '-----------------------------------------------------------------' );
 				$this->engine ( $id_activity );
-				// $this->autoActivityStatusUpdate($id_activity);
+				$this->autoActivityStatusUpdate($id_activity);
 			}
 		}
 		return $updatevar;
@@ -100,36 +100,6 @@ class Core_actions {
 	public function entry_scenario($activity_id = NULL, $setup_details = NULL) {
 		if ($setup_details == NULL || $activity_id == NULL) {
 			return FALSE;
-		}
-		
-		if ($setup_details->entry_scenario == 'Create_Export_Billing') {
-			$CI = & get_instance ();
-			$CI->load->model ( 'core/actions_model' );
-			
-			$customer_details = $CI->actions_model->get_billing_details ( $activity_id );
-			
-			if (count ( $customer_details ) == 0) {
-				return FALSE;
-			}
-			
-			$tipo_richiesta = "ATTIVAZIONE";
-			$d_decorrenza = date ( 'Y-m-d' );
-			$this->export_billing ( $customer_details->customer, $customer_details->be, $activity_id, $tipo_richiesta, $d_decorrenza, $status = 'DONE_GROSSISTA' );
-		} else if ($setup_details->entry_scenario == 'Create_Export_Billing_Sereno') {
-			$CI = & get_instance ();
-			$CI->load->model ( 'core/actions_model' );
-			
-			$customer_details = $CI->actions_model->get_billing_details ( $activity_id );
-			
-			if (count ( $customer_details ) == 0) {
-				return FALSE;
-			}
-			
-			$tipo_richiesta = "ATTIVAZIONE";
-			
-			$d_att = date ( "Y-m-d" );
-			$d_decorrenza = date ( 'Y-m-01', strtotime ( "+1 months", strtotime ( $d_att ) ) );
-			$this->export_billing ( $customer_details->customer, $customer_details->be, $activity_id, $tipo_richiesta, $d_decorrenza, $status = 'DONE_GROSSISTA' );
 		}
 		
 		return TRUE;
@@ -543,7 +513,7 @@ class Core_actions {
 												
 												if ($growl_messages != '')
 													$growl_messages .= "<br>";
-												$growl_messages .= "L'attività " . $each_action ['target_type'] . " è stata creata con successo.";
+												$growl_messages .= "The activity " . $each_action ['target_type'] . " has been successfully created.";
 												
 												$$each_action ['res'] = $response;
 												log_message ( 'DEBUG', 'trigger engine 6' );
@@ -680,7 +650,20 @@ class Core_actions {
 		return 0;
 	}
 	
-	public function test_actions() {
-		echo "Test function";
+	public function autoActivityStatusUpdate($activity_id = NULL){
+	
+		$CI = & get_instance();
+		$CI->load->model('actions_model');
+	
+	
+		if($activity_id == NULL){
+			return FALSE;
+		}
+	
+		//update the status
+		$update = $CI->actions_model->auto_activity_master_update($activity_id);
+		return true;
+	
 	}
+	
 }

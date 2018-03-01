@@ -15,7 +15,7 @@
 			<a data-toggle="modal" data-target="#myModal"
 				href="/common/cases/create_related_activity/{{thread.id}}"
 				class="btn btn-success pull-right"
-				ng-disabled="thread.status=='DONE'">Aggiungi attività correlate</a>
+				ng-disabled="thread.status=='DONE'">Add related activities</a>
 			<div class="clearfix"></div>
 		</div>
 	</div>
@@ -44,8 +44,7 @@
 					<td ng-if="rel.o_ragione_sociale != null">{{rel.o_ragione_sociale}}</td> -->
 				<td>{{rel.status}}</td>
 				<td>{{rel.created}}</td>
-				<td><a class="btn btn-sm btn-primary" href="{{rel.link}}">Dettaglio
-						Attivita</a></td>
+				<td><a class="btn btn-sm btn-primary" href="{{rel.link}}">Activity Detail</a></td>
 			</tr>
 		</tbody>
 	</table>

@@ -60,11 +60,11 @@ class Attach extends CI_Model {
 		$attach_data = clean_array_data ( $attach_data );
 		if ($this->db->insert ( 'setup_attachments', $attach_data )) {
 			log_message ( 'DEBUG', $this->db->last_query () );
-			$this->session->set_flashdata ( 'growl_success', ' è stata inserita correttamente.' );
+			$this->session->set_flashdata ( 'growl_success', 'Record has been inserted correctly.' );
 			return true;
 		} else {
 			log_message ( 'ERROR', $this->db->last_query () );
-			$this->session->set_flashdata ( 'growl_error', 'Si è verificato un errore, preghiamo di riprovare.' );
+			$this->session->set_flashdata ( 'growl_error', 'There was an error, please try again.' );
 			return false;
 		}
 	}

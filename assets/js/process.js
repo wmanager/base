@@ -141,31 +141,7 @@ $( document ).ready(function() {
 	return false;
 	});
 	
-	/* Add attachments onsite report */
-	  $('body').on('click', '#onsite_report_add_attachment',function(e){
-		  	$('#onsite-report-attachment-submit-block').show();
-			var report_id = $(this).data('ref');
-			$.ajax({
-		        type: "GET",
-		        url: '/admin/setup_reports/get_unused_onsite_report_attachments/'+report_id,
-		        dataType: "json",
-		        success: function(response) {
-		        	if(typeof response.data != 'undefined'){
-		        		 var attachments = response.data;
-		        		 var raw_template = $('#attachment_new_list').html();
-		        		 var template = Handlebars.compile(raw_template);
-		        		 var placeHolder = $("#attachment_table tbody");
-		        		 var context = {"attachments": attachments, };
-		        		 var html = template(context);
-		        		 placeHolder.append(html);	        		
-		        		
-						if(attachments.length <=1){
-							$('#add_attachment').removeClass('in');
-						}
-		        	}
-		        }
-		      });
-		});
+
 	
 	  /* Add attachments Activities */
 	  $('body').on('click', '#add_attachment',function(e){
@@ -218,23 +194,7 @@ $( document ).ready(function() {
 	    });
 		return false;
 	  });
-	  
-	  /* Onsite attachment edit-save */
-	  $('body').on('click', '#onsite_report_save_attachment',function(e){
-		  
-			var form_data = $("#onsite_report_attachment_form").serialize();
-			
-			$.ajax({
-		        url: "/admin/setup_reports/save_attachment",
-		        type: 'POST',
-		        data: form_data,
-		        success: function(msg)
-		        {
-		        	window.location.reload();
-		        }
-		    });
-			return false;
-	  });
+
 	  
 	  /* Save exit scenario Activities */
 		$('body').on('click', '#save_exit_scenario',function(){
@@ -350,9 +310,9 @@ $( document ).ready(function() {
 		
 		
 		// adding date picker to filter_dalla_data and filter_alla_data
-		$('#filter_dalla_data').datepicker({ autoclose: true, todayHighlight: true, language: 'it' });
-		$("#filter_alla_data").datepicker({ autoclose: true, todayHighlight: true, language: 'it' });
-		$('#filter_quntity_dalla_data').datepicker({ autoclose: true, todayHighlight: true, language: 'it' });
-		$("#filter_quntity_alla_data").datepicker({ autoclose: true, todayHighlight: true, language: 'it' });
-		$('#data_effettuazione').datepicker({ autoclose: true, todayHighlight: true, language: 'it' });
+		$('#filter_dalla_data').datepicker({ autoclose: true, todayHighlight: true});
+		$("#filter_alla_data").datepicker({ autoclose: true, todayHighlight: true});
+		$('#filter_quntity_dalla_data').datepicker({ autoclose: true, todayHighlight: true});
+		$("#filter_quntity_alla_data").datepicker({ autoclose: true, todayHighlight: true});
+		$('#data_effettuazione').datepicker({ autoclose: true, todayHighlight: true});
 });

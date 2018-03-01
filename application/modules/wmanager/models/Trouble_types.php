@@ -129,16 +129,6 @@ class Trouble_types extends CI_Model {
 	public function add_trouble_type($data) {
 		$insert_data ["title"] = $data ['trouble_type_title'];
 		$insert_data ["description"] = $data ['trouble_type_description'];
-		if ($data ['trouble_type_check_active'] == 't') {
-			$insert_data ["bloccante_credito"] = 't';
-		} else {
-			$insert_data ["bloccante_credito"] = 'f';
-		}
-		if ($data ['trouble_type_check_manutenzione'] == 't') {
-			$insert_data ["bloccante_tecnico"] = 't';
-		} else {
-			$insert_data ["bloccante_tecnico"] = 'f';
-		}
 		if ($data ['trouble_type_check_manual'] == 't') {
 			$insert_data ["manual"] = 't';
 		} else {
@@ -200,16 +190,6 @@ class Trouble_types extends CI_Model {
 		}
 		if ($post ['trouble_type_description']) {
 			$update_data ["description"] = $post ['trouble_type_description'];
-		}
-		if ($post ['trouble_type_check_credito'] == 't') {
-			$update_data ["bloccante_credito"] = 't';
-		} else {
-			$update_data ["bloccante_credito"] = 'f';
-		}
-		if ($post ['trouble_type_check_manutenzione'] == 't') {
-			$update_data ["bloccante_tecnico"] = 't';
-		} else {
-			$update_data ["bloccante_tecnico"] = 'f';
 		}
 		if ($post ['trouble_type_check_manual'] == 't') {
 			$update_data ["manual"] = 't';

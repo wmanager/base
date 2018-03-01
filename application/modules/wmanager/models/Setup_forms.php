@@ -73,11 +73,11 @@ class Setup_forms extends CI_Model {
 		$form_data = clean_array_data ( $form_data );
 		if ($this->db->insert ( 'setup_forms', $form_data )) {
 			log_message ( 'DEBUG', $this->db->last_query () );
-			$this->session->set_flashdata ( 'growl_success', ' è stata inserita correttamente.' );
+			$this->session->set_flashdata ( 'growl_success', 'Record has been inserted correctly.' );
 			return true;
 		} else {
 			log_message ( 'ERROR', $this->db->last_query () );
-			$this->session->set_flashdata ( 'growl_error', 'Si è verificato un errore, preghiamo di riprovare.' );
+			$this->session->set_flashdata ( 'growl_error', 'There was an error, please try again.' );
 			return false;
 		}
 	}
@@ -204,7 +204,7 @@ class Setup_forms extends CI_Model {
 	public function delete_attachment($id) {
 		if ($this->db->where ( 'id', $id )->delete ( 'setup_forms_attachments' )) {
 			log_message ( 'DEBUG', $this->db->last_query () );
-			$this->session->set_flashdata ( 'growl_success', ' It has been deleted successfully' );
+			$this->session->set_flashdata ( 'growl_success', ' Record has been deleted successfully' );
 			return true;
 		} else {
 			log_message ( 'ERROR', $this->db->last_query () );

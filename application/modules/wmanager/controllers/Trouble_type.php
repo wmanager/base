@@ -268,7 +268,7 @@ class Trouble_type extends Common_Controller {
 		if ($page_number > 0) {
 			redirect ( "/admin/trouble_type/index/page/" . $page_number );
 		} else {
-			redirect ( "/administration/quotations_orders" );
+			redirect ( "/admin/trouble_type" );
 		}
 	}
 	

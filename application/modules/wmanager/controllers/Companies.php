@@ -90,9 +90,9 @@ class Companies extends Admin_Controller {
 		$roles = array ();
 		$array_company_role = array ();
 		$sharing = array (
-				'0' => 'Creato o assegnato',
-				'1' => 'Creato, assegnato o non assegnato',
-				'2' => 'Vede tutto' 
+				'0' => 'Created or assigned',
+				'1' => 'Created, assigned or not assigned',
+				'2' => 'He sees everything' 
 		);
 		$company_list = $this->company->company_list ();
 		$array_form_general = array (
@@ -286,7 +286,7 @@ class Companies extends Admin_Controller {
 		$data ['form_billing'] = $this->form_builder->build_form_horizontal ( $array_form_billing );
 		$data ['form_shipping'] = $this->form_builder->build_form_horizontal ( $array_form_shipping );
 		
-		$data ['content'] = $this->load->view ( 'admin/companies/add', $data, true );
+		$data ['content'] = $this->load->view ( 'wmanager/companies/add', $data, true );
 		$this->load->view ( 'wmanager/admin_template', $data );
 	}
 	
@@ -330,15 +330,15 @@ class Companies extends Admin_Controller {
 		$roles = array ();
 		$array_company_role = array ();
 		$sharing = array (
-				'0' => 'Creato o assegnato',
-				'1' => 'Creato, assegnato o non assegnato',
-				'2' => 'Vede tutto' 
+				'0' => 'Created or assigned',
+				'1' => 'Created, assigned or not assigned',
+				'2' => 'He sees everything' 
 		);
 		$array_form_general = array (
 				array(/* Holding autocomplete*/
 		        'id' => 'holding_autocomplete',
 						'label' => 'Holding',
-						'placeholder' => 'Azienda holding',
+						'placeholder' => 'Company holding',
 						'class' => 'typeahead selected' 
 				),
 				array(/* Holding value */
@@ -347,8 +347,8 @@ class Companies extends Admin_Controller {
 				),
 				array(/* Name */
 		        'id' => 'name',
-						'label' => 'Nome',
-						'placeholder' => 'Nome azienda',
+						'label' => 'Name',
+						'placeholder' => 'Name of company',
 						'required' => 'required' 
 				),
 				array(/* Contract */
@@ -365,19 +365,19 @@ class Companies extends Admin_Controller {
 				),
 				array(/* Contact */
 		        'id' => 'contact',
-						'label' => 'Contatto di riferimento',
-						'placeholder' => 'Nome e cognome',
+						'label' => 'Ref. Contact',
+						'placeholder' => 'First and last name',
 						'class' => 'required' 
 				),
 				array(/* Phone1 */
 		        'id' => 'phone1',
-						'label' => 'Telefono',
-						'placeholder' => 'Numero telefonico' 
+						'label' => 'Telephone',
+						'placeholder' => 'Telephone number' 
 				),
 				array(/* Phone2*/
 		        'id' => 'phone2',
-						'label' => 'Telefono (2)',
-						'placeholder' => 'Numero telefonico' 
+						'label' => 'Telephone (2)',
+						'placeholder' => 'Telephone number' 
 				),
 				array(/* Email1*/
 		        'id' => 'email1',
@@ -394,7 +394,7 @@ class Companies extends Admin_Controller {
 				array(/* Fax*/
 		        'id' => 'fax',
 						'label' => 'Fax',
-						'placeholder' => 'Numero Fax' 
+						'placeholder' => 'Fax Number' 
 				),
 				
 				array(/* Active */
@@ -428,7 +428,7 @@ class Companies extends Admin_Controller {
 			$array_company_role = array (
 					'id' => 'company_role',
 					'type' => 'combine',
-					'label' => 'Ruolo',
+					'label' => 'Role',
 					'elements' => array (
 							
 							array (
@@ -471,66 +471,66 @@ class Companies extends Admin_Controller {
 		$array_form_billing = array (
 				array(/* Billing address */
 		        'id' => 'billing_address_street',
-						'label' => 'Indirizzo',
-						'placeholder' => 'Indirizzo' 
+						'label' => 'Address',
+						'placeholder' => 'Address' 
 				),
 				array(/* Billing city */
 		        'id' => 'billing_address_city',
-						'label' => 'Città',
-						'placeholder' => 'Città' 
+						'label' => 'City',
+						'placeholder' => 'City' 
 				),
 				array(/* Billing province */
 		        'id' => 'billing_address_province',
-						'label' => 'Provincia',
-						'placeholder' => 'Provincia' 
+						'label' => 'Province',
+						'placeholder' => 'Province' 
 				),
 				array(/* Billing state */
 		        'id' => 'billing_address_state',
-						'label' => 'Regione',
-						'placeholder' => 'Regione' 
+						'label' => 'Region',
+						'placeholder' => 'Region' 
 				),
 				array(/* Billing country */
 		        'id' => 'billing_address_country',
-						'label' => 'Nazione',
-						'placeholder' => 'Nazione' 
+						'label' => 'Nation',
+						'placeholder' => 'Nation' 
 				),
 				array(/* Billing zip */
 		        'id' => 'billing_address_zip',
-						'label' => 'CAP',
-						'placeholder' => 'CAP' 
+						'label' => 'Zip',
+						'placeholder' => 'Zip' 
 				) 
 		);
 		
 		$array_form_shipping = array (
 				array(/* Shipping address */
 		        'id' => 'shipping_address_street',
-						'label' => 'Indirizzo',
-						'placeholder' => 'Indirizzo' 
+						'label' => 'Address',
+						'placeholder' => 'Address' 
 				),
 				array(/* Shipping city */
 		        'id' => 'shipping_address_city',
-						'label' => 'Città',
-						'placeholder' => 'Città' 
+						'label' => 'City',
+						'placeholder' => 'City' 
 				),
 				array(/* Shipping province */
 		        'id' => 'shipping_address_province',
-						'label' => 'Provincia',
-						'placeholder' => 'Provincia' 
+						'label' => 'Province',
+						'placeholder' => 'Province' 
 				),
 				array(/* Shipping state */
 		        'id' => 'shipping_address_state',
-						'label' => 'Regione',
-						'placeholder' => 'Regione' 
+						'label' => 'Region',
+						'placeholder' => 'Region' 
 				),
 				array(/* Shipping country */
 		        'id' => 'shipping_address_country',
-						'label' => 'Nazione',
-						'placeholder' => 'Nazione' 
+						'label' => 'Nation',
+						'placeholder' => 'Nation' 
 				),
 				array(/* Shipping zip */
 		        'id' => 'shipping_address_zip',
-						'label' => 'CAP',
-						'placeholder' => 'CAP' 
+						'label' => 'Zip',
+						'placeholder' => 'Zip' 
 				) 
 		);
 		
@@ -542,7 +542,7 @@ class Companies extends Admin_Controller {
 		$data ['form_billing'] = $this->form_builder->build_form_horizontal ( $array_form_billing, $data ['company'] );
 		$data ['form_shipping'] = $this->form_builder->build_form_horizontal ( $array_form_shipping, $data ['company'] );
 		
-		$data ['content'] = $this->load->view ( 'admin/companies/edit', $data, true );
+		$data ['content'] = $this->load->view ( 'wmanager/companies/edit', $data, true );
 		$this->load->view ( 'wmanager/admin_template', $data );
 	}
 	public function delete($id = NULL) {
@@ -583,14 +583,14 @@ class Companies extends Admin_Controller {
 		$array_form = array (
 				array(/* First Name */
 		        'id' => 'first_name',
-						'label' => 'Nome',
-						'placeholder' => 'Nome',
+						'label' => 'Name',
+						'placeholder' => 'Name',
 						'required' => 'required' 
 				),
 				array(/* Last Name */
 		        'id' => 'last_name',
-						'label' => 'Cognome',
-						'placeholder' => 'Cognome',
+						'label' => 'Last Name',
+						'placeholder' => 'Last Name',
 						'required' => 'required' 
 				),
 				array(/* Nickname */
@@ -601,21 +601,21 @@ class Companies extends Admin_Controller {
 				),
 				array(/* Phone */
 		        'id' => 'phone',
-						'label' => 'Telefono',
-						'placeholder' => 'Telefono' 
+						'label' => 'Telephone',
+						'placeholder' => 'Telephone' 
 				),
 				array(/* Mobile */
 		        'id' => 'mobile',
-						'label' => 'Cellulare',
-						'placeholder' => 'Cellulare' 
+						'label' => 'Cell',
+						'placeholder' => 'Cell' 
 				),
 				array(/* DROP DOWN */
 		        'id' => 'role1',
-						'label' => 'Ruolo',
+						'label' => 'Role',
 						'type' => 'dropdown',
 						'class' => 'form-control',
 						'options' => array (
-								'OPERATOR' => 'Operatore',
+								'OPERATOR' => 'Operator',
 								'CONTROLLER' => 'Controller' 
 						) 
 				),
@@ -650,7 +650,7 @@ class Companies extends Admin_Controller {
 		$array_user_role = array (
 				'id' => 'user_role',
 				'type' => 'combine',
-				'label' => 'Ruolo',
+				'label' => 'Role',
 				'elements' => $array_users_roles 
 		);
 		array_push ( $array_form, $array_user_role );
@@ -679,7 +679,7 @@ class Companies extends Admin_Controller {
 		array_push ( $array_form, $array_user_group );
 		$data ['form'] = $this->form_builder->build_form_horizontal ( $array_form );
 		
-		$data ['content'] = $this->load->view ( 'admin/companies/users/add', $data, true );
+		$data ['content'] = $this->load->view ( 'wmanager/companies/users/add', $data, true );
 		$this->load->view ( 'wmanager/admin_template', $data );
 	}
 	public function edit_user($company_id, $id) {
@@ -715,14 +715,14 @@ class Companies extends Admin_Controller {
 		$array_form = array (
 				array(/* First Name */
 		        'id' => 'first_name',
-						'label' => 'Nome',
-						'placeholder' => 'Nome',
+						'label' => 'Name',
+						'placeholder' => 'Name',
 						'required' => 'required' 
 				),
 				array(/* Last Name */
 		        'id' => 'last_name',
-						'label' => 'Cognome',
-						'placeholder' => 'Cognome',
+						'label' => 'Lastname',
+						'placeholder' => 'Lastname',
 						'required' => 'required' 
 				),
 				array(/* Nickname */
@@ -733,21 +733,21 @@ class Companies extends Admin_Controller {
 				),
 				array(/* Phone */
 		        'id' => 'phone',
-						'label' => 'Telefono',
-						'placeholder' => 'Telefono' 
+						'label' => 'Telephone',
+						'placeholder' => 'Telephone' 
 				),
 				array(/* Mobile */
 		        'id' => 'mobile',
-						'label' => 'Cellulare',
-						'placeholder' => 'Cellulare' 
+						'label' => 'Cell',
+						'placeholder' => 'Cell' 
 				),
 				array(/* DROP DOWN */
 		        'id' => 'role1',
-						'label' => 'Ruolo',
+						'label' => 'Role',
 						'type' => 'dropdown',
 						'class' => 'form-control',
 						'options' => array (
-								'OPERATOR' => 'Operatore',
+								'OPERATOR' => 'Operator',
 								'CONTROLLER' => 'Controller' 
 						) 
 				),
@@ -760,7 +760,7 @@ class Companies extends Admin_Controller {
 				),
 				array(/* Password */
 		        'id' => 'password',
-						'label' => 'Nuova password',
+						'label' => 'New password',
 						'placeholder' => 'Password',
 						'type' => 'password' 
 				) 
@@ -791,7 +791,7 @@ class Companies extends Admin_Controller {
 		$array_user_role = array (
 				'id' => 'user_role',
 				'type' => 'combine',
-				'label' => 'Ruolo',
+				'label' => 'Role',
 				'elements' => $array_users_roles 
 		);
 		array_push ( $array_form, $array_user_role );
@@ -831,7 +831,7 @@ class Companies extends Admin_Controller {
 		
 		$data ['form'] = $this->form_builder->build_form_horizontal ( $array_form, $data ['user'] );
 		
-		$data ['content'] = $this->load->view ( 'admin/companies/users/edit', $data, true );
+		$data ['content'] = $this->load->view ( 'wmanager/companies/users/edit', $data, true );
 		$this->load->view ( 'wmanager/admin_template', $data );
 	}
 	public function add_api($company) {

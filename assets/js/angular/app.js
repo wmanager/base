@@ -228,59 +228,43 @@ var app = angular.module('WmanagerApp', ['ui.bootstrap','validation','ui.calenda
                         success: ''
                     },
                     email: {
-                        error: 'Email non valida',
+                        error: 'Invalid email',
                         success: ''
                     },
                     cf: {
-                        error: 'Codice fiscale non valido',
+                        error: 'Tax code not valid',
                         success: ''
                     },
                     iva: {
-                        error: 'Partita IVA non valida',
+                        error: 'Invalid VAT number',
                         success: ''
                     },
                     cap: {
-                        error: 'CAP non valido',
+                        error: 'Invalid zip code',
                         success: ''
                     },
                     prov: {
-                        error: 'Inserisci due lettere',
+                        error: 'Enter two letters',
                         success: ''
                     },
                     pod: {
-                        error: 'Inserisci un numero POD valido',
+                        error: 'Enter a valid POD number',
                         success: ''
                     },
                     pod_unique: {
-                        error: 'Il numero POD inserito risulta già presente',
-                        success: ''
-                    },
-                    pod_unique_sereno: {
-                        error: 'Il numero POD inserito risulta già presente',
+                        error: 'The inserted POD number is already present',
                         success: ''
                     },
                     pod_existing: {
-                        error: 'Numero POD non trovato',
+                        error: 'POD number not found',
                         success: ''
                     },
                     contratto: {
-                        error: 'Inserisci un numero contratto valido',
-                        success: ''
-                    },
-                    contratto_sereno: {
-                        error: 'Inserisci un numero contratto valido',
-                        success: ''
-                    },
-                    contrattotuo: {
-                        error: 'Inserisci un numero contratto valido',
-                        success: ''
-                    },
-                    contratto_np04: {
-                        error: 'Inserisci un numero contratto valido',
+                        error: 'Enter a valid contract number',
                         success: ''
                     },
                     number: {
-                        error: 'Inserisci un numero',
+                        error: 'Enter a number',
                         success: ''
                     },
                     minlength: {
@@ -291,36 +275,20 @@ var app = angular.module('WmanagerApp', ['ui.bootstrap','validation','ui.calenda
                         error: 'This should be shorter',
                         success: 'Short enough!'
                     },
-                    blacklist_comuni: {
-                        error: 'Comune blacklisted',
-                        success: ''
-                    },
-                    blacklist_pod: {
-                        error: 'POD blacklisted',
-                        success: ''
-                    },
-                    iban: {
-                      error: 'Inserisci un codice IBAN corretto',
-                      success: ''
-                    },
-                    tensione: {
-                      error: 'Il valore indicato non è corretto',
-                      success: ''
-                    },
                     percentage: {
-                      error: 'Immettere un valore da 0 a 100',
+                      error: 'Enter a value from 0 to 100',
                       success: ''
                     },
                     latitudine: {
-                      error: 'Immettere un valore compreso tra 35,49 e 47,1',
+                      error: 'Enter a value between 35.49 and 47.1',
                       success: ''
                     },
                     longitudine: {
-                      error: 'Immettere un valore compreso tra 6,6255 e 18,522',
+                      error: 'Enter a value between 6.6255 and 18.522',
                       success: ''
                     },
                     azimuth: {
-                      error: 'Immettere un valore compreso tra -90 e +90',
+                      error: 'Enter a value between -90 and +90',
                       success: ''
                     }
                 };
@@ -411,6 +379,7 @@ var app = angular.module('WmanagerApp', ['ui.bootstrap','validation','ui.calenda
                 		$scope.form_data.account_type = data.account.account_type;
                 		$scope.form_data.code = data.account.code;
                 		$scope.form_data.account = data.account;
+                		$scope.form_data.contact = data.contact;
                 		$scope.form_data.client_address = data.address.CLIENT;
                 	}
                 	 
@@ -526,9 +495,9 @@ var app = angular.module('WmanagerApp', ['ui.bootstrap','validation','ui.calenda
 
   window.onbeforeunload = function (event) {
       if($scope.request.draft == 't'){
-        return "Il Thread non è stato salvato, abbandonando la pagina tutti i dati andranno persi.";      
+        return "The Thread has not been saved, redirecting the page all data will be lost.";      
       } else {
-        return "Sei sicuro di voler abbandonare la pagina? I dati non salvati andranno persi.";      
+        return "Are you sure you want to leave the page? Unsaved data will be lost.";      
       }
     };
 
@@ -679,7 +648,7 @@ var app = angular.module('WmanagerApp', ['ui.bootstrap','validation','ui.calenda
             if(data.serials.length > 0){
               $scope.force_required = true;
               not_found = data.serials;
-              $ngBootbox.alert('Attenzione i seguenti seriali risultano incongruenti:<br>'+data.serials.join('<br>')+'<br><br>E\' necessario caricare la foto dei codici incriminati nella sezione allegati.')
+              $ngBootbox.alert('Attention: the following serials are inconsistent:<br>'+data.serials.join('<br>')+'<br><br>It is necessary to upload the photo of the offending codes in the attached section.')
                 .then(function() {
                     
               });
@@ -897,6 +866,7 @@ $scope.viewCalendar = function(){
                     success(function(data, status, headers, config) {
                         // this callback will be called asynchronously
                         // when the response is available
+                    	$scope.activity_bpm = data.bpm;
                         $scope.activities[0] = data;
 
                         
@@ -1014,18 +984,20 @@ $scope.viewCalendar = function(){
                                  		            error(function(data, status, headers, config) {
                                  	           });
                                              } 
-                                      
-                                   	      var request = $http({
-                                   	          method: "get",
-                                   	          url: "/json/companies/active_users/"+$scope.selected.duty_company_crm+'/'+'CRM'
-                                   	        });
+                                          
+                                          if($scope.selected.duty_company_crm) {
+                                        	  var request = $http({
+                                       	          method: "get",
+                                       	          url: "/json/companies/active_users/"+$scope.selected.duty_company_crm
+                                       	        });
 
-                                   	        // Store the data-dump of the FORM scope.
-                                   	        request.success(
-                                   	          function( data ) {
-                                   	            $scope.crm_users = data;
-                                   	          }
-                                   	        );        	      
+                                       	        // Store the data-dump of the FORM scope.
+                                       	        request.success(
+                                       	          function( data ) {
+                                       	            $scope.crm_users = data;
+                                       	          }
+                                       	        );
+                                          }
                                     }
                                   );
                                }
@@ -1071,7 +1043,7 @@ $scope.setPending = function () {
        
               if($scope.thread) {
                 if($scope.request.pending){
-                  $ngBootbox.confirm("Sei sicuro di voler impostare lo status del Thread in PENDING?")
+                  $ngBootbox.confirm("Are you sure you want to set the status of the Thread in PENDING?")
                               .then(function() {
                                   $http({        
                                     method: "post",
@@ -1110,7 +1082,7 @@ $scope.setPending = function () {
     
   });
   $scope.loadRequiredAttachments = function(form_id){
-	  $http.get('/common/module/get_required_attach/'+form_id).
+	  $http.get('/common/cases/attach_types/'+form_id).
 	      success(function(data, status, headers, config) {
 	          // this callback will be called asynchronously
 	          // when the response is available
@@ -1193,7 +1165,7 @@ $scope.setPending = function () {
 
   $scope.loadrequiredfiles = function(form_id){
 
-     $http.get('/common/module/get_required_attach/'+form_id).
+     $http.get('/common/cases/attach_types/'+form_id).
             success(function(data, status, headers, config) {
                 // this callback will be called asynchronously
                 // when the response is available
@@ -1309,10 +1281,93 @@ $scope.setFiles = function(element) {
         $scope.$apply(function(){
            $scope.progressVisible = false
         })
-        $scope.filedata.errors = "The upload has been canceled by the user or the browser dropped the connection.";
+        $scope.filedata.errors = "The upload has been cancelled by the user or the browser dropped the connection.";
         $scope.filedata.busy = false;
         $scope.$digest();
     }
+    
+    $scope.advact_popup = function(act_id, url){
+  	  
+  	  $scope.advact_processes = [];
+  	  $scope.advact_current_activities = [];
+  	  $scope.advact_process_rel_activity = [];
+  	  $scope.advact_url = url;
+  	  $scope.advact_id = act_id;
+  			
+      $http({        
+      method: "get",
+      url: '/common/activities/advanced_activity_startup/'+act_id
+          }).success(function(data){
+          	if(data.result == 'SUCCESS'){
+          		$('#attivita-advanced-report').modal('show');
+          		$scope.advact_processes = data.process;
+          		$scope.advact_current_activities = data.current_activities;
+          		$scope.advact_trouble_exist = data.trouble_exist;
+          		$scope.advact_open_activities_count = data.open_act_count;
+          		$scope.advact_thread_status = data.thread_status;
+          		if($scope.advact_trouble_exist == 'YES'){
+          			$scope.advact_trouble_status = data.trouble_status;
+          			$scope.advact_trouble_title	 = data.trouble_title;
+          			$scope.advact_trouble_id	 = data.trouble_id;
+          		}
+          		$scope.advact_open_activities_count = data.open_act_count;
+          		
+          	}else{
+          		window.location = $scope.advact_url;
+          	}
+          });
+  		    
+  	return false; 
+    }
+    
+    $scope.reloadProcessActivity = function(){
+  	  $scope.selected_request = undefined;
+  	  $scope.advact_process_rel_activity = [];
+  	  if($scope.new_process != ''){
+  		  $http({        
+  			    method: "get",
+  			    url: '/common/activities/advanced_activity_rel_activity/'+$scope.new_process
+  			        }).success(function(data){
+  			        	if(data.result == 'SUCCESS'){
+  			        		$scope.advact_process_rel_activity = data.activities;
+  			        	}
+  			        });
+  	  }
+    }
+    
+    $scope.exitAdvancedActivity = function(){
+  	  window.location = $scope.advact_url;
+    }
+    
+    $scope.saveAdvancedActivity = function(){
+  	  var fd = new FormData();    
+  	  fd.append( 'thread_status', $scope.advact_thread_status);
+  	  fd.append( 'thread_result', $scope.advact_thread_result);
+  	  fd.append( 'trouble_status', $scope.advact_trouble_status);
+  	  fd.append( 'trouble_result', $scope.advact_trouble_result);
+  	  fd.append( 'new_activity', $scope.new_activity);
+  	  fd.append( 'new_process', $scope.new_process);
+  	  fd.append( 'new_request', $scope.new_request);
+  	  fd.append( 'open_act_count', $scope.advact_open_activities_count);
+  	  fd.append( 'advact_id', $scope.advact_id);
+  	  
+  	  $.ajax({
+  	         url : '/common/activities/activity_advanced_report/',
+  	         type : 'post',
+  	         data : fd,
+  	         processData: false,  
+  	         contentType: false, 
+  	         success : function(data) {
+  	        	 if(data.result == 'SUCCESS'){
+  	        		 window.location = $scope.advact_url;
+  	        	 }else{
+  	        		 window.location = $scope.advact_url;
+  	        	 }
+  	         }
+  	  });
+  	  
+  	  return false;
+    }  
 
   $scope.saveForm = function(index,url,id,json) {
       window.onbeforeunload = null;      
@@ -1367,7 +1422,7 @@ $scope.setFiles = function(element) {
                   }
                     $scope.filedata.errors = true;
                 }else{
-                	 $ngBootbox.confirm('Are you sure you want to close the business?')
+                	 $ngBootbox.confirm('Are you sure you want to close the Activity?')
                      .then(function() {
                     	 if(json== true){
                     		 var request = $http({
@@ -1418,7 +1473,11 @@ $scope.setFiles = function(element) {
                                    // when the response is available
                                    
                                    if(data.result === true){
-                                     window.location = "/common/activities";
+                                    	   if($scope.activity_bpm == 'MANUAL'){
+                                    		   $scope.advact_popup(id,"/common/activities");
+                                    	   }else{
+                                    		   window.location = "/common/activities";
+                                    	   }
                                    } else {
                                      $scope.forms[index].errors = data.error;
                                    }
@@ -1484,7 +1543,11 @@ $scope.setFiles = function(element) {
                                       // when the response is available
                                       
                                       if(data.result === true){
-                                       window.location = "/common/activities";
+                                       if($scope.activity_bpm == 'MANUAL'){
+                                    	   $scope.advact_popup(id,"/common/activities");
+                                   	   }else{  
+                                   		   window.location = "/common/activities";
+                                   	   }
                                       } else {
                                         $scope.forms[index].errors = data.error;
                                       }
@@ -1703,6 +1766,7 @@ $scope.loadmemo_allaccio = function(company){
     $scope.activity_related = '/common/troubles/related/';
     $scope.activity_summary = "/common/cases/activity_summary";
     $scope.activity_followup = '/common/cases/activity_followup/';
+    $scope.manual_process = '/common/troubles/manual_process/';
     $scope.showdashboard = false;
     $scope.dashboard = '';
     $scope.locked = true;
@@ -1737,6 +1801,7 @@ $scope.loadmemo_allaccio = function(company){
             $scope.selected = {type : data.type_id, customer:data.customer_id, contract:data.be_id, duty_company_crm:data.crm_duty_company, duty_company_resolution:data.res_duty_company, duty_user_crm:data.crm_duty_user, duty_user_resolution:data.res_duty_user,res_roles:data.res_role, deadline:data.deadline, description:data.description, status:data.status, result:data.result, subtype:data.subtype, be_contratti:data.contratti};
             $scope.trouble_status = $scope.selected.status;
             $scope.selected.status  = $scope.selected.status;
+            $scope.type_id = data.type_id; 
             $scope.loadfiles($scope.trouble_id);
             $scope.campagna_id = data.campagna_id;
 
@@ -1750,6 +1815,20 @@ $scope.loadmemo_allaccio = function(company){
                         $scope.related_threads = [];
                         $scope.related_threads = data;
                 });
+            $http.get('/common/troubles/get_all_setup_process/'+$scope.type_id).
+            success(function(data, status, headers, config) {
+                // this callback will be called asynchronously
+                // when the response is available
+                $scope.all_process = data;	  
+        	}); 
+            
+            $http.get('/common/troubles/get_request_activities/'+$scope.trouble_id).
+            success(function(data, status, headers, config) {
+                // this callback will be called asynchronously
+                // when the response is available
+                $scope.related_threads_activities = [];
+                $scope.related_threads_activities = data;	               
+            });
              $http.get('/common/troubles/get_customer/'+data.customer_id).
                       success(function(data, status, headers, config) {
                         // this callback will be called asynchronously
@@ -1772,18 +1851,7 @@ $scope.loadmemo_allaccio = function(company){
                           function( data ) {
                             $scope.contracts = data;
                           }
-                        );
-                        
-                       /* if(data.be_id!=null){
-                          $http.get('/common/troubles/get_contract/'+data.be_id).
-                                success(function(data, status, headers, config) {
-                                  // this callback will be called asynchronously
-                                  // when the response is available
-                                  $scope.contract = data[0];
-                                  $scope.selected.contract = data.be_id;
-                          });
-                        }
-                        */
+                        );                       
                   });
           }
         );
@@ -1848,7 +1916,19 @@ $scope.loadmemo_allaccio = function(company){
             $scope.busy = false;
     }); 
 }
-
+ $scope.get_request = function(key) {
+	 console.log(key);
+	 $http.get('/common/troubles/get_request/'+key).
+     success(function(data, status, headers, config) {
+         $scope.process_request = data;	  
+         $scope.process_bmp = data[0]['set_pro_bpm'];
+ 	});
+ }
+ 
+ $scope.set_process = function(request,process) {
+	 $('#request_activity').val(request);
+	 $('#thread_type').val(process);
+ } 
 $scope.insertFollowup = function(){
   var pattern = /^(([01][0-9]|2[0-3])h)|(([01][0-9]|2[0-3]):[0-5][0-9])$/;
   $scope.followup_process = true;
@@ -1935,23 +2015,22 @@ $scope.insertFollowup = function(){
     $scope.$watch('selected.duty_company_resolution', function () {
       //if($scope.trouble_id != '') return;
       if($scope.selected.duty_company_resolution=='') return;
-      console.log($scope.selected.duty_company_resolution);
 
-      
-      var request = $http({
-          method: "get",
-          url: "/json/companies/active_users/"+$scope.selected.duty_company_resolution+'/'+$scope.selected.res_roles
-        });
+      if($scope.selected.duty_company_resolution) { 
+    	  var request = $http({
+              method: "get",
+              url: "/json/companies/active_users/"+$scope.selected.duty_company_resolution+'/'+$scope.selected.res_roles
+            });
 
-        // Store the data-dump of the FORM scope.
-        request.success(
-          function( data ) {
-            $scope.resolution_users = data;
-          }
-        );
+            // Store the data-dump of the FORM scope.
+            request.success(
+              function( data ) {
+                $scope.resolution_users = data;
+              }
+            );
+      }
       
     },true);
-
 
     $scope.saveTrouble = function(){
       $(window).off('beforeunload');
@@ -2079,7 +2158,7 @@ $scope.setFiles = function(element) {
         $scope.$apply(function(){
            $scope.progressVisible = false
         })
-        $scope.filedata.errors = "The upload has been canceled by the user or the browser dropped the connection.";
+        $scope.filedata.errors = "The upload has been cancelled by the user or the browser dropped the connection.";
         $scope.filedata.busy = false;
         $scope.$digest();
     }
@@ -2181,8 +2260,7 @@ $scope.setFiles = function(element) {
     $scope.activity_pending = "/common/cases/activity_pending";
     $scope.activity_related = "/common/cases/activity_related";
     $scope.activity_followup = '/common/cases/activity_followup/';
-    $scope.process_list = '/common/cases/process_list/';
-    $scope.activity_integrations = '/common/cases/activity_integrations/';
+    $scope.process_list = '/common/cases/process_list/';    
     $scope.pending = false;
     $scope.forms = [];
     $scope.variables = [];
@@ -2213,7 +2291,7 @@ $scope.setFiles = function(element) {
  
     if($scope.request.draft == 't'){
      window.onbeforeunload = function (event) {
-          return "Sei sicuro di voler abbandonare la pagina? I dati non salvati andranno persi.";      
+          return "Are you sure you want to leave the page? Unsaved data will be lost.";      
       };
     } else {
       window.onbeforeunload = null;
@@ -2553,15 +2631,6 @@ $scope.setFiles = function(element) {
                         // when the response is available
                         $scope.selected.customer = data;
                         
-                        if($scope.thread.be!=null){
-                          $http.get('/common/cases/get_contract/'+$scope.thread.be).
-                                success(function(data, status, headers, config) {
-                                  // this callback will be called asynchronously
-                                  // when the response is available 
-
-                                  $scope.selected.contract = data;
-                          });
-                        }
                   });
                 $http.get('/common/cases/get_process/'+$scope.thread.process+'/'+$scope.thread.type).
                     success(function(data, status, headers, config) {
@@ -2588,7 +2657,7 @@ $scope.setFiles = function(element) {
                         }
                         return 0;
                     });
-
+                    $scope.activity_bpm = $scope.activities[0].bpm;
                     var i = 0;
                     angular.forEach(data, function(value, key) {
                        //console.log(JSON.parse(value.payload));
@@ -2628,29 +2697,7 @@ $scope.setFiles = function(element) {
                         console.log($scope.variables);
                         $scope.loadactivities = true;
                 }); 
-                // Thread Integrations
-                $http.get('/common/cases/get_integrations/'+$scope.thread.id).
-                success(function(data, status, headers, config) {
-                    // this callback will be called asynchronously
-                    // when the response is available
-                    $scope.integrations = data;
-                    var i = 0;
-                    angular.forEach(data, function(value, key) {
-                       //console.log(JSON.parse(value.payload));
-                        try {
-                          $scope.forms[i] = JSON.parse(value.payload);
-                        } catch (e) {
-                          $scope.forms[i] = value.payload;
-                        }
-                       
-                        //$scope.bo_form_data[i] = JSON.parse(value.payload);
-                       // $scope.variables[i] = {'status':value.status};
-                      i++;
-                    });
-                   // console.log('*****************');
-                  //  console.log($scope.integrations);
-                    $scope.loadactivities = true;
-                }); 
+
 	             // Thread process list
 	            $http.get('/common/cases/get_process_list/'+$scope.thread.id).
 	                success(function(data, status, headers, config) {
@@ -2718,12 +2765,106 @@ $scope.setFiles = function(element) {
         $scope.selected.customer = '';
         $scope.selected.customer_model = ''; 
     };
-
+    
+    $scope.advact_popup = function(act_id, url){
+  	  
+  	  $scope.advact_processes = [];
+  	  $scope.advact_current_activities = [];
+  	  $scope.advact_process_rel_activity = [];
+  	  $scope.advact_url = url;
+  	  $scope.advact_id = act_id;
+  			
+      $http({        
+      method: "get",
+      url: '/common/activities/advanced_activity_startup/'+act_id
+          }).success(function(data){
+          	if(data.result == 'SUCCESS'){
+          		$('#attivita-advanced-report').modal('show');
+          		$scope.advact_processes = data.process;
+          		$scope.advact_current_activities = data.current_activities;
+          		$scope.advact_trouble_exist = data.trouble_exist;
+          		$scope.advact_open_activities_count = data.open_act_count;
+          		$scope.advact_thread_status = data.thread_status;
+        		if($scope.advact_trouble_exist == 'YES'){
+        			$scope.advact_trouble_status = data.trouble_status;
+        			$scope.advact_trouble_title	 = data.trouble_title;
+        			$scope.advact_trouble_id	 = data.trouble_id;
+        		}
+          	}else{
+          		window.location = $scope.advact_url;
+          	}
+          });
+  		    
+  	return false; 
+    }
+    
+    $scope.reloadProcessActivity = function(){
+  	  $scope.selected_request = undefined;
+  	  $scope.advact_process_rel_activity = [];
+  	  if($scope.new_process != ''){
+  		  $http({        
+  			    method: "get",
+  			    url: '/common/activities/advanced_activity_rel_activity/'+$scope.new_process
+  			        }).success(function(data){
+  			        	if(data.result == 'SUCCESS'){
+  			        		$scope.advact_process_rel_activity = data.activities;
+  			        	}
+  			        });
+  	  }
+    }
+    
+    $scope.exitAdvancedActivity = function(){
+    	
+      if($scope.advact_url != 'location'){	
+    	  window.location = $scope.advact_url;
+      }else{
+    	  location.reload();
+      }
+    }
+    
+    $scope.saveAdvancedActivity = function(){
+  	  var fd = new FormData();    
+  	  fd.append( 'thread_status', $scope.advact_thread_status);
+  	  fd.append( 'thread_result', $scope.advact_thread_result);
+  	  fd.append( 'trouble_status', $scope.advact_trouble_status);
+  	  fd.append( 'trouble_result', $scope.advact_trouble_result);
+  	  fd.append( 'new_activity', $scope.new_activity);
+  	  fd.append( 'new_process', $scope.new_process);
+  	  fd.append( 'new_request', $scope.new_request);
+  	  fd.append( 'open_act_count', $scope.advact_open_activities_count);
+  	  fd.append( 'advact_id', $scope.advact_id);
+  	  
+  	  $.ajax({
+  	         url : '/common/activities/activity_advanced_report/',
+  	         type : 'post',
+  	         data : fd,
+  	         processData: false,  
+  	         contentType: false, 
+  	         success : function(data) {
+  	        	 if(data.result == 'SUCCESS'){
+  	        		 if($scope.advact_url != 'location'){
+  	        			 window.location = $scope.advact_url;
+  	        		 }else{
+  	        			 location.reload();
+  	        		 }
+  	        	 }else{
+  	        		if($scope.advact_url != 'location'){
+ 	        			 window.location = $scope.advact_url;
+ 	        		 }else{
+ 	        			 location.reload();
+ 	        		 }
+  	        	 }
+  	         }
+  	  });
+  	  
+  	  return false;
+    }
+    
     $scope.saveForm = function(index,url,id,json) {
       window.onbeforeunload = null;
 
       if($scope.request.master_status == 'PENDING'){
-         $ngBootbox.alert('Thread in status PENDING non è possibile apportare modifiche!');
+         $ngBootbox.alert('Thread in status PENDING it is not possible to make changes!');
          return false;
       }
 
@@ -2790,7 +2931,11 @@ $scope.setFiles = function(element) {
                     // this callback will be called asynchronously
                     // when the response is available
                     if(data.result === true){
-                      location.reload();
+                    	   if($scope.activity_bpm == 'MANUAL'){
+                    		   $scope.advact_popup(id,"location");
+                    	   }else{
+                    		   location.reload();
+                    	   }
                     } else {
                       $scope.forms[index].errors = data.error;
                     }
@@ -3239,7 +3384,7 @@ app.directive('newCalendar', function($compile, $timeout) {
     $timeout(function() {
       
       $(element).datepicker('remove');
-      $(element).datepicker({ autoclose: true, todayHighlight: true, language: 'it' });
+      $(element).datepicker({ autoclose: true, todayHighlight: true });
       $(element).datepicker('update');
     });
   };
@@ -3250,7 +3395,7 @@ app.directive('loadCalendar', function() {
     if (scope.$last){
       // iteration is complete, do whatever post-processing
       // is necessary
-      element.parent().find(".input-group.date").datepicker({ autoclose: true, todayHighlight: true, language: 'it' });
+      element.parent().find(".input-group.date").datepicker({ autoclose: true, todayHighlight: true });
     }
   };
 });
@@ -3352,156 +3497,6 @@ app.directive('greaterThan', function () {
     };
 });
 
-app.controller('Tee', function($scope,$rootScope,$http,$timeout) {
-  $scope.busy = true;
-  $scope.request = {};
-  $scope.activities = [];
-
-  $http.get('/common/cases/get_tee/').
-      success(function(data, status, headers, config) {
-          $scope.thread = data;
-          $scope.busy = false;
-  });
-
-  $http.get('/common/cases/get_tee_activities').
-                success(function(data, status, headers, config) {
-                    $scope.activities = data;
-                    $scope.busy = false;
-                  
-                   
-  });
-
-
-
-
-  $scope.createThread = function(){
-
-    $scope.busy = true;
-    var request = $http({
-            method: "post",
-            url: "/common/cases/create_tee",
-            data: angular.toJson($scope.request),
-            transformRequest: false
-        });
-
-        // Store the data-dump of the FORM scope.
-        request.success(
-          function( data ) {
-
-            $http.get('/common/cases/get_tee/').
-                success(function(data, status, headers, config) {
-                    $scope.thread = data;
-                    $scope.busy = false;
-            });
-
-            $http.get('/common/cases/get_tee_activities/').
-                success(function(data, status, headers, config) {
-                    $scope.activities = [];
-                    var i = 0;
-                     angular.forEach(data, function(value, key) {
-                           //console.log(JSON.parse(value.payload));
-                           $scope.activities[i] = value;
-                           
-                            try {
-                              $scope.activities[i].payload = JSON.parse(value.payload);
-                              //$scope.activities[i].id = value.id;
-                            } catch (e) {
-                              $scope.activities[i].payload = value.payload;
-                              //$scope.activities[i].id = value.id;
-                            }
-                           
-                          i++;
-                        });
-                    $scope.busy = false;
-            });
-
-            $scope.request.crea = false;
-
-   
-          }
-        );
-  }
-
-});
-
-app.controller('Import', ['$scope', '$http', 'Upload', function ($scope, $http, Upload) {
-    $scope.busy = false;
-    $scope.percentage = 0;
-    $scope.preview = false;
-    $scope.ip = '';
-    $scope.imported = false;
-
-
-    $scope.continue = function() {
-      $http.post("/wizards/import/in", $scope.preview).success(function(data, status) {
-            $scope.imported = true;
-            $scope.imported_records = data.count;
-      });
-    };
-
-    // upload later on form submit or something similar
-    $scope.submit = function() {
-      if ($scope.form.file.$valid && $scope.file) {
-        $scope.upload($scope.file);
-      }
-    };
-
-    // upload on file select or drop
-    $scope.upload = function (file) {
-        $scope.busy = true;
-        Upload.upload({
-            url: '/fileimport/fileimport.php',
-            data: {upload: file, filetype: 'xls',ip: $scope.ip}
-        }).then(function (resp) {
-  
-            //console.log('Success ' + resp.config.data.file.name + 'uploaded. Response: ' + resp.data);
-            $scope.preview = resp.data.data.imported_data;
-            $scope.busy = false;
-            $scope.errors = resp.data.error;
-        }, function (resp) {
-            console.log('Error status: ' + resp.status);
-            console.log(resp);
-            $scope.busy = false;
-            
-
-        }, function (evt) {
-            var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
-            //console.log('progress: ' + progressPercentage + '% ' + evt.config.data.file.name);
-            $scope.percentage = progressPercentage;
-        });
-    };
-
-    $scope.submit_inorder_teleselling = function() {
-        if ($scope.form.file.$valid && $scope.file) {
-            $scope.upload_inorder_teleselling($scope.file);
-        }
-    };
-
-    // upload on file select or drop
-    $scope.upload_inorder_teleselling = function (file) {
-        $scope.busy = true;
-        Upload.upload({
-            url: '/fileimport/fileimport_inorder_sereno.php',
-            data: {upload: file, filetype: 'xls',ip: $scope.ip}
-        }).then(function (resp) {
-            
-            $scope.data_elab = resp.data.data;
-            $scope.preview = resp.data.data.imported_data;
-            $scope.busy = false;
-            $scope.errors = resp.data.error;
-        }, function (resp) {
-            console.log('Error status: ' + resp.status);
-            console.log(resp);
-            $scope.busy = false;
-
-
-        }, function (evt) {
-            var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
-            //console.log('progress: ' + progressPercentage + '% ' + evt.config.data.file.name);
-            $scope.percentage = progressPercentage;
-        });
-    };
-}]);
 
 app.directive('stringToNumber', function() {
   return {

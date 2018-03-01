@@ -109,7 +109,7 @@ class Activity extends CI_Model {
 			}
 			
 			if (! $this->session->userdata ( 'filter_activities_status_all' ) && $this->session->userdata ( 'filter_activities_status' ) == '' && count ( $_POST ) == 0) {
-				$this->session->set_userdata ( 'filter_activities_status', 'APERTO' );
+				$this->session->set_userdata ( 'filter_activities_status', 'OPEN' );
 				$this->session->unset_userdata ( 'filter_activities_status_all' );
 			}
 			
@@ -267,7 +267,7 @@ class Activity extends CI_Model {
 				->limit ( $limit, $offset )
 				->order_by ( "activities.created", "DESC" )
 				->get ( 'activities' );
-		
+
 		$result = $query->result ();
 		
 		return $result;
@@ -489,7 +489,7 @@ class Activity extends CI_Model {
 				m.last_name as modifier_last_name, d.first_name as duty_first_name,
 				d.last_name as duty_last_name, s.value as status, 
 				r.value as result, rn.value as result_note,				
-				setup_processes.form_id as form_id_thread' )
+				setup_processes.form_id as form_id_thread,setup_processes.bpm' )
 		->join ( 'threads', 'threads.id = activities.id_thread', 'left' )
 		->join ( 'be', 'be.id = threads.be', 'left' )
 		->join ( 'setup_processes', 'setup_processes.key = threads.type', 'left' )
@@ -529,7 +529,7 @@ class Activity extends CI_Model {
 		
 		if (count ( $result ) > 0) {
 			foreach ( $result as $item ) {
-				$get_details = $this->db->select ( "setup_activities.title, setup_processes.id as process_id,setup_activities.description,setup_activities.role,setup_activities.is_request" )->join ( "threads", "threads.id = activities.id_thread" )->join ( "setup_processes", "setup_processes.key = threads.type" )->join ( "setup_activities", "setup_activities.id_process = setup_processes.id" )->where ( "activities.id", $item->id )->where ( "setup_activities.key", $item->type )->get ( "activities" );
+				$get_details = $this->db->select ( "setup_activities.title, setup_processes.id as process_id,setup_activities.description,setup_activities.role,setup_activities.is_request,setup_activities.help,setup_processes.bpm" )->join ( "threads", "threads.id = activities.id_thread" )->join ( "setup_processes", "setup_processes.key = threads.type" )->join ( "setup_activities", "setup_activities.id_process = setup_processes.id" )->where ( "activities.id", $item->id )->where ( "setup_activities.key", $item->type )->get ( "activities" );
 				$result_details = $get_details->row ();
 				
 				$item->title = $result_details->title;
@@ -538,6 +538,8 @@ class Activity extends CI_Model {
 				$item->role = $result_details->role;
 				$item->is_request = $result_details->is_request;
 				$item->id_process = $result_details->process_id;
+				$item->help 		= 	$result_details->help;
+				$item->bpm		= 	$result_details->bpm;
 			}
 		}
 		
@@ -797,7 +799,7 @@ class Activity extends CI_Model {
 		return $var->value;
 	}
 	public function get_activities_for_cancel($thread_id) {
-		$query = $this->db->select ( 'activities.id' )->where ( 'activities.id_thread', $thread_id )->where ( "(activities.status != 'CHIUSO' AND activities.status != 'CANCELED')" )->get ( 'activities' );
+		$query = $this->db->select ( 'activities.id' )->where ( 'activities.id_thread', $thread_id )->where ( "(activities.status != 'CLOSED' AND activities.status != 'CANCELLED')" )->get ( 'activities' );
 		return $query->result ();
 	}
 
@@ -891,19 +893,7 @@ class Activity extends CI_Model {
 		$query = $this->db->select ( 'activities.*,setup_activities.title as setup_title' )->join ( 'threads', 'threads.id=activities.id_thread' )->join ( 'setup_processes', 'setup_processes.key = threads.type' )->join ( 'setup_activities', 'setup_activities.id_process=setup_processes.id' )->where ( 'id_thread', $thread )->where ( 'setup_activities.key = activities.type' )->order_by ( "activities.created" )->get ( 'activities' );
 		return $query->result ();
 	}
-	public function get_integrations($thread) {
-		// $query = $this->db->where('id_thread',$thread)->order_by('id','DESC')->get('export_billing');
-/* 		$query1 = $this->db->query ( 'SELECT DISTINCT(threads.id), exb.tipologia, exb.status, exb.d_decorrenza, exb.gross_d_invio, exb.gross_esito, exb.billing_d_invio, exb.return_value, exb.billing_esito, exb.billing_esito_note, exb.created FROM export_billing exb LEFT JOIN threads ON threads.id=exb.id_thread WHERE threads.id = ' . $thread . ' ORDER BY exb.created DESC' );
-		$query2 = $this->db->query ( 'SELECT DISTINCT(threads.id), exa.status as exa_status, exa.billing_d_invio as exa_billing_d_invio, exa.billing_esito as exa_billing_esito, exa.billing_esito_note as exa_billing_esito_note, exa.created as exa_created FROM export_autoletture exa LEFT JOIN threads ON threads.id=exa.thread_id  WHERE threads.id = ' . $thread . ' ORDER BY exa.created DESC' );
-		$query3 = $this->db->query ( 'SELECT exr.created as exr_created, exr.status as exr_status, exr.causale as exr_causale FROM export_rettifiche exr LEFT JOIN threads ON threads.id = exr.thread_id WHERE threads.id = ' . $thread . ' ORDER BY exr.created DESC' );
-		$result1 = $query1->result ();
-		$result2 = $query2->result ();
-		$result3 = $query3->result ();
-		
-		$newarray = array_merge_recursive ( $result1, $result2, $result3 );
-		 */
-		return NULL;
-	}
+
 	public function get_process_list($thread) {
 		$query = $this->db->select ( "setup_activities.*" )->join ( "setup_processes", "setup_processes.key = threads.type" )->join ( "setup_activities", "setup_activities.id_process = setup_processes.id" )->where ( 'threads.id', $thread )->order_by ( 'setup_activities.id', 'ASC' )->get ( 'threads' );
 		return $query->result ();
@@ -932,6 +922,140 @@ class Activity extends CI_Model {
 		} else {
 			return false;
 		}
+	}
+	
+	public function advanced_activity_start_details($id){
+		$activity_query = $this->db->select('setup_activities.key,setup_activities.title as value')
+		->join("threads","threads.id = activities.id_thread")
+		->join("setup_processes","setup_processes.key = threads.type")
+		->join("setup_activities","setup_activities.id_process = setup_processes.id")
+		->where("activities.id",$id)
+		->get('activities');
+		$activity = $activity_query->result();
+	
+		$process_query = $this->db->select("setup_processes.key,setup_processes.title as value")
+		->where("bpm = 'MANUAL'")
+		->get("setup_processes");
+		$process = $process_query->result();
+	
+		$trouble_query = $this->db->select("trouble_id,troubles.status as trouble_status,threads.status as thread_status,setup_troubles_types.title")
+		->join("threads","threads.id = activities.id_thread","left")
+		->join("troubles","troubles.id = threads.trouble_id","left")
+		->join("setup_troubles_types","setup_troubles_types.id = troubles.type_id","left")
+		->where("activities.id",$id)
+		->get("activities");
+	
+		$trouble_id 	= $trouble_query->row()->trouble_id;
+		$trouble_status = $trouble_query->row()->trouble_status;
+		$thread_status  = $trouble_query->row()->thread_status;
+		$trouble_title	= $trouble_query->row()->title;
+	
+		$open_act_query = $this->db->select("count(id)")
+		->where("id_thread = (SELECT id_thread from activities where id = $id)")
+		->where("activities.status != 'CANCELLED' AND activities.status != 'CLOSED'")
+		->get("activities");
+		$count = $open_act_query->row()->count;
+	
+		$final_array = array();
+		if($activity_query->num_rows()>0 && $process_query->num_rows()>0){
+			$final_array['result'] = 'SUCCESS';
+			$final_array['process'] = $process;
+			$final_array['current_activities'] = $activity;
+			$final_array['thread_status'] = $thread_status;
+	
+			if($trouble_id != NULL){
+				$final_array['trouble_exist'] = 'YES';
+				$final_array['trouble_id'] = $trouble_id;
+				$final_array['trouble_status'] = $trouble_status;
+				$final_array['trouble_title'] = $trouble_title;
+			}else{
+				$final_array['trouble_exist'] = 'NO';
+			}
+	
+			$final_array['open_act_count'] = $count;
+		}else{
+			$final_array['result'] = 'FAILED';
+		}
+		 
+		return $final_array;
+	}
+	
+	public function advanced_activity_rel_activities($key){
+		$activity_query = $this->db->select("setup_activities.key,setup_activities.title as value")
+		->join("setup_processes","setup_activities.id_process = setup_processes.id")
+		->where("setup_processes.key = '$key'")
+		->where("is_request = 't'")
+		->get("setup_activities");
+		 
+		$final_array = array();
+		if($activity_query->num_rows() > 0){
+			$final_array['result'] = 'SUCCESS';
+			$final_array['activities'] = $activity_query->result();
+		}else{
+			$final_array['result'] = 'FAILED';
+		}
+		 
+		return $final_array;
+	}
+	
+	public function avdact_close_thread_trouble($id,$status){
+		$this->load->library("core/core_actions");
+		$query = $this->db->select("threads.id,threads.trouble_id")
+		->join("threads","threads.id = activities.id_thread")
+		->where("activities.id",$id)
+		->get("activities");
+		 
+		if($query->num_rows() == 0){
+			$final_array = array(
+					"result" => 'SUCCESS'
+			);
+			return $final_array;
+		}
+		 
+		$thread_id = $query->row()->id;
+		$trouble_id = $query->row()->trouble_id;
+		 
+		if($thread_id != ''){
+			$this->core_actions->Set_Status_Activity($id,'CLOSED','');
+			$this->core_actions->Set_Satus_Thread($thread_id,'CLOSED','');
+			if($trouble_id != '') {
+				$this->actions->Set_Status_Trouble($trouble_id,"DONE",null,null,null,$status);
+			}
+	
+			$final_array = array(
+					"result" => 'SUCCESS'
+			);
+		}else{
+			$final_array = array(
+					"result" => 'FAILED',
+					"message" => "No threads where found"
+			);
+		}
+		 
+		return $final_array;
+	}
+	
+	public function advact_details($id){
+		$query = $this->db->select("threads.id,threads.trouble_id,threads.customer,threads.be")
+		->join("threads","threads.id = activities.id_thread")
+		->where("activities.id",$id)
+		->get("activities");
+	
+		if($query->num_rows() > 0){
+			return $query->row();
+		}else{
+			return array();
+		}
+	}
+	
+	public function update_thread_result($thread_id,$status,$result){
+		 
+		$update = array(
+				'value' => $result
+		);
+		 
+		$this->db->where('id_thread',$thread_id)->where("key = 'RESULT'")->where("id_activity IS NULL")->update('vars',$update);
+		return TRUE;
 	}
 
 }

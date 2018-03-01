@@ -271,8 +271,7 @@ class Trouble extends CI_Model {
 				'res_duty_company' => ! empty ( $data ['duty_company_resolution'] ) ? $data ['duty_company_resolution'] : '',
 				'res_duty_user' => ! empty ( $data ['duty_user_resolution'] ) ? $data ['duty_user_resolution'] : '',
 				'res_role' => ! empty ( $data ['res_roles'] ) ? $data ['res_roles'] : '',
-				'contratti' => ! empty ( $data ['be_contratti'] ) ? $data ['be_contratti'] : '',
-				'campagna_id' => ! empty ( $data ['campagna_id'] ) ? $data ['campagna_id'] : '' 
+				'contratti' => ! empty ( $data ['be_contratti'] ) ? $data ['be_contratti'] : ''
 		);
 		
 		foreach ( $arr as $k => $v ) {
@@ -309,7 +308,7 @@ class Trouble extends CI_Model {
 			if ($v == '')
 				unset ( $arr [$k] );
 		}
-		
+
 		if ($res = $this->db->where ( 'id', $id )->update ( 'troubles', $arr )) {
 			return $res;
 		} else {
@@ -373,16 +372,21 @@ class Trouble extends CI_Model {
 	public function get_manual_types() {
 		// $query = $this->db->where('active','t')->where('manual','t')->order_by('title','ASC')->get('setup_troubles_types');
 		// return $query->result();
-		$query = $this->db->select ( 'setup_troubles_types.id,setup_troubles_types.title,setup_troubles_types_2_processes_types.process_key' )->join ( 'setup_troubles_types_2_processes_types', 'setup_troubles_types.id=setup_troubles_types_2_processes_types.trouble_type', 'left' )->where ( 'setup_troubles_types.active', 't' )->where ( 'setup_troubles_types.manual', 't' )->order_by ( 'setup_troubles_types.title' )->get ( 'setup_troubles_types' );
+		$query = $this->db->select ( 'setup_troubles_types.id,setup_troubles_types.title,setup_troubles_types_2_processes_types.process_key' )
+			->join ( 'setup_troubles_types_2_processes_types', 'setup_troubles_types.id=setup_troubles_types_2_processes_types.trouble_type', 'left' )
+			->where ( 'setup_troubles_types.active', 't' )
+			->where ( 'setup_troubles_types.manual', 't' )			
+			->order_by ( 'setup_troubles_types.title' )
+			->get ( 'setup_troubles_types' );
 		$types = $query->result ();
 		$result = array ();
 		if (count ( $types ) > 0) {
-			
+				
 			foreach ( $types as $key => $type ) {
 				$result [$key] = new stdClass ();
 				$result [$key]->id = $type->id;
 				if ($type->process_key != '') {
-					$result [$key]->title = $type->title . ' (automatico)';
+					$result [$key]->title = $type->title . ' (automatic)';
 				} else {
 					$result [$key]->title = $type->title;
 				}
@@ -505,5 +509,77 @@ class Trouble extends CI_Model {
 		$trouble_type_id = ($this->session->userdata ( 'troubles_type_filter' )) ? $this->session->userdata ( 'troubles_type_filter' ) : '0';
 		$query = $this->db->select ( 'id,key' )->where ( 'trouble_type', $trouble_type_id )->get ( 'setup_troubles_subtypes' );
 		return $query->result ();
+	}
+	
+
+	public function get_request_activities($id) {
+		$query = $this->db->select('companies.name as company_name,threads.id as thread_id,set_pro.bpm as bpm,threads.type as thread_type, activities.*,users.first_name, users.last_name,duty.name as duty_company,(SELECT value FROM vars va WHERE va.id_thread = activities.id_thread AND va.id_activity = activities.id AND key = \'RESULT\') as result_value, (SELECT value FROM vars va WHERE va.id_thread = activities.id_thread AND va.id_activity = activities.id AND key = \'STATUS\') as status_value')
+		->join('activities_acl','activities_acl.activities_id = activities.id','left')
+		->join('companies','companies.id = activities.creator_company','left')
+		->join('companies duty','duty.id = activities_acl.duty_company','left')
+		->join('users','users.id = activities.created_by','left')
+		->join('threads','threads.id = activities.id_thread')
+		->join('setup_processes set_pro','set_pro.key = threads.type')
+		->where('threads.trouble_id', $id)
+		->get('activities');
+		$result = $query->result();
+		if($query->num_rows() > 0) {
+			foreach($result as $key => $row) {
+				$query_status = $this->db->select('setup_vars_values.label')
+				->where('setup_vars.type','STATUS')
+				->where('setup_vars.disabled','f')
+				->where('setup_vars_values.key',$row->status_value)
+				->join('setup_activities','setup_activities.id = setup_vars.id_activity')
+				->join('setup_vars_values','setup_vars_values.id_var = setup_vars.id')
+				->where('setup_activities.key',$row->type)
+				->get('setup_vars');
+				$status_result = $query_status->row();
+				$result[$key]->result_status = $status_result;
+				$result[$key]->request_activity = $this->get_request($row->thread_type,$row->thread_id);
+					
+			}
+		}
+	
+		$final_array = array();
+		if(isset($result)) {
+			foreach($result as $key => $row) {
+				$final_array[$row->thread_id][] = $row;
+			}
+		}
+	
+		return  $final_array;
+	}
+	
+	public function get_all_setup_process($id){
+	
+		$query = $this->db->select('set_pro.id as process_id , set_pro.key as process_key, set_pro.title');
+		$query = $this->db->where('set_pro.disabled','f');
+		$query = $this->db->where('pt.trouble_type',$id);
+		$query = $this->db->join('setup_processes set_pro','set_pro.key = pt.process_key');
+		$query = $this->db->join('setup_troubles_types stt','stt.id = pt.trouble_type');
+		$query = $this->db->order_by("set_pro.title","ASC")->get('setup_troubles_types_2_processes_types pt');
+		$result = $query->result_array();
+		if(count($result) > 0) {
+			return $query->result_array();
+		}
+		$all_query = $this->db->select('set_pro.id as process_id , set_pro.key as process_key, set_pro.title');
+		$all_query = $this->db->where('set_pro.disabled','f');
+		$all_query = $this->db->order_by("set_pro.title","ASC")->get('setup_processes set_pro');
+		return $all_query->result_array();
+	}
+	
+	public function get_request($process_key,$thread_id=NULL) {
+		$query = $this->db->select('set_pro.id as process_id , set_pro.key as process_key, set_act.id as set_act_id,set_act.title as act_title, set_act.key as act_key, set_pro.bpm as set_pro_bpm');
+		$query = $this->db->join('setup_processes set_pro','set_pro.id=set_act.id_process');
+		if($thread_id){
+			$query = $this->db->where("(set_act.key NOT IN (SELECT type from activities where id_thread = $thread_id))");
+			$query = $this->db->where("((set_act.is_request = 't' AND set_pro.bpm='AUTOMATIC') OR (set_pro.bpm='MANUAL'))");
+		}else{
+			$query = $this->db->where("set_act.is_request = 't'");
+		}
+		$query = $this->db->where('set_pro.key',$process_key);
+	
+		$query = $this->db->order_by("set_act.title","ASC")->get('setup_activities set_act');
+		return $query->result_array();
 	}
 }

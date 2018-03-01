@@ -120,26 +120,24 @@ class Cases extends Common_Controller {
 	public function get_customer($id) {
 		$this->output->set_content_type ( 'application/json' )->set_output ( json_encode ( $this->customer->single ( $id ) ) );
 	}
-	public function get_contract($id) {
-		$this->output->set_content_type ( 'application/json' )->set_output ( json_encode ( $this->contract->single ( $id ) ) );
-	}
+
 	public function get_process($process, $type) {
 		$this->output->set_content_type ( 'application/json' )->set_output ( json_encode ( $this->process->get_single_key ( $process, $type ) ) );
 	}
 	public function get_activities($thread) {
 		$activities = $this->activity->by_thread ( $thread );
-		
+
 		foreach ( $activities as &$act ) {
 			$statuses = $this->activity->get_transition_status ( $act->type, NULL, $act->id_process, $act->id );
 			$act->statuses = $statuses;
-			$customer = $this->activity->get_customer ( $act->id_thread );			
-			$act->indirizzi_cliente = $this->activity->get_indirizzi_cliente ( $customer->account_id );
+			$customer = $this->activity->get_customer ( $act->id_thread );	
+
+			$act->indirizzi_cliente = $this->activity->get_indirizzi_cliente ( $customer->id );
 			$act->company = ''; // $company;
 			$act->customer = $customer;			
 			$act->statuses = $statuses;						
 			$act->be = $this->activity->get_be_details ( $act->be_id );			
 			$act->contratti = $this->activity->get_contratti ( $act->be_id );
-			$act->product = $this->activity->get_products ();
 			$act->magic_variables = $this->activity->get_magic_fields ( $act->form_id, $act->type, $act->id );
 		}
  
@@ -213,8 +211,8 @@ class Cases extends Common_Controller {
 	public function debug_user() {
 		$this->load->view ( 'common/cases/activities/userdomain' );
 	}
-	public function activity_detail($role, $process, $form) {
-		$this->load->view ( 'common/cases/activities/forms/' . $role . '/' . $process . '/' . $form );
+	public function activity_detail($process, $form) {
+		$this->load->view ( 'common/cases/activities/forms/' . $process . '/' . $form );
 	}
 	public function save_activity_process($id) {
 		$result = $this->activity->update_payload ( $id );
@@ -254,14 +252,14 @@ class Cases extends Common_Controller {
 		if ($_POST ['thread_id'] != '') {
 			
 			// Thread status change
-			$this->core_actions->Set_Satus_Thread ( $_POST ['thread_id'], 'CANCELED', $_POST ['reason'] );
+			$this->core_actions->Set_Satus_Thread ( $_POST ['thread_id'], 'CANCELLED', $_POST ['reason'] );
 			
 			// Activities status change
 			// if(isset($_POST['cancel_activities']) && $_POST['cancel_activities'] !=''){
 			$activities = $this->activity->get_activities_for_cancel ( $this->input->post ( 'thread_id' ) );
 			if (count ( $activities ) > 0) {
 				foreach ( $activities as $activity ) {
-					$this->core_actions->Set_Status_Activity ( $activity->id, 'CANCELED', $this->input->post ( 'reason' ) );
+					$this->core_actions->Set_Status_Activity ( $activity->id, 'CANCELLED', $this->input->post ( 'reason' ) );
 				}
 			}
 			// }
@@ -315,18 +313,11 @@ class Cases extends Common_Controller {
 			
 			foreach ( $related as $item ) {
 				if ($this->input->post ( 'thread' ) && $this->input->post ( 'thread' ) != '') {
+
+				$this->core_actions->create_activity ( 'THREAD', $this->input->post ( 'thread' ), $item, array (
+						'STATUS' => 'NEW' 
+				), NULL );
 					
-					$setup_activity_workorder_status = $this->actions->get_setup_activity_details ( $this->input->post ( 'thread' ), $item );
-					
-					if ($setup_activity_workorder_status == 't') {
-						$this->core_actions->create_activity ( 'THREAD', $this->input->post ( 'thread' ), $item, array (
-								'STATUS' => 'DA_PIANIFICARE' 
-						), NULL );
-					} else {
-						$this->core_actions->create_activity ( 'THREAD', $this->input->post ( 'thread' ), $item, array (
-								'STATUS' => 'NEW' 
-						), NULL );
-					}
 				}
 			}
 			redirect ( '/common/cases/edit/' . $this->input->post ( 'thread' ) );
@@ -370,11 +361,7 @@ class Cases extends Common_Controller {
 		$threads = $this->thread->get_request_for_trouble ( $customer_id, $thread_id, $trouble_id );
 		$this->output->set_content_type ( 'application/json' )->set_output ( json_encode ( $threads ) );
 	}
-	public function get_integrations($thread) {
-		$integrations = $this->activity->get_integrations ( $thread );
-		
-		$this->output->set_content_type ( 'application/json' )->set_output ( json_encode ( $integrations ) );
-	}
+
 	public function get_process_list($thread) {
 		$process = $this->activity->get_process_list ( $thread );
 		
@@ -424,27 +411,23 @@ class Cases extends Common_Controller {
 		$roles = array (			
 				'admin' 
 		);
+
 		$CI = & get_instance ();
 		$user_role = $CI->ion_auth->in_group ( $roles );
 		if ($user_role) {
 			$data ['related_activity'] = $this->activity->thread_rel_activity ( $thread_id );
 			if ((is_array ( $data ['related_activity'] )) && (count ( $data ['related_activity'] ) > 0)) {
 				foreach ( $data ['related_activity'] as $row ) {
-					if ($row->status != 'CHIUSO') {
-						$this->core_actions->Set_Status_Activity ( $row->id, 'ANNULLATO', '' );
-						$this->core_actions->Set_Satus_Thread ( $row->id_thread, 'CANCELED', '' );
-						$this->thread->update_status_exb_exa_exr ( $row->id, $row->id_thread );
+					if ($row->status != 'CLOSED') {
+						$this->core_actions->Set_Status_Activity ( $row->id, 'CANCELLED', '' );
+						$this->core_actions->Set_Satus_Thread ( $row->id_thread, 'CANCELLED', '' );						
 					}
 				}
 			}
 		}
 		redirect ( "/common/cases/edit/$thread_id" );
 	}
-	public function fast_thread($id) {
-		$data ['fast_thread'] = $this->fast_thread->get_details ( $id );
-		$data ['content'] = $this->load->view ( 'common/cases/fast_thread', $data, true );
-		$this->load->view ( 'template', $data );
-	}
+
 	public function export_thread() {
 		$this->load->helper ( 'php-excel' );
 		$filename = "thread_export-" . date ( 'd-m-Y-His' );

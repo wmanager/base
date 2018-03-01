@@ -40,17 +40,18 @@
 class Service extends CI_Controller
 {
     public function __construct()
-    {
+    {    	
     	parent::__construct();
+    	$this->load->model('version');
     }
 
  	public function allextention() {
  		//API URL
  		$url = $this->config->item('api_url').'api/service/allextention';
- 
+ 		$version = $this->version->fetch_current_version();
  		//HEADER
  		$header = array(
- 				'Version:'. '1.0.1'
+ 				'Version:'. $version
  		);
  		//CREATING THE cURL REQUEST
  		$ch = curl_init($url);
@@ -73,10 +74,11 @@ class Service extends CI_Controller
 	    	}	
 	    	// API Request
 	    	$url = $this->config->item('api_url').'api/service/download_file';
+	    	$version = $this->version->fetch_current_version();
 	    	// POST data
 	    	$header = array(
 	    			'X-API-KEY:'. $key,
-	    			'Version:'.'1.0.1',
+	    			'Version:'.$version,
 	    			'Authorization:'.$token
 	    	);
 	    	//CREATING THE cURL REQUEST

@@ -4,7 +4,7 @@
 		<div class="widget-header">
 			<i class="icon-pencil"></i>
 			<h3>
-				<i class="fa fa-building-o"></i> Modifica utente
+				<i class="fa fa-building-o"></i> Modify user
 			</h3>
 		</div>
 		<!-- /.widget-header -->
@@ -38,9 +38,9 @@
 								<?= $form; ?>
 								<div class="form-group">
 					<div class="col-md-offset-2 col-md-8">
-						<button type="submit" class="btn btn-success">Salva</button>
+						<button type="submit" class="btn btn-success">Save</button>
 						<a href="/admin/companies/edit/<?=$this->uri->segment(4)?>/#users"
-							class="btn btn-default">Annulla</a>
+							class="btn btn-default">Cancel</a>
 					</div>
 				</div>
 

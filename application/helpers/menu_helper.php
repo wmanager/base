@@ -70,10 +70,6 @@ if (! function_exists ( 'top_menu' )) {
 					
 					if (count ( $roles ) != 2) {
 						echo '<li class="' . $item ['class'] . '"><a href="' . $item ['link'] . '"><i class="fa ' . $item ['icon'] . '"></i><span>' . $item ['label'] . '</span></a>';
-					} else {
-						if ((($item ['label'] != 'Planning') && ($item ['label'] != 'Calendar') && ($item ['label'] != 'Onsite Report'))) {
-							echo '<li class="' . $item ['class'] . '"><a href="' . $item ['link'] . '"><i class="fa ' . $item ['icon'] . '"></i><span>' . $item ['label'] . '</span></a>';
-						}
 					}
 				}
 				// see if this menu has children
@@ -134,10 +130,6 @@ if (! function_exists ( 'top_menu' )) {
 						
 					if (count ( $roles ) != 2) {
 						echo '<li class="text-center ' . $item ['class'] . '"><a href="javascript:void(0);"><i class="fa ' . $item ['icon'] . '"></i><br><span>' . $item ['label'] . '</span></a>';
-					} else {
-						if ((($item ['label'] != 'Planning') && ($item ['label'] != 'Calendar') && ($item ['label'] != 'Onsite Report'))) {
-							echo '<li class="text-center ' . $item ['class'] . '"><a href="javascript:void(0);"><i class="fa ' . $item ['icon'] . '"></i><br><span>' . $item ['label'] . '</span></a>';
-						}
 					}
 				}
 				// see if this menu has children

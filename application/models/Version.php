@@ -2,12 +2,12 @@
 /**
  * WManager
  *
- * An open source application for business process management
- * and a process automation development framework
+ * An open source application for business process management  
+ * and a process automation development framework  
  *
  * This content is released under the MIT License (MIT)
  *
- * WManager
+ * WManager  
  * Copyright (c) 2017 JAMAIN SOCIAL AND SERVICES SRL (http://jamain.co)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -28,49 +28,38 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
- * @package     WManager
- * @author      Eng. Gianluca Pelliccioli and JAMAIN SOCIAL AND SERVICES SRL development team
- * @copyright   Copyright (c) 2017 JAMAIN SOCIAL AND SERVICES SRL (http://jamain.co)
+ * @package     WManager 
+ * @author      Eng. Gianluca Pelliccioli and JAMAIN SOCIAL AND SERVICES SRL development team  
+ * @copyright   Copyright (c) 2017 JAMAIN SOCIAL AND SERVICES SRL (http://jamain.co) 
  * @license     http://opensource.org/licenses/MIT      MIT License
  * @link        http://wmanager.org
  * @since       Version 1.0.0
  * @filesource
  */
 
-if (! defined ( 'BASEPATH' ))
-	exit ( 'No direct script access allowed' );
-class Home extends Admin_Controller {
-	
-	/**
-	 * Index Page for this controller.
-	 *
-	 * Maps to the following URL
-	 * http://example.com/index.php/welcome
-	 * - or -
-	 * http://example.com/index.php/welcome/index
-	 * - or -
-	 * Since this controller is set as the default controller in
-	 * config/routes.php, it's displayed at http://example.com/
-	 *
-	 * So any other public methods not prefixed with an underscore will
-	 * map to /index.php/welcome/<method_name>
-	 * 
-	 * @see http://codeigniter.com/user_guide/general/urls.html
-	 */
-	public function index() {
-		$this->dashboard ();
-	}
-	public function dashboard() {
-		$this->load->model ( 'dashboard' );
-		$data = array ();
-		$data ['visible'] = $this->ion_auth->in_group ( array (
-				'user',				
-				'admin' 
-		) );
+defined('BASEPATH') OR exit('No direct script access allowed');
 
-		$data ['troubles'] = $this->dashboard->get_open_troubles ();
-		
-		$data ['content'] = $this->load->view ( 'common/dashboard', $data, true );
-		$this->load->view ( 'template', $data );
+/**
+ * Version class.
+ * 
+ * @extends CI_Model
+ */
+class Version extends CI_Model {
+
+	public function fetch_current_version($find) {
+		$find = "Current version:";
+		$reading = FCPATH."version.txt";
+		$version = NULL;
+		if ($fh = fopen($reading, 'r')) {
+			while (!feof($fh)) {
+				$line = fgets($fh);
+				if (stristr($line, $find)) {
+					$version = trim(str_replace($find,'',$line));
+				}
+	
+			}
+			fclose($fh);
+		}
+		return $version;
 	}
 }

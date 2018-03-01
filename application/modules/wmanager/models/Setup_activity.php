@@ -72,26 +72,9 @@ class Setup_activity extends CI_Model {
 		$general_data ['modified_by'] = $this->ion_auth->user ()->row ()->id;
 		$general_data ['ordering'] = $this->total ( $data ['id_process'] ) + 1;
 		
-// 		/**
-// 		 * onsite report setup
-// 		 */
-// 		$general_data ['is_workorder'] = $data ['is_workorder'];
-// 		$general_data ['reportizzazione_avanzata'] = $data ['reportizzazione_avanzata'];
-// 		$onsite_report_type_id_flag = false;
-		
-// 		if ($general_data ['is_workorder'] == 't') {
-// 			if ($data ['onsite_report_type_id'] != '-') {
-// 				$general_data ['onsite_report_type_id'] = $data ['onsite_report_type_id'];
-// 			} else {
-// 				$onsite_report_type_id_flag = true;
-// 			}
-// 		} else {
-// 			$general_data ['onsite_report_type_id'] = NULL;
-// 		}
 		
 		$general_data = clean_array_data ( $general_data );
 		
-		if ($onsite_report_type_id_flag == false) {
 			if ($this->db->insert ( 'setup_activities', $general_data )) {
 				
 				$insert_id = $this->db->insert_id ();
@@ -109,28 +92,18 @@ class Setup_activity extends CI_Model {
 					/* Insert variable values to setup_vars_values table */
 					$set_var_values = $this->set_var_values ( $data, $status_varid );
 				} else {
-					/**
-					 * onsite report: workorder checking
-					 */
-					if ($data ['is_workorder'] == 't') {
-						$this->setup_activity_default_status_workorder ( $status_varid );
-					} else {
 						$this->set_default_status_value ( $status_varid );
-					}
+					
 				}
 				
 				log_message ( 'DEBUG', $this->db->last_query () );
-				$this->session->set_flashdata ( 'growl_success', ' è stata inserita correttamente.' );
+				$this->session->set_flashdata ( 'growl_success', 'Record has been inserted correctly.' );
 				return true;
 			} else {
 				log_message ( 'ERROR', $this->db->last_query () );
-				$this->session->set_flashdata ( 'growl_error', 'Si è verificato un errore, preghiamo di riprovare.' );
+				$this->session->set_flashdata ( 'growl_error', 'There was an error, please try again.' );
 				return false;
 			}
-		} else {
-			$this->session->set_flashdata ( 'growl_error', 'Something went wrong, please check input fields' );
-			return false;
-		}
 	}
 	public function get_default_variables() {
 		$query = $this->db->where ( 'domain', 'ACTIVITY' )->where ( 'disabled', 'f' )->get ( 'setup_default_vars' );
@@ -274,23 +247,6 @@ class Setup_activity extends CI_Model {
 		$general_data ['modified_by'] = $this->ion_auth->user ()->row ()->id;
 		$general_data ['modified'] = date ( 'Y-m-d H:i:s' );
 		
-// 		/**
-// 		 * onsite report setup
-// 		 */
-// 		$general_data ['is_workorder'] = $data ['is_workorder'];
-// 		$general_data ['reportizzazione_avanzata'] = $data ['reportizzazione_avanzata'];
-		
-// 		$onsite_report_type_id_flag = false;
-		
-// 		if ($general_data ['is_workorder'] == 't') {
-// 			if ($data ['onsite_report_type_id'] != '-') {
-// 				$general_data ['onsite_report_type_id'] = $data ['onsite_report_type_id'];
-// 			} else {
-// 				$onsite_report_type_id_flag = true;
-// 			}
-// 		} else {
-// 			$general_data ['onsite_report_type_id'] = NULL;
-// 		}
 		
 		$general_data = clean_array_data ( $general_data );
 		
@@ -310,8 +266,7 @@ class Setup_activity extends CI_Model {
 			$general_data ['duty_company'] = $data ['duty_company'];
 		} else {
 			$general_data ['duty_company'] = NULL;
-		}
-		if ($onsite_report_type_id_flag == false) {
+		}		
 			if ($data ['form_id'] == '') {
 				$general_data ['form_id'] = NULL;
 			} else {
@@ -329,13 +284,7 @@ class Setup_activity extends CI_Model {
 				$varid = $this->get_status_varid ( $id );
 				
 				if (! empty ( $data ['status_key'] )) {
-					
-					/* Update variable values to setup_vars_values table */
-					if ($data ['is_workorder'] == 't') {
-						$this->setup_activity_default_status_workorder_edit ( $varid );
-					} else {
-						$update_var_values = $this->edit_var_values ( $data, $varid );
-					}
+					$update_var_values = $this->edit_var_values ( $data, $varid );
 				}
 				
 				if (! empty ( $data ['id_attachment'] )) {
@@ -360,175 +309,9 @@ class Setup_activity extends CI_Model {
 				$this->session->set_flashdata ( 'growl_error', 'There was an error, please try again.' );
 				return false;
 			}
-		} else {
-			$this->session->set_flashdata ( 'growl_error', 'Something went wrong, please check input fields' );
-			return false;
-		}
 	}
 	
-	/**
-	 * setup_activity_default_status_workorder_edit
-	 *
-	 * @param number $id_var        	
-	 */
-	public function setup_activity_default_status_workorder_edit($id_var) {
-		$query = $this->db->select ( '*' )->where ( 'id_var', $id_var )->get ( 'setup_vars_values' );
-		
-		$data = $query->result ();
-		
-		$status_order_array = array ();
-		
-		foreach ( $data as $key => $value ) {
-			$status_order_array [$value->key] = $value->ordering;
-		}
-		
-		$this->setup_activity_default_status_workorder ( $id_var, $status_order_array );
-	
-	/**
-	 * onsite report updating setup activities status if it not exist
-	 */
-	}
-	
-	/**
-	 * setup_activity_default_status_workorder
-	 *
-	 * @param number $id        	
-	 */
-	public function setup_activity_default_status_workorder($id_var, $status_order_array = array()) {
-		$status_array = array (
-				'NEW' => array (
-						'ordering' => 0,
-						'label' => 'new',
-						'description' => 'Initial status',
-						'initial' => 'f',
-						'final' => 'f',
-						'final_default' => 'f' 
-				),
-				'DA_PIANIFICARE' => array (
-						'ordering' => 1,
-						'label' => 'da pianificare',
-						'description' => 'Ready for planning',
-						'initial' => 't',
-						'final' => 'f',
-						'final_default' => 'f' 
-				),
-				'PIANIFICATO' => array (
-						'ordering' => 2,
-						'label' => 'pianificato',
-						'description' => 'Scheduled',
-						'initial' => 'f',
-						'final' => 'f',
-						'final_default' => 'f' 
-				),
-				'DA_REPORTIZZARE' => array (
-						'ordering' => 3,
-						'label' => 'da reportizzare',
-						'description' => 'Waiting for BO-OPERATION',
-						'initial' => 'f',
-						'final' => 'f',
-						'final_default' => 'f' 
-				),
-				'REPORTIZZATO_OK' => array (
-						'ordering' => 4,
-						'label' => 'reportizzato positivo',
-						'description' => 'Onsite report successfull',
-						'initial' => 'f',
-						'final' => 'f',
-						'final_default' => 'f' 
-				),
-				'REPORTIZZATO_KO' => array (
-						'ordering' => 5,
-						'label' => 'reportizzato negativo',
-						'description' => 'Onsite report unsuccessfull',
-						'initial' => 'f',
-						'final' => 'f',
-						'final_default' => 'f' 
-				),
-				'REPORTIZZATO_KO_TECNICO' => array (
-						'ordering' => 6,
-						'label' => 'reportizzato negativo - KO tecnico',
-						'description' => 'Onsite report unsuccessfull',
-						'initial' => 'f',
-						'final' => 'f',
-						'final_default' => 'f' 
-				),
-				'REPORTIZZATO_KO_COMMERCIALE' => array (
-						'ordering' => 7,
-						'label' => 'reportizzato negativo - KO commerciale',
-						'description' => 'Onsite report unsuccessfull',
-						'initial' => 'f',
-						'final' => 'f',
-						'final_default' => 'f' 
-				),
-				'DONE' => array (
-						'ordering' => 8,
-						'label' => 'done',
-						'description' => 'Final status',
-						'initial' => 'f',
-						'final' => 't',
-						'final_default' => 't' 
-				) 
-		);
-		
-		$count_status_order_array = count ( $status_order_array );
-		
-		if ($count_status_order_array == 0) {
-			foreach ( $status_array as $key => $value ) {
-				$save_data = array ();
-				
-				$save_data ['id_var'] = $id_var;
-				$save_data ['key'] = $key;
-				$save_data ['ordering'] = $value ['ordering'];
-				$save_data ['label'] = $value ['label'];
-				$save_data ['description'] = $value ['description'];
-				$save_data ['initial'] = $value ['initial'];
-				$save_data ['final'] = $value ['final'];
-				$save_data ['final_default'] = $value ['final_default'];
-				$save_data ['created_by'] = $this->ion_auth->user ()->row ()->id;
-				$save_data ['modified_by'] = $this->ion_auth->user ()->row ()->id;
-				
-				$this->db->insert ( 'setup_vars_values', $save_data );
-			}
-		} else {
-			$i = 0;
-			foreach ( $status_array as $key => $value ) {
-				$order_array [] = $value->ordering;
-				
-				if (! array_key_exists ( $key, $status_order_array )) {
-					$save_data = array ();
-					$save_data ['id_var'] = $id_var;
-					$save_data ['key'] = $key;
-					$save_data ['ordering'] = $count_status_order_array + $i;
-					$save_data ['label'] = $value ['label'];
-					$save_data ['description'] = $value ['description'];
-					$save_data ['initial'] = $value ['initial'];
-					$save_data ['final'] = $value ['final'];
-					$save_data ['final_default'] = $value ['final_default'];
-					$save_data ['created_by'] = $this->ion_auth->user ()->row ()->id;
-					$save_data ['modified_by'] = $this->ion_auth->user ()->row ()->id;
-					
-					$this->db->insert ( 'setup_vars_values', $save_data );
-					
-					$i ++;
-				} else {
-					
-					if ($key == 'NEW') {
-						$update_data = array ();
-						$update_data ['initial'] = 'f';
-						
-						$this->db->where ( 'id_var', $id_var )->where ( 'key', $key )->update ( 'setup_vars_values', $update_data );
-					}
-					
-					if ($key == 'DA_PIANIFICARE') {
-						$update_data = array ();
-						$update_data ['initial'] = 't';
-						
-						$this->db->where ( 'id_var', $id_var )->where ( 'key', $key )->update ( 'setup_vars_values', $update_data );
-					}
-				}
-			}
-		}
-	}
+
 	public function add_variable($vardata) {
 		if (! $vardata ['disabled']) {
 			$var_data ['disabled'] = 'f';
@@ -596,7 +379,7 @@ class Setup_activity extends CI_Model {
 			log_message ( 'DEBUG', $this->db->last_query () );
 			$this->db->where ( 'id_var', $id )->delete ( 'setup_vars_values' );
 			log_message ( 'DEBUG', $this->db->last_query () );
-			$this->session->set_flashdata ( 'growl_success', ' It has been deleted successfully' );
+			$this->session->set_flashdata ( 'growl_success', ' Record has been deleted successfully' );
 			return true;
 		} else {
 			log_message ( 'ERROR', $this->db->last_query () );
@@ -643,7 +426,7 @@ class Setup_activity extends CI_Model {
 	public function delete_status($id) {
 		if ($this->db->where ( 'id', $id )->delete ( 'setup_vars_values' )) {
 			log_message ( 'DEBUG', $this->db->last_query () );
-			$this->session->set_flashdata ( 'growl_success', ' It has been deleted successfully' );
+			$this->session->set_flashdata ( 'growl_success', ' Record has been deleted successfully' );
 			return true;
 		} else {
 			log_message ( 'ERROR', $this->db->last_query () );
@@ -668,7 +451,7 @@ class Setup_activity extends CI_Model {
 	public function delete_attachment($id) {
 		if ($this->db->where ( 'id', $id )->delete ( 'setup_forms_attachments' )) {
 			log_message ( 'DEBUG', $this->db->last_query () );
-			$this->session->set_flashdata ( 'growl_success', ' It has been deleted successfully' );
+			$this->session->set_flashdata ( 'growl_success', ' Record has been deleted successfully' );
 			return true;
 		} else {
 			log_message ( 'ERROR', $this->db->last_query () );
@@ -778,7 +561,7 @@ class Setup_activity extends CI_Model {
 	public function delete_scenario($id) {
 		if ($this->db->where ( 'id', $id )->delete ( 'setup_activities_exits' )) {
 			log_message ( 'DEBUG', $this->db->last_query () );
-			$this->session->set_flashdata ( 'growl_success', ' It has been deleted successfully' );
+			$this->session->set_flashdata ( 'growl_success', ' Record has been deleted successfully' );
 			return true;
 		} else {
 			log_message ( 'ERROR', $this->db->last_query () );
@@ -822,7 +605,7 @@ class Setup_activity extends CI_Model {
 		$this->delete_associated_vars ( $process_id, $act_id );
 		if ($this->db->where ( 'id', $act_id )->delete ( 'setup_activities' )) {
 			log_message ( 'DEBUG', $this->db->last_query () );
-			$this->session->set_flashdata ( 'growl_success', ' It has been deleted successfully' );
+			$this->session->set_flashdata ( 'growl_success', ' Record has been deleted successfully' );
 			return true;
 		} else {
 			log_message ( 'ERROR', $this->db->last_query () );
@@ -839,52 +622,8 @@ class Setup_activity extends CI_Model {
 		
 		$this->db->where ( 'id_process', $process_id )->where ( 'id_activity', $act_id )->delete ( 'setup_vars' );
 	}
+
 	
-	/**
-	 * set_workorder
-	 *
-	 * @param array $post        	
-	 *
-	 * @return boolean
-	 *
-	 * @author Sumesh
-	 */
-	public function set_workorder($post) {
-		$is_workorder = $post ['is_workorder'];
-		$report_type_id = $post ['report_type'];
-		$setup_activty_id = $post ['setup_activty_id'];
-		
-		$workorder_data ['workorder'] = $is_workorder;
-		$workorder_data ['onsite_report_id'] = $report_type_id;
-		
-		if ($this->db->where ( 'id', $setup_activty_id )->update ( 'setup_activities', $workorder_data )) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-	
-	/**
-	 * get_setup_activity_details
-	 *
-	 * @param integer $thread_id        	
-	 * @param string $setup_activity_key        	
-	 *
-	 * @return string
-	 *
-	 * @author Sumesh
-	 */
-	public function get_setup_activity_details($thread_id, $setup_activity_key) {
-		$query = $this->db->select ( 'setup_activities.is_workorder' )->join ( 'setup_processes', 'setup_processes.id = setup_activities.id_process' )->join ( 'threads', 'threads.type = setup_processes.key' )->where ( 'setup_activities.key', $setup_activity_key )->where ( 'threads.id', $thread_id )->get ( 'setup_activities' );
-		
-		$data = $query->result ();
-		
-		if (count ( $data ) > 0) {
-			return $data [0]->is_workorder;
-		} else {
-			return 'f';
-		}
-	}
 	
 	// For getting the initails status of particular activity
 	public function get_initial_status($id_activity = NULL, $flag = NULL, $vid = NULL) {

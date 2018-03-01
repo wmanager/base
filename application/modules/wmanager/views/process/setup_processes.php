@@ -34,11 +34,7 @@
 					</thead>
 					<tbody>
 					    		<?php
-											$tf_array = array (
-													't' => 'ATTIVO',
-													'f' => 'DISATTIVO' 
-											);
-											if (is_array ( $processes )) {
+											if ((is_array ( $processes )) && !empty($processes)) {
 												foreach ( $processes as $process ) {
 													echo '<tr>';
 													echo "<td width='40'></td>";
@@ -63,7 +59,7 @@
 													echo '<li role="presentation"><a role="menuitem" tabindex="-1" href="' . site_url ( 'admin/setup_processes/edit/' . $process->id ) . '">Edit</a></li>';
 													echo '<li role="presentation"><a role="menuitem" tabindex="-1" href="' . site_url ( 'admin/setup_activities/' . $process->id ) . '">Setup POA</a></li>';
 													if ($process->act_count == 0) {
-														echo '<li role="presentation"><a role="menuitem" tabindex="-1" href="' . base_url () . 'admin/setup_processes/delete/' . $process->id . '" class="delete-confirm" data-message="Sei sicuro di voler eliminare il record?">Elimina</a></li>';
+														echo '<li role="presentation"><a role="menuitem" tabindex="-1" href="' . base_url () . 'admin/setup_processes/delete/' . $process->id . '" class="delete-confirm" data-message="You are sure you want to delete the record?">Delete</a></li>';
 													}
 													echo '</ul>';
 													echo '</div>';
@@ -71,6 +67,12 @@
 													
 													echo '</tr>';
 												}
+											} else {
+												echo '<tr>';
+												echo '<td colspan="7">';
+												echo 'No Record Found';
+												echo '</td>';
+												echo '</tr>';
 											}
 											?>
 					    	</tbody>
