@@ -39,7 +39,7 @@
 
 if (! defined ( 'BASEPATH' ))
 	exit ( 'No direct script access allowed' );
-class email_notification_library {
+class Email_notification_library {
 	var $CI;
 	public function __construct() {
 		$this->CI = & get_instance ();

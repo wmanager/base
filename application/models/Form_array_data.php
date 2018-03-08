@@ -56,5 +56,10 @@ class Form_array_data extends CI_Model
 		
 	}
 	
+	public function get_table_structure($table_name){
+		$fields = $this->db->field_data($table_name);
+		return $fields;
+	}
+	
 	
 }

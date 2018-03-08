@@ -33,6 +33,7 @@
 									<th>Name</th>
 									<th>Status</th>
 									<th>Created</th>
+									<th></th>
 								</tr>
 							</thead>
 							<tbody>
@@ -43,7 +44,8 @@
 													echo "<td>" . ucwords ( $item->module_name ) . "</td>";
 													echo "<td>" . ucwords ( $item->status ) . "</td>";
 													echo "<td>" . date ( 'd/m/Y', strtotime ( str_replace ( "/", "-", $item->created ) ) ) . "</td>";
-													echo "<td>";													
+													echo "<td>";
+													echo '<a href="/core/extension/uninstall_extension/'.$item->id.'/'.$item->key.'" data-toggle="tooltip" data-placement="top" title="Uninstall"><i class="fa fa-share-square-o" style="color:#333"></i></a>';
 													echo "</td>";
 													echo "</tr>";
 												}

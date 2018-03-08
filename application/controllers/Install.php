@@ -56,7 +56,7 @@ class Install extends CI_Controller {
 		
 		parent::__construct();
 		$this->load->model('install_model');
-		$this->load->model('version');
+		$this->load->library('core/version');
 		$this->load->helper(array('form', 'cookie', 'url'));
 		$this->load->library(array('form_validation', 'session'));
 		
@@ -68,10 +68,8 @@ class Install extends CI_Controller {
 	 * @return void
 	 */
 	public function index() {	
-/*  		$step= 1;
-		$this->install_model->reset_configs($step); */
-		
-		
+		$step= 1;
+		$this->install_model->reset_configs($step); 
 		$data = (object)[];
 		$data->version = $this->version->fetch_current_version();
 		$data->content = $this->load->view ( 'install/install', $data, true );
@@ -80,8 +78,8 @@ class Install extends CI_Controller {
 	}
 
 	public function create_host() {
-/*  		$step= 2;
-		$this->install_model->reset_configs($step);  */
+ 		$step= 2;
+		$this->install_model->reset_configs($step);
 		$data = (object)[];
 		
 		// form validation
@@ -191,12 +189,9 @@ class Install extends CI_Controller {
 	 */
 	public function database_creation() {
 
-/* 		$step= 3;
-		$this->install_model->reset_configs($step); */
+		$step= 3;
+		$this->install_model->reset_configs($step); 
 		$data = (object)[];
-		ini_set('display_errors', 1);
-		ini_set('display_startup_errors', 1);
-		error_reporting(E_ALL);
 		// form validation
 		$this->form_validation->set_rules('database_name', 'Database name', 'trim|required|max_length[64]');
 		
@@ -245,8 +240,8 @@ class Install extends CI_Controller {
 	 */
 	public function tables_creation($method = NULL) {
 
-/* 		$step= 4;
-		$this->install_model->reset_configs($step); */
+ 		$step= 4;
+		$this->install_model->reset_configs($step); 
 		$data = (object)[];
 		$data->method = $method;
 		
@@ -297,8 +292,9 @@ class Install extends CI_Controller {
 	 * @return void
 	 */
 	public function site_settings() {
-/* 		$step= 5;
-		$this->install_model->reset_configs($step); */
+		
+ 		$step= 5;
+		$this->install_model->reset_configs($step); 
 		
 		$data = (object)[];
 		
@@ -410,7 +406,7 @@ class Install extends CI_Controller {
 					
 				}	
 	
-				$_SESSION['site_settings'] = true;
+				
 				// forum settings ok, go to the final installation step
 				redirect('install/finish');
 			
@@ -426,7 +422,8 @@ class Install extends CI_Controller {
 	 * @return void
 	 */
 	public function finish() {
-		
+		$step= 5;
+		$this->install_model->reset_configs($step);
 		$data = (object)[];		
 		$data->content = $this->load->view ( 'install/install_finish', $data, true );
 		$this->load->view ( 'install/install_template', $data );
@@ -439,11 +436,12 @@ class Install extends CI_Controller {
 	 * @return void
 	 */
 	public function delete_files() {
-		
+		$step= 6;
+		$this->install_model->reset_configs($step);
 		$data = (object)[];
 		
 		if($this->install_model->delete_installation_files()) {
-			redirect('/', 'refresh');
+			redirect('auth/login', 'refresh');
 			return;
 		} else {
 			echo 'Unable to delete installation files, please do it manually.';

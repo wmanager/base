@@ -60,15 +60,10 @@ class Install_model extends CI_Model {
 	
 	public function reset_configs($step) {
 		switch ($step) {
-			case 1:
-				if (isset($_SESSION['table_creation'])) {
-					// empty value and expiration one hour before
-					unset($_SESSION['table_creation']);
-				}
-				if (isset($_SESSION['site_settings'])) {
-					// empty value and expiration one hour before
-					unset($_SESSION['site_settings']);
-				}
+			case 1:		
+				$_SESSION['site_settings'] = false;
+				$_SESSION['finish_install'] = false;
+				
 				//replace hook
 				$find = '$hook["post_controller_constructor"] = ';
 					
@@ -108,25 +103,21 @@ class Install_model extends CI_Model {
 			break;
 			
 			case 2: 
-				if (isset($_SESSION['table_creation'])) {
-					// empty value and expiration one hour before
-					unset($_SESSION['table_creation']);
+				if(!empty($_SESSION['finish_install'])) {
+					redirect('install/finish');
 				}
-				if (isset($_SESSION['site_settings'])) {
-					// empty value and expiration one hour before
-					unset($_SESSION['site_settings']);
-				}
-				// replace hostname in the database.php config file
+				//replace hook
+				$find = '$hook["post_controller_constructor"] = ';
+				$replace = '$hook["post_controller_constructor"] = array();';
+				$this->edit_hook_file($find,$replace);
+				
+				// reset the database.php config file
 				$find    = "'hostname' =>";
-				$replace = "\t" . "'hostname' => ''," . "\n";
-				
+				$replace = "\t" . "'hostname' => 'localhost'," . "\n";
 				$this->install_model->edit_database_config_file($find, $replace);
-				
 				$find    = "'username' =>";
 				$replace = "\t" . "'username' => ''," . "\n";
 				$this->install_model->edit_database_config_file($find, $replace);
-				
-				// replace password in the database.php config file
 				$find    = "'password' =>";
 				$replace = "\t" . "'password' => ''," . "\n";
 				$this->install_model->edit_database_config_file($find, $replace);
@@ -135,76 +126,49 @@ class Install_model extends CI_Model {
 				$find    = "'ion_auth',";
 				$replace = "//'ion_auth',". "\n";
 				$this->edit_autoload_file($find, $replace);
-					
-				// replace default route in the routes.php config file
-				$find    = '$route [\'default_controller\'] =';
-				$replace = '$route [\'default_controller\'] = \'' . 'install' . '\';' . "\n";
-				$this->install_model->edit_routes_config_file($find, $replace);
+
 			break;
 			
 			case 3:
-				if(isset($_SESSION['site_settings'])) {
-					$site_settings = $_SESSION['site_settings'];
-					if ($site_settings)
-					{
-						redirect('install/finish');
-					}
+				if(!empty($_SESSION['finish_install'])) {
+					redirect('install/finish');
 				}
+				//replace hook
+				$find = '$hook["post_controller_constructor"] = ';
+				$replace = '$hook["post_controller_constructor"] = array();';
+				$this->edit_hook_file($find,$replace);
 				
-				if(isset($_SESSION['table_creation'])) {
-					$table_creation = $_SESSION['table_creation'];
-					if ($table_creation)
-					{
-						redirect('install/site_settings');
-					}
-				}
-				// replace database name in the database.php config file
+				// reset the database.php config file
 				$find    = "'database' =>";
 				$replace = "\t" . "'database' => 'postgres'," . "\n";
 				$this->install_model->edit_database_config_file($find, $replace);
-				//replace hook
-				$find = '$hook["post_controller_constructor"] = ';
-					
-				$replace = '$hook["post_controller_constructor"] = array();';
-					
-				$this->edit_hook_file($find,$replace);
 				
 				// replace base url in the autoload.php config file
 				$find    = "'ion_auth',";
 				$replace = "//'ion_auth',". "\n";
 				$this->edit_autoload_file($find, $replace);
+
 			break;
 			
 			case 4:
-
-				if(isset($_SESSION['site_settings'])) {
-					$site_settings = $_SESSION['site_settings'];
-					if ($site_settings)
-					{
-						redirect('install/finish');
-					}
+				if(!empty($_SESSION['site_settings'])) {
+					$_SESSION['site_settings'] = false;
+					redirect('install/database_creation');
 				}
-				if(isset($_SESSION['table_creation'])) {
-					$table_creation = $_SESSION['table_creation'];
-					if ($table_creation)
-					{
-						redirect('install/site_settings');
-					}
+				if(!empty($_SESSION['finish_install'])) {
+					redirect('install/finish');
 				}
 				break;
 				
 			case 5:
-				
-				if(isset($_SESSION['site_settings'])) {
-					$site_settings = $_SESSION['site_settings'];
-					if ($site_settings)
-					{
-						redirect('install/finish');
-					}
+				$_SESSION['site_settings'] = true;
+				if(!empty($_SESSION['finish_install'])) {
+					redirect('install/finish');
 				}
 				break;
-				
-
+			case 6:
+				$_SESSION['finish_install'] = true;
+				break;
 		}
 	}
 	

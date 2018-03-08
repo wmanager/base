@@ -324,7 +324,6 @@ class Companies extends Admin_Controller {
 		$company_list = $this->company->company_list ();
 		$data ['keys'] = $this->key->get ( $id );
 		
-		$data ['cleaning_keys'] = $this->company->get_keys ( $id );
 		
 		$all_roles = $this->company->get_roles ();
 		$roles = array ();

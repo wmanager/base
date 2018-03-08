@@ -37,11 +37,38 @@
  * @filesource
  */
 
-class Dummy_action {
-	function test() {
-		$this->ci = &get_instance ();
-		$this->ci->load->library ( 'core/core_actions' );
-		$result = $this->ci->core_actions->test_actions ();
-		return $result;
+if (! function_exists ( 'get_dependencies' )) {
+	
+	/**
+	 *  get_dependencies
+	 *  Provides an array containing the dependencies to be loaded into templates
+	 */
+	function get_dependencies($for,$type) {
+		$CI = & get_instance ();
+		
+		//load models
+		$CI->load->model("core/dependencies");
+		$raw_data = $CI->dependencies->get($for,$type);
+		
+		if(count($raw_data) > 0){
+			$return_array = array();
+			foreach ($raw_data as $item){
+				$path = rtrim(FCPATH,"/").$item['path'];
+				if(!file_exists($path)){
+				  continue;		
+				}
+				if($type == "css"){
+					$return_array[] =  $item['path'];
+				}else{
+					$return_array[] = $item['path'];
+				}
+					
+			}
+			
+			return $return_array;
+		}else{
+			return array();
+		}
+		
 	}
 }

@@ -126,10 +126,8 @@ var app = angular.module('WmanagerApp', ['ui.bootstrap','validation','ui.calenda
                           });
                     },
                     contratto: /^[0-9]{8}([B-D]|(CDD)){1}$/,
-                    contratto_sereno: /^[0-9]{8}([S]|(CDS)){1}$/,
                     contrattotuo: /^[0-9]{8}([T]|(CDT)){1}$/,
                     contratto_np04: /^[0-9]{8}[N]{1}$/,
-                    iban: /^IT\d{2}[A-Z]\d{10}[0-9A-Z]{12}$/,
                     tensione: /^[0-9]{3}$/,
                     percentage: function(value, scope) {
                       if(value >= 0 && value <= 100) return true;
@@ -750,45 +748,6 @@ var app = angular.module('WmanagerApp', ['ui.bootstrap','validation','ui.calenda
 	        }
 	    };
   })();
-
-  $scope.check_iban =(function(){
-    var regexp = /^IT\d{2}[A-Z]\d{10}[0-9A-Z]{12}$/;
-    return {
-          test: function(value) {
-              if(value != null && value.length > 0){
-                   return regexp.test(value);
-              } else {
-                return true;
-              }
-          }
-      };
-  })();
-
-  $scope.verificaiban = function(iban,index){
-   
-   $http.get('/common/module/get_filiale/'+iban).
-                    success(function(data, status, headers, config) {
-                      if(data.DENOMINAZIONE===undefined){
-                        $ngBootbox.alert('Filiale non trovata')
-                        .then(function() {
-                           $scope.forms[index].verified_iban = false;
-                           $scope.forms[index].sdd_banca = '';
-                           $scope.forms[index].sdd_filiale = '';
-                        });
-                      } else {
-                        $ngBootbox.confirm(data.DENOMINAZIONE+'<br>'+data.INDIRIZZO+'<br>'+data.COMUNE)
-                        .then(function() {
-                            $scope.forms[index].verified_iban = true;
-                            $scope.forms[index].sdd_banca = data.DENOMINAZIONE;
-                            $scope.forms[index].sdd_filiale = data.INDIRIZZO+' '+data.COMUNE;
-                        }, function() {
-                            $scope.forms[index].verified_iban = false;
-                            $scope.forms[index].sdd_banca = '';
-                            $scope.forms[index].sdd_filiale = '';
-                        });
-                      }
-                }); 
-  };
 
 $scope.busy = true;
   $rootScope.$watch('process', function () {

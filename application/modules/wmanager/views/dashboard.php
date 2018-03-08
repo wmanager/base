@@ -158,7 +158,11 @@
 				</div>
 				<div class="col-md-4 box_right admin-box">
 					<div class="admin-box-content text-center ">
-						
+						<a href="/admin/setup_products/index/">
+							<i class="fa fa-cubes fa-2x" aria-hidden="true"></i>
+							<br/>
+							Products
+						</a>
 					</div>
 				</div>
 				<div class="col-md-4 box_right admin-box">

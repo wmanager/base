@@ -148,7 +148,6 @@ class Activities extends Common_Controller {
 		redirect ( '/common/activities' );
 	}
 	function attach_types($form) {
-		$this->load->library ( 'Attachments' );
 		$this->output->set_content_type ( 'application/json' )->set_output ( json_encode ( $this->attachment->list_types ( $form ) ) );
 	}
 	public function detail($id = NULL) {

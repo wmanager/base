@@ -46,6 +46,7 @@ class  Form_array_builder{
 		log_message ( 'debug', "Form array Class Initialized" );
 	}
 	
+	//ONLY CONFIG
 	public function create_form_array($module = NULL, $type = 'module'){
 		$CI = & get_instance ();
 		$CI->load->model ( 'form_array_data' );
@@ -100,7 +101,9 @@ class  Form_array_builder{
 			"date" => "date",
 			"text" => "text",
 			"checkbox" => "checkbox",	
-			"boolean" => "radio"	
+			"boolean" => "radio",
+			"character varying"	=> "text",
+			"int" => "text"
 		);
 		
 		if(isset($field_array[$type])){
@@ -111,6 +114,7 @@ class  Form_array_builder{
 		
 	}
 	
+	//ONLY CONFIG
 	public function get_field_array($type, $data){
 		
 		
@@ -165,5 +169,92 @@ class  Form_array_builder{
 		return $return_array;
 		
 	}
+	
+	
+	//COMMON library for all 
+	public function table_structure($table_name = NULL){
+		$CI = & get_instance ();
+		$CI->load->model ( 'form_array_data' );
+		
+		if($table_name == NULL){
+			return FALSE;
+		}
+		//get all fields
+		$table_structure = $CI->form_array_data->get_table_structure($table_name);
+		
+		//clean fields
+		$fields = $this->remove_common_fields($table_structure);
+		
+		//create form array from field
+		$form_array = $this->create_form_builder_array($fields);
+		
+		return $form_array;	
+		
+	}
+	
+	//This function is to remove the common fields from table eg:id,created,created_by etc.
+	public function remove_common_fields($table_fields){
+		
+		if(count($table_fields)==0){
+			return $table_fields;
+		}
+		
+		//common fields
+		$common_fields = ['id','created','created_by','modified','modified_by'];
+				
+				
+		foreach ($table_fields as $key=>$item){
+			
+			if(in_array($item->name,$common_fields)){
+				unset($table_fields[$key]);
+			}
+		}
+		
+		return $table_fields;
+	}
+	
+	public function create_form_builder_array($fields){
+		
+		if(count($fields) == 0){
+			return array();
+		}
+		
+		$return = array();
+		$i = 0;
+		foreach($fields as $item){
+			
+			//set id
+			$return[$i]['id'] = $item->name;
+			
+			//set type
+			$type = $this->get_db2html($item->type);
+			if($type != 'text' && $type != 'date')
+				$return[$i]['type'] = $type;
+			
+			//set label
+			$return[$i]['label'] = str_replace("_"," ",ucfirst($item->name));
+			
+			//set placeholer
+			$return[$i]['placeholder'] = 'Enter '.str_replace("_"," ",$item->name);
+			
+			$class = '';
+			//set class
+			if($type == 'date'){
+				$return[$i]['class'] = "date_picker";
+			}else if($type == 'dropdown'){
+				$return[$i]['class'] = "form-control";
+			}else{
+				$return[$i]['class'] = "";
+			}
+			
+			$i++;
+		}
+		
+		
+		return $return;
+	}
+	
+	
+	
 	
 }

@@ -37,8 +37,23 @@
  * @filesource
  */
 
-if (! function_exists ( 'get_domain' )) {
-	function get_domain() {
-		return 'Wmanager';
+if (! defined ( 'BASEPATH' ))
+	exit ( 'No direct script access allowed' );
+class Version  {
+	public function fetch_current_version($find) {
+		$find = "Current version:";
+		$reading = APPPATH."modules/core/version.txt";
+		$version = NULL;
+		if ($fh = fopen($reading, 'r')) {
+			while (!feof($fh)) {
+				$line = fgets($fh);
+				if (stristr($line, $find)) {
+					$version = trim(str_replace($find,'',$line));
+				}
+	
+			}
+			fclose($fh);
+		}
+		return $version;
 	}
 }

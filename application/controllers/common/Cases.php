@@ -239,7 +239,6 @@ class Cases extends Common_Controller {
 		$this->output->set_content_type ( 'application/json' )->set_output ( json_encode ( $response ) );
 	}
 	function attach_types($form) {
-		$this->load->library ( 'Attachments' );
 		$this->output->set_content_type ( 'application/json' )->set_output ( json_encode ( $this->attachment->list_types ( $form ) ) );
 	}
 	public function cancel($id) {

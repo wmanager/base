@@ -384,19 +384,7 @@ class Core_actions {
 		$history = $CI->actions_model->add_history ( 'ACTIVITY', $act_id, 'ACTIVITY', $ACTIVITYID, $parma, $action, $session, $updatestatus, $exit_code );
 		return $updatestatus;
 	}
-	public function Set_Parent_Trouble_Status($THREADID, $status, $status_detail, $thread_id = NULL, $act_id = NULL, $exit_code = NULL) {
-		$CI = & get_instance ();
-		$CI->load->model ( 'core/actions_model' );
-		$updatestatus = $CI->actions_model->Set_Parent_Trouble_Status ( $THREADID, $status, $status_detail );
-		
-		$action = $updatestatus ['message'];
-		$updatestatus = $updatestatus ['status'];
-		$session = $CI->session->userdata ( 'session_id' );
-		$parma ['STATUS'] = $status;
-		log_message ( 'DEBUG', 'trigger engine 13' );
-		$history = $CI->actions_model->add_history ( 'ACTIVITY', $act_id, 'THREAD', $THREADID, $parma, $action, $session, $updatestatus, $exit_code );
-		return $updatestatus;
-	}
+	
 	public function Set_Parent_Trouble_Result($THREADID, $status, $status_detail, $thread_id = NULL, $act_id = NULL, $exit_code = NULL) {
 		$CI = & get_instance ();
 		$CI->load->model ( 'core/actions_model' );
@@ -664,6 +652,20 @@ class Core_actions {
 		$update = $CI->actions_model->auto_activity_master_update($activity_id);
 		return true;
 	
+	}
+	
+	public function checkActivity($actId) {
+		$CI = & get_instance ();
+		$CI->load->model ( 'core/actions_model' );
+		$check = $CI->actions_model->checkActivity ( $actId );
+		return $check;
+	}
+	
+	public function checkActivityType($actType, $thread_id) {
+		$CI = & get_instance ();
+		$CI->load->model ( 'core/actions_model' );
+		$check = $CI->actions_model->checkActivityType ( $actType, $thread_id );
+		return $check;
 	}
 	
 }

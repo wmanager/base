@@ -107,6 +107,12 @@ class Extension_model extends CI_Model {
 		}
 	}
 	
+	public function delete_extension_details($ext) {
+		$this->db->where('id', $ext);
+		$del=$this->db->delete('extensions');
+		return $del;
+	}
+	
 	public function insert_extension($data) {
 		$data_array = array(
 				"status"  => 'downloaded',
@@ -119,7 +125,7 @@ class Extension_model extends CI_Model {
 		$result = $query->row_array();
 		if(count($result) == 0) {
 			if($this->db->insert("extensions",$data_array)) {
-				return true;
+				return $this->db->insert_id();
 			} else {
 				return false;
 			}

@@ -72,7 +72,8 @@ class Actions {
 	public function create_thread($process_key, $account_id, $be_id, $duty = NULL, $trouble_id = NULL, $draft = 't') {
 		$CI = & get_instance ();
 		$CI->load->model ( 'core/actions_model' );
-		$thread_id = $CI->actions_model->create_thread ( $process_key, $account_id, $be_id, $duty, $trouble_id, $draft );
+		$CI->load->model ( 'user_action' );
+		$thread_id = $CI->user_action->create_thread ( $process_key, $account_id, $be_id, $duty, $trouble_id, $draft );
 		
 		$action = 'create_thread';
 		$session = $CI->session->userdata ( 'session_id' );
@@ -109,20 +110,6 @@ class Actions {
 		return $trouble_id;
 	}
 	
-	public function checkActivity($actId) {
-		$CI = & get_instance ();
-		$CI->load->model ( 'core/actions_model' );
-		$check = $CI->actions_model->checkActivity ( $actId );
-		return $check;
-	}
-	
-	public function checkActivityType($actType, $thread_id) {
-		$CI = & get_instance ();
-		$CI->load->model ( 'core/actions_model' );
-		$check = $CI->actions_model->checkActivityType ( $actType, $thread_id );
-		return $check;
-	}
-	
 	public function Set_Status_Trouble($TROUBLEID, $status, $thread_id = NULL, $act_id = NULL, $exit_code = NULL, $status_result = NULL) {
 		$CI = & get_instance ();
 		$CI->load->model ( 'core/actions_model' );
@@ -135,20 +122,6 @@ class Actions {
 		return $updatestatus;
 	}
 	
-	public function Set_Parent_Trouble_Status($THREADID, $status, $status_detail, $thread_id = NULL, $act_id = NULL, $exit_code = NULL) {
-		$CI = & get_instance ();
-		$CI->load->model ( 'core/actions_model' );
-		$updatestatus = $CI->actions_model->Set_Parent_Trouble_Status ( $THREADID, $status, $status_detail );
-		
-		$action = $updatestatus ['message'];
-		$updatestatus = $updatestatus ['status'];
-		$session = $CI->session->userdata ( 'session_id' );
-		$parma ['STATUS'] = $status;
-		log_message ( 'DEBUG', 'trigger engine 13' );
-		$history = $CI->actions_model->add_history ( 'ACTIVITY', $act_id, 'THREAD', $THREADID, $parma, $action, $session, $updatestatus, $exit_code );
-		return $updatestatus;
-	}
-	
 	public function get_Threadid($actid) {
 		$CI = & get_instance ();
 		$CI->load->model ( 'core/actions_model' );
@@ -156,31 +129,25 @@ class Actions {
 		return $threadid;
 	}
 	
-	public function save_data($type, $activity) {
-		$CI = & get_instance ();
-		$CI->load->model ( 'core/actions_model' );
-		return $CI->actions_model->save_data ( $type, $activity );
-	}
-	
 	public function get_related_id($type, $thread) {
 		$CI = & get_instance ();
-		$CI->load->model ( 'core/actions_model' );
-		$actid = $CI->actions_model->get_related_id ( $type, $thread );
+		$CI->load->model ( 'user_action' );
+		$actid = $CI->user_action->get_related_id ( $type, $thread );
 		return $actid;
 	}
 	
 	public function addNote($threadid, $activityID, $text, $date = null) {
 		$CI = & get_instance ();
-		$CI->load->model ( 'core/actions_model' );
-		$note_id = $CI->actions_model->add_note ( $threadid, $activityID, $text, $date );
+		$CI->load->model ( 'user_action' );
+		$note_id = $CI->user_action->add_note ( $threadid, $activityID, $text, $date );
 		return $note_id;
 	}
 	
 	public function create_trouble_tree($type, $description, $status, $customer_id, $be_id) {
 		$trouble_id = $this->create_trouble ( $type, $description, $status, $customer_id, $be_id );
 		$CI = & get_instance ();
-		$CI->load->model ( 'core/actions_model' );
-		$autocreate_process = $CI->actions_model->get_process_for_trouble_types ( $type );
+		$CI->load->model ( 'user_action' );
+		$autocreate_process = $CI->user_action->get_process_for_trouble_types ( $type );
 		
 		if (count ( $autocreate_process ) > 0) {
 			foreach ( $autocreate_process as $process ) {
@@ -198,8 +165,9 @@ class Actions {
 		$CI->load->library ( "core/core_actions" );
 		$CI->load->model ( 'core/actions_model' );
 		$CI->load->model ( 'wmanager/setup_activity' );
+		$CI->load->model ( 'user_action' );
 		
-		$request_activity_id = $CI->actions_model->get_activity_id ( $request_key );
+		$request_activity_id = $CI->user_action->get_activity_id ( $request_key );
 		$initial_status_key = $this->get_activity_initial_status ( $request_key, $process_key );
 		
 		$vars = array (
@@ -214,9 +182,10 @@ class Actions {
 		$CI = & get_instance ();
 		$CI->load->model ( 'core/actions_model' );
 		$CI->load->library ( "core/core_actions" );
+		$CI->load->model ( 'user_action' );
 		
 		// fetch threads for the trouble
-		$thread_details = $CI->actions_model->get_thread_details ( $trouble_id );
+		$thread_details = $CI->user_action->get_thread_details ( $trouble_id );
 		$i = 0;
 		$return_array = array ();
 		// check count of threads
@@ -269,10 +238,10 @@ class Actions {
 	
 	public function get_activity_initial_status($activity_type = NULL, $thread_type = NULL) {
 		$CI = & get_instance ();
-		$CI->load->model ( 'core/actions_model' );
+		$CI->load->model ( 'user_action' );
 		
 		// get setup_vars value for process and actvity
-		$vars = $CI->actions_model->get_setup_vars_initial_status ( $activity_type, $thread_type );
+		$vars = $CI->user_action->get_setup_vars_initial_status ( $activity_type, $thread_type );
 		
 		return $vars;
 	}
@@ -280,9 +249,10 @@ class Actions {
 	public function Auto_Trouble_Status_Update($THREADID, $status) {
 		$CI = & get_instance ();
 		$CI->load->model ( 'core/actions_model' );
+		$CI->load->model ( 'user_action' );
 		
 		// get Thread Details
-		$thread_details = $CI->actions_model->get_all_thread_details ( $THREADID );
+		$thread_details = $CI->user_action->get_all_thread_details ( $THREADID );
 		
 		// check any trouble associated to it
 		if ($thread_details->trouble_id == NULL || $thread_details->trouble_id == '') {

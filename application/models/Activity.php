@@ -45,25 +45,14 @@ class Activity extends CI_Model {
 			$array_items = array (
 					'filter_activities_process',
 					'filter_activities_type',
-					'filter_activities_role',
-					'filter_activities_thread',
 					'filter_activities_status',
 					'filter_activities_cliente',
-					'filter_activities_codice_contratto',
-					'filter_activities_duty',
-					'filter_activities_key',
-					'filter_activities_role',
-					'filter_reclamo' 
+					'filter_esito_result'
 			);
 			foreach ( $array_items as $item ) {
 				$this->session->unset_userdata ( $item );
 			}
 		} else {
-			if (isset ( $_POST ['activity_autocomplete'] ) && $this->input->post ( 'activity_autocomplete' ) != '') {
-				$this->session->set_userdata ( 'filter_activities_label', $this->input->post ( 'activity_autocomplete' ) );
-			} else if (isset ( $_POST ['activity_autocomplete'] ) && $_POST ['activity_autocomplete'] == '') {
-				$this->session->unset_userdata ( 'filter_activities_label' );
-			}
 			
 			if ($this->input->post ( 'process' ) != '' && $this->input->post ( 'process' ) != '-') {
 				$this->session->set_userdata ( 'filter_activities_process', $this->input->post ( 'process' ) );
@@ -75,30 +64,6 @@ class Activity extends CI_Model {
 				$this->session->set_userdata ( 'filter_activities_type', $this->input->post ( 'type' ) );
 			} else if ($this->input->post ( 'type' ) == '-') {
 				$this->session->unset_userdata ( 'filter_activities_type' );
-			}
-			
-			if ($this->input->post ( 'activity' ) != '') {
-				$this->session->set_userdata ( 'filter_activities_key', $this->input->post ( 'activity' ) );
-			} else if (isset ( $_POST ['activity'] ) && $_POST ['activity'] == '') {
-				$this->session->unset_userdata ( 'filter_activities_key' );
-			}
-			
-			if ($this->input->post ( 'role' ) && $this->input->post ( 'role' ) != '-') {
-				$this->session->set_userdata ( 'filter_activities_role', $this->input->post ( 'role' ) );
-			} else if ($this->input->post ( 'role' ) && $this->input->post ( 'role' ) == '-') {
-				$this->session->unset_userdata ( 'filter_activities_role' );
-			}
-			
-			if ($this->input->post ( 'order' ) != '') {
-				$this->session->set_userdata ( 'filter_activities_order', $this->input->post ( 'order' ) );
-			} else if (isset ( $_POST ['order'] ) && $_POST ['order'] == '') {
-				$this->session->unset_userdata ( 'filter_activities_order' );
-			}
-			
-			if ($this->input->post ( 'id_thread' ) != '') {
-				$this->session->set_userdata ( 'filter_activities_thread', $this->input->post ( 'id_thread' ) );
-			} else if (isset ( $_POST ['id_thread'] ) && $_POST ['id_thread'] == '') {
-				$this->session->unset_userdata ( 'filter_activities_thread' );
 			}
 			
 			if ($this->input->post ( 'status' ) && $this->input->post ( 'status' ) != '' && $this->input->post ( 'status' ) != '-') {
@@ -118,36 +83,10 @@ class Activity extends CI_Model {
 			} else if (isset ( $_POST ['cliente'] ) && $_POST ['cliente'] == '') {
 				$this->session->unset_userdata ( 'filter_activities_cliente' );
 			}
-
-			if ($this->input->post ( 'codice_contratto' ) != '') {
-				$this->session->set_userdata ( 'filter_activities_codice_contratto', $this->input->post ( 'codice_contratto' ) );
-			} else if (isset ( $_POST ['codice_contratto'] ) && $_POST ['codice_contratto'] == '') {
-				$this->session->unset_userdata ( 'filter_activities_codice_contratto' );
-			}
-			
-			
-			if ($this->input->post ( 'duty' ) != '') {
-				$user = $this->ion_auth->user ()->row ()->id;
-				$this->session->set_userdata ( 'filter_activities_duty', $user );
-			} else if (isset ( $_POST ['duty'] ) && $_POST ['duty'] == '') {
-				$this->session->unset_userdata ( 'filter_activities_duty' );
-			}
-			
-			if ($this->input->post ( 'reclamo' ) != '') {
-				$this->session->set_userdata ( 'filter_reclamo', $this->input->post ( 'reclamo' ) );
-			} else if (isset ( $_POST ['reclamo'] ) && $_POST ['reclamo'] == '') {
-				$this->session->unset_userdata ( 'filter_reclamo' );
-			}
 			
 			if ($this->input->post ( 'process' ) && $this->input->post ( 'process' ) != '-') {
 				$this->session->unset_userdata ( 'filter_activities_label' );
 				$this->session->unset_userdata ( 'filter_activities_key' );
-			}
-			
-			if ($this->input->post ( 'reminder' ) != '') {
-				$this->session->set_userdata ( 'filter_activities_reminder', 't' );
-			} else if (isset ( $_POST ['reminder'] ) && $_POST ['reminder'] == '') {
-				$this->session->unset_userdata ( 'filter_activities_reminder' );
 			}
 			
 			if ($this->input->post ( 'search_esito' ) != '') {
@@ -159,16 +98,8 @@ class Activity extends CI_Model {
 		
 		$filter2 = $this->session->userdata ( 'filter_activities_process' );
 		$filter3 = $this->session->userdata ( 'filter_activities_type' );
-		$filter4 = $this->session->userdata ( 'filter_activities_role' );
-		$filter5 = $this->session->userdata ( 'filter_activities_thread' );
 		$filter6 = $this->session->userdata ( 'filter_activities_status' );
 		$filter7 = $this->session->userdata ( 'filter_activities_cliente' );
-		$filter10 = $this->session->userdata ( 'filter_activities_codice_contratto' );
-		$filter11 = $this->session->userdata ( 'filter_activities_duty' );
-		$filter12 = $this->session->userdata ( 'filter_activities_key' );
-		$filter13 = $this->session->userdata ( 'filter_activities_role' );
-		$filter15 = $this->session->userdata ( 'filter_activities_reminder' );
-		$filter16 = $this->session->userdata ( 'filter_reclamo' );
 		$filter17 = $this->session->userdata ( 'filter_esito_result' );
 		
 		$this->db->flush_cache ();
@@ -187,22 +118,6 @@ class Activity extends CI_Model {
 			$this->db->where ( "activities.status", $filter6 );
 		}
 		
-		if ($filter11) {
-			$this->db->where ( "activities_acl.duty_user", $filter11 );
-		}
-		
-		if ($filter16) {
-			$this->db->where ( "threads.reclamo = true" );
-		}
-		
-		if ($filter12) {
-			$this->db->where ( "(activities.type ILIKE '$filter12')" );
-		}
-		
-		if ($filter13) {
-			$this->db->where ( "(setup_activities.role = '$filter13')" );
-		}
-		
 		if ($filter17) {
 			$this->db->where ( "r.value", $filter17 );
 		}
@@ -210,16 +125,6 @@ class Activity extends CI_Model {
 		if ($filter7) {
 			$filter7 = $this->db->escape_like_str ( $filter7 );
 			$this->db->where ( "(accounts.first_name ILIKE '$filter7%' OR accounts.last_name ILIKE '$filter7%' OR accounts.code ILIKE '$filter7%')" );
-		}
-
-		
-		if ($filter10) {
-			$this->db->where ( "(contracts.contract_code ILIKE '$filter10')" );
-		}
-
-		
-		if ($filter15) {
-			$this->db->where ( "((SELECT COUNT(*) FROM memos WHERE activity_id = activities.id AND start_day IS NOT NULL AND memos.type = 'FOLLOWUP') > 0)" );
 		}
 
 		$this->db->flush_cache ();
@@ -230,10 +135,10 @@ class Activity extends CI_Model {
 						threads.trouble_id,threads.status as thread_status,
 						setup_vars_values.label, setup_activities.role, setup_activities.title as activity_title,
 						duty.name as duty_company,						
-						contracts.created as data_inserimento, activities.status as activity_status, 
+						activities.status as activity_status, 
 						be.*,be.id as be_table_id,
-						be.be_status,contracts.contract_code,
-						contracts.d_sign,setup_vars_values.final, activities.*, 
+						be.be_status,
+						setup_vars_values.final, activities.*, 
 						accounts.first_name as client_first_name, accounts.last_name as client_last_name, accounts.code as client_code, 
 						accounts.id as cliente, companies.name as company_name,
 						companies.icon as company_icon,
@@ -253,8 +158,6 @@ class Activity extends CI_Model {
 				->join ( 'users', 'users.id = activities.created_by', 'left' )	
 				->join ( 'threads', 'threads.id = activities.id_thread', 'left' )
 				->join ( 'be', 'be.id = threads.be', 'left' )
-				->join ( 'assets', "(assets.be_id = be.id", 'left' )				
-				->join ( 'contracts', 'contracts.id = activities.id_contract', 'left' )
 				->join ( 'accounts', 'accounts.id = threads.customer', 'left' )
 				->join ( 'vars s', "s.id_activity = activities.id AND s.key = 'STATUS'", 'left' )
 				->join ( 'vars r', "r.id_activity = activities.id AND r.key = 'RESULT'", 'left' )
@@ -275,16 +178,8 @@ class Activity extends CI_Model {
 	public function export() {
 			$filter2 = $this->session->userdata ( 'filter_activities_process' );
 		$filter3 = $this->session->userdata ( 'filter_activities_type' );
-		$filter4 = $this->session->userdata ( 'filter_activities_role' );
-		$filter5 = $this->session->userdata ( 'filter_activities_thread' );
 		$filter6 = $this->session->userdata ( 'filter_activities_status' );
 		$filter7 = $this->session->userdata ( 'filter_activities_cliente' );
-		$filter10 = $this->session->userdata ( 'filter_activities_codice_contratto' );
-		$filter11 = $this->session->userdata ( 'filter_activities_duty' );
-		$filter12 = $this->session->userdata ( 'filter_activities_key' );
-		$filter13 = $this->session->userdata ( 'filter_activities_role' );
-		$filter15 = $this->session->userdata ( 'filter_activities_reminder' );
-		$filter16 = $this->session->userdata ( 'filter_reclamo' );
 		$filter17 = $this->session->userdata ( 'filter_esito_result' );
 		
 		$this->db->flush_cache ();
@@ -303,22 +198,6 @@ class Activity extends CI_Model {
 			$this->db->where ( "activities.status", $filter6 );
 		}
 		
-		if ($filter11) {
-			$this->db->where ( "activities_acl.duty_user", $filter11 );
-		}
-		
-		if ($filter16) {
-			$this->db->where ( "threads.reclamo = true" );
-		}
-		
-		if ($filter12) {
-			$this->db->where ( "(activities.type ILIKE '$filter12')" );
-		}
-		
-		if ($filter13) {
-			$this->db->where ( "(setup_activities.role = '$filter13')" );
-		}
-		
 		if ($filter17) {
 			$this->db->where ( "r.value", $filter17 );
 		}
@@ -328,15 +207,6 @@ class Activity extends CI_Model {
 			$this->db->where ( "(accounts.first_name ILIKE '$filter7%' OR accounts.last_name ILIKE '$filter7%' OR accounts.code ILIKE '$filter7%')" );
 		}
 
-		
-		if ($filter10) {
-			$this->db->where ( "(contracts.contract_code ILIKE '$filter10')" );
-		}
-
-		
-		if ($filter15) {
-			$this->db->where ( "((SELECT COUNT(*) FROM memos WHERE activity_id = activities.id AND start_day IS NOT NULL AND memos.type = 'FOLLOWUP') > 0)" );
-		}
 		$this->db->flush_cache ();
 		
 		$query = $this->db->distinct ( 'activities.id' )
@@ -344,10 +214,10 @@ class Activity extends CI_Model {
 						threads.trouble_id,threads.status as thread_status,
 						setup_vars_values.label, setup_activities.role, setup_activities.title as activity_title,
 						(SELECT COUNT(*) FROM memos WHERE activity_id = activities.id AND memos.type = \'FOLLOWUP\') as followup, (SELECT MIN(start_day) FROM memos WHERE activity_id = activities.id AND isdone = \'f\' AND memos.type = \'FOLLOWUP\') as reminder,duty.name as duty_company,						
-						contracts.created as data_inserimento, activities.status as activity_status, 
+						activities.status as activity_status, 
 						be.*,be.id as be_table_id,
-						be.be_status,contracts.contract_code,
-						contracts.d_sign,setup_vars_values.final, activities.*, 
+						be.be_status,
+						setup_vars_values.final, activities.*, 
 						accounts.first_name as client_first_name, accounts.last_name as client_last_name, accounts.code as client_code, 
 						accounts.id as cliente, companies.name as company_name,
 						companies.icon as company_icon,
@@ -367,8 +237,6 @@ class Activity extends CI_Model {
 				->join ( 'users', 'users.id = activities.created_by', 'left' )	
 				->join ( 'threads', 'threads.id = activities.id_thread', 'left' )
 				->join ( 'be', 'be.id = threads.be', 'left' )
-				->join ( 'assets', "(assets.be_id = be.id", 'left' )				
-				->join ( 'contracts', 'contracts.id = activities.id_contract', 'left' )
 				->join ( 'accounts', 'accounts.id = threads.customer', 'left' )
 				->join ( 'vars s', "s.id_activity = activities.id AND s.key = 'STATUS'", 'left' )
 				->join ( 'vars r', "r.id_activity = activities.id AND r.key = 'RESULT'", 'left' )
@@ -389,16 +257,8 @@ class Activity extends CI_Model {
 	public function total() {
 		$filter2 = $this->session->userdata ( 'filter_activities_process' );
 		$filter3 = $this->session->userdata ( 'filter_activities_type' );
-		$filter4 = $this->session->userdata ( 'filter_activities_role' );
-		$filter5 = $this->session->userdata ( 'filter_activities_thread' );
 		$filter6 = $this->session->userdata ( 'filter_activities_status' );
 		$filter7 = $this->session->userdata ( 'filter_activities_cliente' );
-		$filter10 = $this->session->userdata ( 'filter_activities_codice_contratto' );
-		$filter11 = $this->session->userdata ( 'filter_activities_duty' );
-		$filter12 = $this->session->userdata ( 'filter_activities_key' );
-		$filter13 = $this->session->userdata ( 'filter_activities_role' );
-		$filter15 = $this->session->userdata ( 'filter_activities_reminder' );
-		$filter16 = $this->session->userdata ( 'filter_reclamo' );
 		$filter17 = $this->session->userdata ( 'filter_esito_result' );
 		
 		$this->db->flush_cache ();
@@ -417,22 +277,6 @@ class Activity extends CI_Model {
 			$this->db->where ( "activities.status", $filter6 );
 		}
 		
-		if ($filter11) {
-			$this->db->where ( "activities_acl.duty_user", $filter11 );
-		}
-		
-		if ($filter16) {
-			$this->db->where ( "threads.reclamo = true" );
-		}
-		
-		if ($filter12) {
-			$this->db->where ( "(activities.type ILIKE '$filter12')" );
-		}
-		
-		if ($filter13) {
-			$this->db->where ( "(setup_activities.role = '$filter13')" );
-		}
-		
 		if ($filter17) {
 			$this->db->where ( "r.value", $filter17 );
 		}
@@ -441,17 +285,7 @@ class Activity extends CI_Model {
 			$filter7 = $this->db->escape_like_str ( $filter7 );
 			$this->db->where ( "(accounts.first_name ILIKE '$filter7%' OR accounts.last_name ILIKE '$filter7%' OR accounts.code ILIKE '$filter7%')" );
 		}
-
-		
-		if ($filter10) {
-			$this->db->where ( "(contracts.contract_code ILIKE '$filter10')" );
-		}
-
-		
-		if ($filter15) {
-			$this->db->where ( "((SELECT COUNT(*) FROM memos WHERE activity_id = activities.id AND start_day IS NOT NULL AND memos.type = 'FOLLOWUP') > 0)" );
-		}
-
+			
 		$this->db->flush_cache ();
 		
 
@@ -462,8 +296,6 @@ class Activity extends CI_Model {
 				->join ( 'users', 'users.id = activities.created_by', 'left' )	
 				->join ( 'threads', 'threads.id = activities.id_thread', 'left' )
 				->join ( 'be', 'be.id = threads.be', 'left' )
-				->join ( 'assets', "(assets.be_id = be.id", 'left' )				
-				->join ( 'contracts', 'contracts.id = activities.id_contract', 'left' )
 				->join ( 'accounts', 'accounts.id = threads.customer', 'left' )
 				->join ( 'vars s', "s.id_activity = activities.id AND s.key = 'STATUS'", 'left' )
 				->join ( 'vars r', "r.id_activity = activities.id AND r.key = 'RESULT'", 'left' )

@@ -172,9 +172,9 @@
 					<thead>
 						<tr>
 							<th>Trouble</th>
+							<th>Sub Type</th>
 							<th>Client</th>
 							<th>Resp. Resolution</th>
-							<th>Sub Type</th>
 							<th></th>
 							<th>Esito</th>
 							<th></th>
@@ -187,33 +187,33 @@
 													
 													foreach ( $troubles as $item ) {
 														echo '<tr>';
-														echo "<td><a href='/common/troubles/edit/$item->id'>#" . sprintf ( "%05d", $item->id ) . "</a><br><a href='/common/troubles/edit/$item->id'>$item->type</a><br>";
-														if ($item->status) {													
-																echo "<span class='label label-primary'>$item->status</span>";
-														}
-														echo "</td>";
-														echo "<td>$item->code<br><a href='/common/accounts/detail/$item->accounts_id'>$item->first_name $item->last_name </a></td>";														
-														echo "<td>$item->resp_risoluzione_company<br>$item->resp_risoluzione_user</td>";
-														echo "<td>$item->subtype</td>";
-														
-														echo "<td>Created on ";
-														if($item->created)
-															echo  date ( 'd-m-Y H:i', strtotime ( str_replace ( '/', '-', $item->created ) ) );
-														echo "<br>  Deadline ";
-														if($item->deadline)
-															echo  date ( 'd-m-Y H:i', strtotime ( str_replace ( '/', '-', $item->deadline ) ) );
-														echo "</td>";
-														
-														if ($item->reminder != '')
-															echo "<td><small><i class='fa fa-comment'></i> $item->followup<br><i class='fa fa-calendar'></i> $item->reminder</small></td>";
-														if ($item->reminder == '')
-															echo "<td><small><i class='fa fa-comment'></i> $item->followup</td>";
-														echo "<td><span class='label label-primary'>$item->result</span></td>";														
-														echo "<td><span class='badge'>" . $this->trouble->count_related ( $item->id ) . " PROCESS</span></td>";
+															echo "<td><a href='/common/troubles/edit/$item->id'>#" . sprintf ( "%05d", $item->id ) . "</a><br><a href='/common/troubles/edit/$item->id'>$item->type</a><br>";
+																if ($item->status) {													
+																		echo "<span class='label label-primary'>$item->status</span>";
+																}
+															echo "</td>";
+															echo "<td>$item->subtype</td>";
+															echo "<td>$item->code<br><a href='/common/accounts/detail/$item->accounts_id'>$item->first_name $item->last_name </a></td>";														
+															echo "<td>$item->resp_risoluzione_company<br>$item->resp_risoluzione_user</td>";
+															
+															echo "<td>Created on ";
+																if($item->created)
+																	echo  date ( 'd-m-Y H:i', strtotime ( str_replace ( '/', '-', $item->created ) ) );
+																echo "<br>  Deadline ";
+																if($item->deadline)
+																	echo  date ( 'd-m-Y H:i', strtotime ( str_replace ( '/', '-', $item->deadline ) ) );
+															echo "</td>";
+															
+															if ($item->reminder != '')
+																echo "<td><small><i class='fa fa-comment'></i> $item->followup<br><i class='fa fa-calendar'></i> $item->reminder</small></td>";
+															if ($item->reminder == '')
+																echo "<td><small><i class='fa fa-comment'></i> $item->followup</td>";
+															echo "<td><span class='label label-primary'>$item->result</span></td>";														
+															echo "<td><span class='badge'>" . $this->trouble->count_related ( $item->id ) . " PROCESS</span></td>";
 														echo '</tr>';
 													}
 												} else {
-													echo "<tr><td colspan='9'>No record found</td></tr>";
+													echo "<tr><td colspan='8'>No record found</td></tr>";
 												}
 												?>
 						    	</tbody>

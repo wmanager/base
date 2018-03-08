@@ -41,7 +41,7 @@ if (! defined ( 'BASEPATH' ))
 	exit ( 'No direct script access allowed' );
 class Key extends CI_Model {
 	public function get($company) {
-		$query = $this->db->select ( 'api_keys.*, companies.icon, companies.name' )->where ( 'api_keys.id_company', $company )->where ( 'api_keys.domain', get_domain () )->join ( 'companies', 'companies.id = api_keys.id_company' )->order_by ( 'api_keys.created', 'asc' )->get ( 'api_keys' );
+		$query = $this->db->select ( 'api_keys.*, companies.icon, companies.name' )->where ( 'api_keys.id_company', $company )->join ( 'companies', 'companies.id = api_keys.id_company' )->order_by ( 'api_keys.created', 'asc' )->get ( 'api_keys' );
 		$result = $query->result ();
 		$this->db->flush_cache ();
 		return $result;
@@ -51,8 +51,7 @@ class Key extends CI_Model {
 		
 		$data ['created_by'] = $this->ion_auth->user ()->row ()->id;
 		$data ['modified_by'] = $this->ion_auth->user ()->row ()->id;
-		$data ['domain'] = get_domain ();
-		
+
 		$data = clean_array_data ( $data );
 		unset ( $data ['company_autocomplete'] );
 		
@@ -67,7 +66,7 @@ class Key extends CI_Model {
 		}
 	}
 	public function get_single($id) {
-		$query = $this->db->select ( 'api_keys.*, companies.name as company_autocomplete' )->where ( 'api_keys.domain', get_domain () )->where ( 'api_keys.id', $id )->join ( 'companies', 'companies.id = api_keys.id_company' )->get ( 'api_keys' );
+		$query = $this->db->select ( 'api_keys.*, companies.name as company_autocomplete' )->where ( 'api_keys.id', $id )->join ( 'companies', 'companies.id = api_keys.id_company' )->get ( 'api_keys' );
 		return $query->row ();
 	}
 	public function edit($id) {

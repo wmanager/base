@@ -48,7 +48,7 @@ if (! function_exists ( 'clean_array_data' )) {
 	}
 	function defect_exist($serial, $list) {
 		$CI = & get_instance ();
-		$query = $CI->db->where ( 'domain', get_domain () )->join ( 'activities', 'activities.id = activities_detail.id_activity' )->where ( 'activities.type', 'DEFECT' )->where ( 'activities.id_list', $list )->where ( 'activities_detail.serial', $serial )->get ( 'activities_detail' );
+		$query = $CI->db->join ( 'activities', 'activities.id = activities_detail.id_activity' )->where ( 'activities.type', 'DEFECT' )->where ( 'activities.id_list', $list )->where ( 'activities_detail.serial', $serial )->get ( 'activities_detail' );
 		return $query->num_rows ();
 	}
 	function assets_status($id) {

@@ -96,7 +96,7 @@ if (! function_exists ( 'acl' )) {
 	}
 	function iterate_acl(&$arr, $father, $contract) {
 		$CI = & get_instance ();
-		$query = $CI->db->where ( 'domain', get_domain () )->where ( 'id_father', $father )->where ( 'id_contract', $contract )->where ( 'active', 't' )->get ( 'contracts2companies' );
+		$query = $CI->db->where ( 'id_father', $father )->where ( 'id_contract', $contract )->where ( 'active', 't' )->get ( 'contracts2companies' );
 		if ($query->num_rows () > 0) {
 			$list = $query->result ();
 			foreach ( $list as $company ) {
@@ -107,7 +107,7 @@ if (! function_exists ( 'acl' )) {
 	}
 	function get_holding($company) {
 		$CI = & get_instance ();
-		$query = $CI->db->where ( 'domain', get_domain () )->where ( 'id', $company )->get ( 'companies' );
+		$query = $CI->db->where ( 'id', $company )->get ( 'companies' );
 		$result = $query->row ();
 		return $result->holding;
 	}

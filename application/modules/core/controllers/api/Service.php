@@ -42,7 +42,7 @@ class Service extends CI_Controller
     public function __construct()
     {    	
     	parent::__construct();
-    	$this->load->model('version');
+    	$this->load->library('core/version');
     }
 
  	public function allextention() {

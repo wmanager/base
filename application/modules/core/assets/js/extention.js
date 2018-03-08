@@ -164,7 +164,7 @@ var extentionCtr = myApp.controller('extentionCtrl', function ($scope, $filter, 
     $scope.download_file = function(selected_item) {    		
     	$(".download").hide();
     	$(".spinner").show();
-	    var page_url = '/api/service/download_file/';    	
+	    var page_url = '/core/api/service/download_file/';    	
 	    var req = new XMLHttpRequest();
 	    req.open("POST", page_url, true);
 	    function transfer_complete(e) {
@@ -213,7 +213,7 @@ var extentionCtr = myApp.controller('extentionCtrl', function ($scope, $filter, 
 	  var getExtension = {};
 
 	  getExtension.async = function() {
-	    $http.get('/api/service/allextention')
+	    $http.get('/core/api/service/allextention')
 	    .success(function (d) {
 	      if(d.status == false) {
 	    	  data = '';

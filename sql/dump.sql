@@ -20,7 +20,7 @@ CREATE TABLE accounts (
     created timestamp without time zone,
     created_by integer,
     modified timestamp without time zone,
-    modifed_by integer
+    modified_by integer
 );
 
 
@@ -154,7 +154,7 @@ CREATE TABLE address (
     created timestamp without time zone,
     created_by integer,
     modified timestamp without time zone,
-    modifed_by integer
+    modified_by integer
 );
 
 
@@ -235,7 +235,7 @@ CREATE TABLE assets (
     created timestamp without time zone,
     created_by integer,
     modified timestamp without time zone,
-    modifed_by integer
+    modified_by integer
 );
 
 
@@ -320,7 +320,7 @@ CREATE TABLE be (
     created timestamp without time zone,
     created_by integer,
     modified timestamp without time zone,
-    modifed_by integer,
+    modified_by integer,
     account_id integer,
     be_status character varying(100)
 );
@@ -442,7 +442,7 @@ CREATE TABLE contacts (
     created timestamp without time zone,
     created_by integer,
     modified timestamp without time zone,
-    modifed_by integer
+    modified_by integer
 );
 
 
@@ -485,7 +485,7 @@ CREATE TABLE contracts (
     created timestamp without time zone,
     created_by integer,
     modified timestamp without time zone,
-    modifed_by integer
+    modified_by integer
 );
 
 
@@ -1322,7 +1322,7 @@ CREATE TABLE products (
     created timestamp without time zone,
     created_by integer,
     modified timestamp without time zone,
-    modifed_by integer
+    modified_by integer
 );
 
 
@@ -1932,7 +1932,8 @@ CREATE TABLE setup_menu (
     "order" integer,
     is_child boolean,
     parent_id integer,
-    child_order integer
+    child_order integer,
+    module character varying
 );
 
 
@@ -3098,9 +3099,9 @@ SELECT pg_catalog.setval('contracts_id_seq', 1, false);
 -- Data for Name: dependencies; Type: TABLE DATA; Schema: public; Owner: install_host_username
 --
 
-INSERT INTO dependencies VALUES (1, 'admin', 'js', 'extention.js', '/assets/js/extention.js', 'core', 1, 1);
-INSERT INTO dependencies VALUES (2, 'admin', 'js', 'underscore.js', '/assets/js/underscore.js', 'code', 2, 1);
-INSERT INTO dependencies VALUES (3, 'admin', 'css', 'extention.css', '/assets/css/extention.css', 'core', 1, 1);
+INSERT INTO dependencies VALUES (1, 'admin', 'js', 'extention.js', '/application/modules/core/assets/js/extention.js', 'core', 1, 1);
+INSERT INTO dependencies VALUES (2, 'admin', 'js', 'underscore.js', '/application/modules/core/assets/js/underscore.js', 'core', 2, 1);
+INSERT INTO dependencies VALUES (3, 'admin', 'css', 'extention.css', '/application/modules/core/assets/css/extention.css', 'core', 1, 1);
 
 
 --
@@ -3358,7 +3359,7 @@ INSERT INTO setup_config VALUES (10, 'api_url', 'http://repo.wmanager.org/', 'te
 -- Name: setup_config_id_seq; Type: SEQUENCE SET; Schema: public; Owner: install_host_username
 --
 
-SELECT pg_catalog.setval('setup_config_id_seq', 9, true);
+SELECT pg_catalog.setval('setup_config_id_seq', 10, true);
 
 
 --
@@ -3379,7 +3380,7 @@ INSERT INTO setup_default_vars VALUES (8, 'ACTIVITY', 'STANDARD', 'RESULT_DATE',
 -- Name: setup_default_vars_id_seq; Type: SEQUENCE SET; Schema: public; Owner: install_host_username
 --
 
-SELECT pg_catalog.setval('setup_default_vars_id_seq', 9, false);
+SELECT pg_catalog.setval('setup_default_vars_id_seq', 8, false);
 
 
 --
@@ -3449,20 +3450,20 @@ INSERT INTO products VALUES (1, 'Unknown', 'UNKNOWN', 'UNKNOWN', NULL, NULL, '20
 -- Data for Name: setup_menu; Type: TABLE DATA; Schema: public; Owner: install_host_username
 --
 
-INSERT INTO setup_menu VALUES (1, 'Home', NULL, 'admin', 'fa-dashboard', NULL, 1, false, NULL, NULL);
-INSERT INTO setup_menu VALUES (2, 'Clients', '/common/accounts/', 'admin', 'fa-user', NULL, 2, false, NULL, NULL);
-INSERT INTO setup_menu VALUES (3, 'Contracts', '/common/businessentities/', 'admin,operator,controller', 'fa-suitcase', NULL, 3, false, NULL, NULL);
-INSERT INTO setup_menu VALUES (4, 'Troubles', '/common/troubles/', 'admin,operator,controller', 'fa-bug', NULL, 4, false, NULL, NULL);
-INSERT INTO setup_menu VALUES (5, 'Threads', '/common/cases/', 'admin,operator,controller', 'fa-file-text-o', NULL, 5, false, NULL, NULL);
-INSERT INTO setup_menu VALUES (6, 'Activity', '/common/activities/', 'admin,operator,controller', 'fa-tasks', NULL, 6, false, NULL, NULL);
-INSERT INTO setup_menu VALUES (7, 'New', '#', 'admin', 'fa-plus', 'pull-right', 10, false, NULL, NULL);
-INSERT INTO setup_menu VALUES (8, 'New Client', '/common/module_inorder/', 'admin', '', NULL, NULL, true, 7, 1);
+INSERT INTO setup_menu VALUES (1, 'Home', NULL, 'admin', 'fa-dashboard', NULL, 1, false, NULL, NULL, NULL);
+INSERT INTO setup_menu VALUES (2, 'Clients', '/common/accounts/', 'admin', 'fa-user', NULL, 2, false, NULL, NULL, NULL);
+INSERT INTO setup_menu VALUES (3, 'Contracts', '/common/businessentities/', 'admin,operator,controller', 'fa-suitcase', NULL, 3, false, NULL, NULL, NULL);
+INSERT INTO setup_menu VALUES (4, 'Troubles', '/common/troubles/', 'admin,operator,controller', 'fa-bug', NULL, 4, false, NULL, NULL, NULL);
+INSERT INTO setup_menu VALUES (5, 'Threads', '/common/cases/', 'admin,operator,controller', 'fa-file-text-o', NULL, 5, false, NULL, NULL, NULL);
+INSERT INTO setup_menu VALUES (6, 'Activity', '/common/activities/', 'admin,operator,controller', 'fa-tasks', NULL, 6, false, NULL, NULL, NULL);
+INSERT INTO setup_menu VALUES (7, 'New', '#', 'admin', 'fa-plus', 'pull-right', 10, false, NULL, NULL, NULL);
+INSERT INTO setup_menu VALUES (8, 'New Client', '/common/module_inorder/', 'admin', '', NULL, NULL, true, 7, 1, NULL);
 
 --
 -- Name: setup_menu_id_seq; Type: SEQUENCE SET; Schema: public; Owner: install_host_username
 --
 
-SELECT pg_catalog.setval('setup_menu_id_seq', 9, true);
+SELECT pg_catalog.setval('setup_menu_id_seq', 8, true);
 
 
 --
@@ -3554,7 +3555,7 @@ SELECT pg_catalog.setval('setup_troubles_types_id_seq', 1, true);
 -- Name: setup_users_roles_id_seq; Type: SEQUENCE SET; Schema: public; Owner: install_host_username
 --
 
-SELECT pg_catalog.setval('setup_users_roles_id_seq', 6, true);
+SELECT pg_catalog.setval('setup_users_roles_id_seq',  1, true);
 
 --
 -- Name: setup_vars_id_seq; Type: SEQUENCE SET; Schema: public; Owner: install_host_username

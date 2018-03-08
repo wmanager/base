@@ -43,34 +43,16 @@ class Thread extends CI_Model {
 	public function get($limit, $offset = 0) {
 		$company = $this->ion_auth->user ()->row ()->id_company;
 		
-		if ($this->input->post ( 'type' ) != '') {
-			$this->session->set_userdata ( 'filter_thread_type', $this->input->post ( 'type' ) );
-		} else if (isset ( $_POST ['type'] ) && $_POST ['type'] == '') {
-			$this->session->unset_userdata ( 'filter_thread_type' );
-		}
-		
 		if ($this->input->post ( 'cliente' ) != '') {
 			$this->session->set_userdata ( 'filter_threads_cliente', $this->input->post ( 'cliente' ) );
 		} else if (isset ( $_POST ['cliente'] ) && $_POST ['cliente'] == '') {
 			$this->session->unset_userdata ( 'filter_threads_cliente' );
 		}
 		
-		if ($this->input->post ( 'reclamo' ) != '') {
-			$this->session->set_userdata ( 'filter_threads_reclamo', $this->input->post ( 'reclamo' ) );
-		} else if (isset ( $_POST ['reclamo'] ) && $_POST ['reclamo'] == '') {
-			$this->session->unset_userdata ( 'filter_threads_reclamo' );
-		}
-		
 		if ($this->input->post ( 'process' ) != '' && $this->input->post ( 'process' ) != '-') {
 			$this->session->set_userdata ( 'filter_threads_process', $this->input->post ( 'process' ) );
 		} else if ($this->input->post ( 'process' ) == '-') {
 			$this->session->unset_userdata ( 'filter_threads_process' );
-		}
-		
-		if ($this->input->post ( 'macro_process' ) != '' && $this->input->post ( 'macro_process' ) != '-') {
-			$this->session->set_userdata ( 'filter_threads_macro_process', $this->input->post ( 'macro_process' ) );
-		} else if ($this->input->post ( 'macro_process' ) == '-') {
-			$this->session->unset_userdata ( 'filter_threads_macro_process' );
 		}
 		
 		if ($this->input->post ( 'status' ) && $this->input->post ( 'status' ) != '' && $this->input->post ( 'status' ) != '-') {
@@ -90,25 +72,15 @@ class Thread extends CI_Model {
 			$this->session->unset_userdata ( 'filter_esito_result' );
 		}
 		
-
-
-		$filter1 = $this->session->userdata ( 'filter_thread_type' );
 		$filter2 = $this->session->userdata ( 'filter_threads_cliente' );
-		$filter4 = $this->session->userdata ( 'filter_threads_reclamo' );
 		$filter5 = $this->session->userdata ( 'filter_threads_process' );
 		$filter6 = $this->session->userdata ( 'filter_threads_status' );
-		$filter7 = $this->session->userdata ( 'filter_threads_macro_process' );
 		$filter8 = $this->session->userdata ( 'filter_esito_result' );
 		
 		
-		if ($filter1) {
-			$this->db->where ( 'threads.type', $filter );
-		}
+		
 		if ($filter2) {
 			$this->db->where ( "(accounts.first_name ILIKE '%$filter2%' OR accounts.last_name ILIKE '%$filter2%' OR accounts.code ILIKE '%$filter2%')" );
-		}
-		if ($filter4) {
-			$this->db->where ( "threads.reclamo = true" );
 		}
 		if ($filter5) {
 			$this->db->where ( "threads.type", $filter5 );
@@ -116,10 +88,6 @@ class Thread extends CI_Model {
 		if ($filter6) {
 			$this->db->where ( "threads.status", $filter6 );
 		}
-		if ($filter7) {
-			$this->db->where ( "threads.process", $filter7 );
-		}
-		
 		if ($filter8) {
 			$this->db->where ( "r.value", $filter8 );
 		}
@@ -165,34 +133,23 @@ class Thread extends CI_Model {
 		return $result;
 	}
 	public function total() {
-		$filter1 = $this->session->userdata ( 'filter_thread_type' );
+	
 		$filter2 = $this->session->userdata ( 'filter_threads_cliente' );		
-		$filter4 = $this->session->userdata ( 'filter_threads_reclamo' );
 		$filter5 = $this->session->userdata ( 'filter_threads_process' );
 		$filter6 = $this->session->userdata ( 'filter_threads_status' );
-		$filter7 = $this->session->userdata ( 'filter_threads_macro_process' );
 		$filter8 = $this->session->userdata ( 'filter_esito_result' );
 		
 		acl ( 'threads' ); 
 		
-		if ($filter1) {
-			$this->db->where ( 'threads.type', $filter );
-		}
+		
 		if ($filter2) {
 			$this->db->where ( "(accounts.first_name ILIKE '%$filter2%' OR accounts.last_name ILIKE '%$filter2%' OR accounts.code ILIKE '%$filter2%')" );
-		}
-
-		if ($filter4) {
-			$this->db->where ( "threads.reclamo = true" );
 		}
 		if ($filter5) {
 			$this->db->where ( "threads.type", $filter5 );
 		}
 		if ($filter6) {
 			$this->db->where ( "threads.status", $filter6 );
-		}
-		if ($filter7) {
-			$this->db->where ( "threads.process", $filter7 );
 		}
 		if ($filter8) {
 			$this->db->where ( "r.value", $filter8 );

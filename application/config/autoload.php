@@ -60,16 +60,14 @@ $autoload ['packages'] = array ();
  */
 
 $autoload ['libraries'] = array (
-		//'ion_auth',		
+		//'ion_auth',
 		'form_builder',
 		'pagination',
 		'breadcrumb',
 		'encrypt',
-		'sla',
 		'actions',
 		'core/core_actions',
-		'Codicefiscale',
-		'Iban' 
+		'sla'
 );
 
 /*
@@ -99,13 +97,12 @@ $autoload ['drivers'] = array ();
 $autoload ['helper'] = array (
 		'form',
 		'menu',
-		'domain',
 		'tools',
 		'company',
 		'acl',
 		'url',
 		'curl',
-		'dependencies_helper',
+		'core/dependencies',
 		'core/catalog',
 		'string_helper',
 		'php-excel'
@@ -128,7 +125,7 @@ $autoload ['config'] = array (
 		'pagination',
 		'breadcrumb',
 		'roles',
-		'sla' 
+		'sla'
 );
 
 /*

@@ -79,7 +79,7 @@ class Company extends CI_Model {
 	}
 	public function add() {
 		$data = $this->input->post ();
-		
+
 		$sharings = $data ['sharing'];
 		$roles = $data ['role'];
 		$operatives = $data ['operative'];
@@ -126,7 +126,6 @@ class Company extends CI_Model {
 		
 		$data ['created_by'] = $this->ion_auth->user ()->row ()->id;
 		$data ['modified_by'] = $this->ion_auth->user ()->row ()->id;
-		$data ['domain'] = get_domain ();
 		
 		unset ( $data ['holding_autocomplete'] );
 		
@@ -159,6 +158,7 @@ class Company extends CI_Model {
 	}
 	public function edit($id) {
 		$data = $this->input->post ();
+
 		$sharings = $data ['sharing'];
 		$roles = $data ['role'];
 		$operatives = $data ['operative'];
@@ -167,7 +167,7 @@ class Company extends CI_Model {
 		unset ( $data ['role'] );
 		unset ( $data ['operative'] );
 		$this->session->unset_userdata ( 'upload_errors' );
-		
+
 		if (isset ( $_FILES ['icon'] ['tmp_name'] ) && $_FILES ['icon'] ['tmp_name'] != '') {
 			
 			$this->load->helper ( 'string' );
@@ -206,10 +206,10 @@ class Company extends CI_Model {
 		$data ['modified'] = date ( 'Y-m-d H:i:s' );
 		
 		unset ( $data ['holding_autocomplete'] );
-		
+
 		$data = clean_array_data ( $data );
-		
-		if ($this->db->where ( 'id', $id )->where ( 'domain', get_domain () )->update ( 'companies', $data )) {
+
+		if ($this->db->where ( 'id', $id )->update ( 'companies', $data )) {
 			log_message ( 'DEBUG', $this->db->last_query () );
 			$this->session->set_flashdata ( 'growl_success', 'The company' . $data ['name'] . ' has been updated correctly.' );
 			/**
@@ -251,7 +251,7 @@ class Company extends CI_Model {
 		$data = $this->get_single ( $id );
 		if (count ( $data ) > 0) {
 			
-			if ($this->db->where ( 'id', $id )->where ( 'domain', get_domain () )->delete ( 'companies' )) {
+			if ($this->db->where ( 'id', $id )->delete ( 'companies' )) {
 				log_message ( 'DEBUG', $this->db->last_query () );
 				$this->db->where ( 'company_id', $id )->delete ( 'setup_company_roles' );
 				$this->session->set_flashdata ( 'growl_success', 'The company ' . $data->name . ' has been removed.' );
@@ -355,7 +355,6 @@ class Company extends CI_Model {
 				'company' => $company->name,
 				'created_by' => $this->ion_auth->user ()->row ()->id,
 				'modified_by' => $this->ion_auth->user ()->row ()->id,
-				'domain' => get_domain (),
 				'icon' => $data ['icon'] 
 		);
 		
@@ -505,7 +504,7 @@ class Company extends CI_Model {
 		} else {
 			$this->db->where ( 'user_id', $id )->delete ( 'setup_users_roles' );
 		}
-		$query = $this->db->where ( 'domain', get_domain () )->where ( 'id', $company )->get ( 'companies' );
+		$query = $this->db->where ( 'id', $company )->get ( 'companies' );
 		if ($query->num_rows () == 0)
 			return false;
 		
@@ -583,7 +582,7 @@ class Company extends CI_Model {
 		if ($this->input->post ( 'q' )) {
 			$this->db->limit ( 20 );
 		}
-		$query = $this->db->select ( 'name, id as value, icon' )->where ( 'active', 't' )->where ( "name ILIKE '%" . $param . "%'" )->where ( 'domain', get_domain () )->order_by ( 'name', 'asc' )->get ( 'companies' );
+		$query = $this->db->select ( 'name, id as value, icon' )->where ( 'active', 't' )->where ( "name ILIKE '%" . $param . "%'" )->order_by ( 'name', 'asc' )->get ( 'companies' );
 		$result = $query->result ();
 		return $result;
 	}
@@ -592,25 +591,17 @@ class Company extends CI_Model {
 			$this->db->limit ( 20 );
 		}
 		
-		// $query = $this->db->select('companies.name, companies.id as value, companies.icon')->join('contracts2companies','contracts2companies.id_company = companies.id','left')->where('contracts2companies.id_contract',$contract)->where('companies.active', 't')->where("companies.name ILIKE '%".$param."%'")->where('companies.domain',get_domain())->order_by('companies.name','asc')->get('companies');
-		$query = $this->db->query ( "SELECT name, id as value, icon FROM companies WHERE (id IN(SELECT id_company FROM contracts2companies WHERE id_contract = $contract) OR id IN(SELECT id_company FROM contracts WHERE id = $contract)) AND domain = '" . get_domain () . "' AND name ILIKE '%$param%'" );
+		$query = $this->db->query ( "SELECT name, id as value, icon FROM companies WHERE (id IN(SELECT id_company FROM contracts2companies WHERE id_contract = $contract) OR id IN(SELECT id_company FROM contracts WHERE id = $contract)) AND name ILIKE '%$param%'" );
 		$result = $query->result ();
 		return $result;
 	}
-// 	public function get_contracts($id) {
-// 		$query = $this->db->where ( 'domain', get_domain () )->where ( 'id_company', $id )->get ( 'contracts' );
-// 		return $query->num_rows ();
-// 	}
-	public function get_keys($company) {
-		//$query = $this->db->where ( 'keys.domain', get_domain () )->where ( 'id_company', $company )->get ( 'keys' );
-		return array();
-	}
+
+
 	public function add_key($customer) {
 		$data = $this->input->post ();
 		
 		$data ['created_by'] = $this->ion_auth->user ()->row ()->id;
 		$data ['modified_by'] = $this->ion_auth->user ()->row ()->id;
-		$data ['domain'] = get_domain ();
 		$data ['id_company'] = $customer;
 		
 		$data = clean_array_data ( $data );
@@ -630,7 +621,6 @@ class Company extends CI_Model {
 		
 		$data ['modified'] = 'NOW()';
 		$data ['modified_by'] = $this->ion_auth->user ()->row ()->id;
-		$data ['domain'] = get_domain ();
 		
 		$data = clean_array_data ( $data );
 		
@@ -645,7 +635,7 @@ class Company extends CI_Model {
 		}
 	}
 	public function get_single_key($id) {
-		$query = $this->db->where ( 'domain', get_domain () )->where ( 'id', $id )->get ( 'keys' );
+		$query = $this->db->where ( 'id', $id )->get ( 'keys' );
 		return $query->row ();
 	}
 	public function get_by_role($role = NULL) {
