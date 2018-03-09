@@ -48,6 +48,7 @@ class Cases extends Common_Controller {
 		$this->load->model ( 'wmanager/process' );
 		$this->load->model ( 'activity' );
 		$this->load->model ( 'followup' );
+		$this->load->model ( 'attachment' );
 		$this->breadcrumb->append ( 'Cases' );
 	}
 	
@@ -143,7 +144,7 @@ class Cases extends Common_Controller {
  
 		$company = $this->activity->get_company_name ();
 		$activities [0]->company = $company;
-		
+
 		$this->output->set_content_type ( 'application/json' )->set_output ( json_encode ( $activities ) );
 	}
 	public function get_rel_activities($thread) {

@@ -2866,9 +2866,10 @@ $scope.setFiles = function(element) {
        request.success(
           function( data ) {
             if($scope.forms[index].errors) delete $scope.forms[index].errors;
+            $scope.forms[index] = {};
             $scope.forms[index].status = $scope.variables[index].status;
             $scope.forms[index].activity = id;
-            $scope.forms[index].thread = $scope.thread.id;
+            $scope.forms[index].thread = $scope.thread.id;            
             if(data.result===true){
               if(json== true){
                                var form_request = $http({

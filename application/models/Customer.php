@@ -72,10 +72,11 @@ class Customer extends CI_Model {
 		return $result;
 	}
 	public function single($id) {
-		$this->db->join ( 'address', 'address.id = accounts.address_id' );
-		$query = $this->db->select ( 'accounts.*, address.*, accounts.id' )
+		$this->db->join ( 'address', 'address.id = accounts.address_id' , 'left');
+		$query = $this->db->select ( 'accounts.*, address.*, accounts.id')
 			->where ( 'accounts.id', $id )
 			->where ( 'address.type', 'CLIENT' )
+			->or_where ( 'address.type', NULL )
 			->get ( 'accounts' );
 		return $query->row ();
 	}

@@ -496,14 +496,15 @@ class Activity extends CI_Model {
 									(SELECT c.value  FROM contacts c LEFT JOIN accounts ON c.account_id = accounts.id where c.contact_type = 'cell') as cell")
 			->where ( 'threads.id', $thread_id )
 			->join ( 'accounts', 'accounts.id = threads.customer' )
-			->join ( 'address', 'address.id = accounts.address_id' )			
+			->join ( 'address', 'address.id = accounts.address_id', 'left' )			
 			->where ( 'address.type', 'CLIENT' )			
+			->or_where ( 'address.type', NULL )
 			->get ( 'threads' );
 		return $query->row ();
 	}
 
 	public function get_company_name() {
-		$query = $this->db->select ( 'co.name' )->join ( 'setup_roles r', 'r.id = cr.role_key' )->join ( 'companies co', 'cr.company_id = co.id' )->where ( 'r.key', 'PT-SOPRALLUOGO' )->where ( 'cr.operative_yn', 'Y' )->get ( 'setup_company_roles cr' );
+		$query = $this->db->select ( 'co.name' )->join ( 'setup_roles r', 'r.id = cr.role_key' )->join ( 'companies co', 'cr.company_id = co.id' )->where ( 'cr.operative_yn', 'Y' )->get ( 'setup_company_roles cr' );
 		return $query->result ();
 	}
 	public function get_attachments($thread_id, $form_id) {

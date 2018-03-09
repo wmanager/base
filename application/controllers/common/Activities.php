@@ -45,6 +45,7 @@ class Activities extends Common_Controller {
 		ob_start ();
 		$this->load->model ( 'activity' );
 		$this->load->model ( 'be' );
+		$this->load->model ( 'attachment' );
 		$this->breadcrumb->append ( 'Activity', '/common/activities/' );
 	}
 	
@@ -181,6 +182,7 @@ class Activities extends Common_Controller {
 		$company = $this->activity->get_company_name ();
 		$statuses = $this->activity->get_transition_status ( $activity->type, NULL, $activity->id_process, $id );
 		$customer = $this->activity->get_customer ( $activity->id_thread );		
+
 		$activity->indirizzi_cliente = $this->activity->get_indirizzi_cliente ($customer->cliente_id );		
 		$activity->be = $this->activity->get_be ( $activity->id_thread );
 		$this->load->model ( 'account' );
