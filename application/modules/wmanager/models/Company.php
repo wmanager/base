@@ -648,7 +648,7 @@ class Company extends CI_Model {
 	public function company_list() {
 		$query = $this->db->get ( 'companies' );
 		$cs = $query->result ();
-		$arr_rs [0] = 'Select parent company';
+		$arr_rs [''] = 'Select parent company';
 		foreach ( $cs as $c ) {
 			$arr_rs [$c->id] = $c->name;
 		}

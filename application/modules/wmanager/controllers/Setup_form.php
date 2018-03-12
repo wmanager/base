@@ -74,12 +74,7 @@ class Setup_form extends Admin_Controller {
 				redirect ( '/admin/setup_form', 'refresh' );
 			}
 		}
-		$form_type = array (
-				'THREAD' => 'THREAD',
-				'ACTIVITY' => 'ACTIVITY',
-				'WIZARD' => 'WIZARD',
-				'SUMMARY' => 'SUMMARY' 
-		);
+		$form_type = $this->setup_forms->get_form_type();
 		$array_form_form = array (
 				array(/* Type */
 						'id' => 'type',
@@ -162,12 +157,7 @@ class Setup_form extends Admin_Controller {
 		$data ['form'] = $form;
 		if (! $data ['form'])
 			redirect ( '/admin/setup_form/', 'refresh' );
-		$form_type = array (
-				'THREAD' => 'THREAD',
-				'ACTIVITY' => 'ACTIVITY',
-				'WIZARD' => 'WIZARD',
-				'SUMMARY' => 'SUMMARY' 
-		);
+		$form_type = $this->setup_forms->get_form_type();
 		$array_form_form = array (
 				array(/* Type */
 						'id' => 'type',

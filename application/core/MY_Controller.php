@@ -69,3 +69,6 @@ class Common_Controller extends CI_Controller {
 		}
 	}
 }
+class Access_Controller extends CI_Controller {
+	// Access without any login
+}

@@ -41,7 +41,7 @@ if (! function_exists ( 'top_menu' )) {
 	function top_menu() {
 		$CI = & get_instance ();
 		
-		$CI->load->model("dependencies");
+		$CI->load->model("core/dependencies");
 		$menu_array = $CI->dependencies->get_menu();
 		
 		$user = $CI->session->userdata ( 'user' );
@@ -49,7 +49,7 @@ if (! function_exists ( 'top_menu' )) {
 		$roles = array ();
 		
 		foreach ( $role_details as $key => $value ) {
-			if ($value->name == 'admin' || $value->name == 'BO-OPERATION') {
+			if ($value->name == 'admin') {
 				$roles [] = $value->name;
 			}
 		}
@@ -78,13 +78,7 @@ if (! function_exists ( 'top_menu' )) {
 					// echo the child menu
 					foreach ( $item ['children'] as $child ) {
 						if ($CI->ion_auth->in_group ( $child ['access'] )) {
-							if ($child ['label'] == 'Credit') {
-								if ((ENVIRONMENT == 'development') || (ENVIRONMENT == 'testing')) {
-									echo '<li class="' . $child ['class'] . '"><a href="' . $child ['link'] . '">' . $child ['label'] . '</a></li>';
-								}
-							} else {
 								echo '<li class="' . $child ['class'] . '"><a href="' . $child ['link'] . '">' . $child ['label'] . '</a></li>';
-							}
 						}
 					}
 					echo '</ul>';
@@ -99,7 +93,7 @@ if (! function_exists ( 'top_menu' )) {
 	function menu_display() {
 		$CI = & get_instance ();
 	
-		$CI->load->model("dependencies");
+		$CI->load->model("core/dependencies");
 		$menu_array = $CI->dependencies->get_menu();
 	
 		$user = $CI->session->userdata ( 'user' );
@@ -107,7 +101,7 @@ if (! function_exists ( 'top_menu' )) {
 		$roles = array ();
 	
 		foreach ( $role_details as $key => $value ) {
-			if ($value->name == 'admin' || $value->name == 'BO-OPERATION') {
+			if ($value->name == 'admin') {
 				$roles [] = $value->name;
 			}
 		}
@@ -138,13 +132,7 @@ if (! function_exists ( 'top_menu' )) {
 					// echo the child menu
 					foreach ( $item ['children'] as $child ) {
 						if ($CI->ion_auth->in_group ( $child ['access'] )) {
-							if ($child ['label'] == 'Credit') {
-								if ((ENVIRONMENT == 'development') || (ENVIRONMENT == 'testing')) {
-									echo '<li class="' . $child ['class'] . '"><a href="javascript:void(0);">' . $child ['label'] . '</a></li>';
-								}
-							} else {
 								echo '<li class="' . $child ['class'] . '"><a href="javascript:void(0);">' . $child ['label'] . '</a></li>';
-							}
 						}
 					}
 					echo '</ul>';

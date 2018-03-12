@@ -162,33 +162,25 @@ class Sla {
 	}
 	private function isHoliday($data = false) {
 		$data = date ( 'Y-m-d', strtotime ( $data ) );
-		// creo un array con le festivita
 		$array_festivita = $this->working_time ['holidays'];
-		// se non ho la data come argomento restituisco l'array
 		if (! $data) {
 			return $array_festivita;
 		}
-		// creo un array con la data ricevuta
 		$exp = explode ( '-', $data );
-		// verifico la data
 		if (! checkdate ( $exp [1], $exp [2], $exp [0] )) {
-			// data non valida esco
-			return "Data non valida!";
+			return "Invalid date!";
 		}
-		// time della data
+
 		$timestamp = mktime ( 0, 0, 0, $exp [1], $exp [2], $exp [0] );
-		// verifico se il giorno della settimana è Domenica
-		// con date('w') (0->Dom 6->Sab)
+
 		if (date ( 'w', $timestamp ) == 0) {
-			// Se = a 0 è festivo ! esco
 			return true;
 		}
-		// altrimenti creo una variabile per la ricerca nell array
+
 		$mesegiorno = $exp [1] . "-" . $exp [2];
-		// se true è festivo
 		if (array_key_exists ( $mesegiorno, $array_festivita ))
 			return $array_festivita [$mesegiorno];
-			// non è festivo esco
+			
 		return false;
 	}
 	function isWeekend($date) {

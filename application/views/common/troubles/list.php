@@ -140,7 +140,7 @@
 
 							<div class="input-group">
 								<button type="submit" class="btn btn-primary" name="search"
-									value="Cerca">Search</button>
+									value="Search">Search</button>
 							</div>
 
 							<div class="input-group">

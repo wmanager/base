@@ -100,8 +100,8 @@ class  Form_array_builder{
 			"dropdown" => "dropdown",
 			"date" => "date",
 			"text" => "text",
-			"checkbox" => "checkbox",	
-			"boolean" => "radio",
+			"checkbox" => "checkbox",
+			"boolean" => "checkbox",
 			"character varying"	=> "text",
 			"int" => "text"
 		);
@@ -245,6 +245,12 @@ class  Form_array_builder{
 				$return[$i]['class'] = "form-control";
 			}else{
 				$return[$i]['class'] = "";
+			}
+			
+			//for checkbox
+			if($type == 'checkbox'){
+				$return[$i]['value'] = 't';
+				$return[$i]['default_value'] = 't';				
 			}
 			
 			$i++;

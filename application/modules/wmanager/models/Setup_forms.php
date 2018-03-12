@@ -258,4 +258,17 @@ class Setup_forms extends CI_Model {
 			}
 		}
 	}
+	
+	public function get_form_type() {
+		$query = $this->db->select ('*')->get ('setup_form_type');
+		$result = $query->result_array();
+		$res = array();
+		if(count($result) > 0) {
+			foreach($result as $row) {
+				$res[$row['key']] = $row['title'];
+			}
+		}
+		return $res;
+		
+	}
 }

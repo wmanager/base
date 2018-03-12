@@ -172,7 +172,7 @@ class Companies extends Admin_Controller {
 			$array_company_role = array (
 					'id' => 'company_role',
 					'type' => 'combine',
-					'label' => 'Ruolo',
+					'label' => 'Role',
 					'elements' => array (
 							
 							array (

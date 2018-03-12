@@ -216,10 +216,7 @@ class Account extends CI_Model
 		$query = $this->db->where('id',$be_id)->get('be');
 		return $query->result();
 	}
-	public function get_cliente($client_id){
-		$query = $this->db->where('id',$client_id)->get('cliente');
-		return $query->result();
-	}
+
 	
 
 	static function count_actions($customer_id,$process){
@@ -228,44 +225,7 @@ class Account extends CI_Model
 		return $query->num_rows();
 	}
 	
-	public function contact($id){
-		//properietor
-		$get_properietor = $this->db->select("accounts.*,proprieta.be_id as be_id,indirizzi.*")
-									->join("accounts","accounts.id = proprieta.account_id")
-									->join("indirizzi","indirizzi.account_id = accounts.id",'left')
-									->where("proprieta.cliente_id",$id)
-									->where("tipo_indirizzo = 'PROPRIETARIO'")
-									->get("proprieta");
-		$properietor 	= $get_properietor->result();
-		
-		//contatto for fast thread
-		$get_contactto 	= $this->db->select("contatti.id as id_contatti, contatti.ruolo, contatti.disabled as contatto_disabled, accounts.id as acc_id, accounts.p_nome, accounts.p_cognome, accounts.o_ragione_sociale,be.id as be_id,indirizzi.*")
-									->join("be","be.cliente_id = contatti.client_id",'left')
-									->join("accounts","accounts.id = contatti.contatto_id",'left')
-									->join("indirizzi","indirizzi.account_id = contatti.contatto_id",'left')
-									->where("contatti.client_id",$id)
-									->where("indirizzi.tipo_indirizzo = 'CONTATTO'")
-									->order_by('created', 'DESC')
-									->get("contatti");
-		$contactti		= $get_contactto->result();	
-		$final_array = array();
-		
-		if(count($properietor) > 0){
-			foreach($properietor as $item){
-				$final_array[] = $item;
-			}
-		}
-		
-		if(count($contactti) > 0){
-			foreach($contactti as $item){
-				$final_array[] = $item;
-			}
-		}
-		
-		
-		
-		return $final_array;
-	}
+
 	
 	public function get_be_details($be_ids = array()){
 		

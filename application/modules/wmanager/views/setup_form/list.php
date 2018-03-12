@@ -18,7 +18,7 @@
 							<div class="input-group">
 								<input class="form-control" type="text" name="filter_setup_form"
 									value="<?=$this->session->userdata('filter_setup_form')?>"
-									placeholder="Cerca Title">
+									placeholder="Search Title">
 							</div>
 							<div class="input-group">
 								<button type="submit" class="btn btn-primary">Search</button>

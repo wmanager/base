@@ -3502,6 +3502,7 @@ INSERT INTO setup_troubles_status VALUES (3, 'DONE', 'Completed', 3);
 INSERT INTO setup_troubles_status VALUES (4, 'CANCELLED', 'Cancelled', 4);
 
 
+
 --
 -- Name: setup_troubles_status_id_seq; Type: SEQUENCE SET; Schema: public; Owner: install_host_username
 --
@@ -3612,6 +3613,69 @@ SELECT pg_catalog.setval('users_id_seq', 1, true);
 
 SELECT pg_catalog.setval('vars_id_seq', 1, true);
 
+--
+-- Name: setup_form_type; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE setup_form_type (
+    id integer NOT NULL,
+    title character varying(100),
+    key character varying(100)
+);
+
+
+ALTER TABLE public.setup_form_type OWNER TO postgres;
+
+--
+-- Name: setup_form_type_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE setup_form_type_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.setup_form_type_id_seq OWNER TO postgres;
+
+--
+-- Name: setup_form_type_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE setup_form_type_id_seq OWNED BY setup_form_type.id;
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY setup_form_type ALTER COLUMN id SET DEFAULT nextval('setup_form_type_id_seq'::regclass);
+
+
+--
+-- Data for Name: setup_form_type; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO setup_form_type VALUES (1, 'ACTIVITY', 'ACTIVITY');
+INSERT INTO setup_form_type VALUES (2, 'THREAD', 'THREAD');
+
+
+--
+-- Name: setup_form_type_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('setup_form_type_id_seq', 2, true);
+
+
+--
+-- Name: setup_form_type_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY setup_form_type
+    ADD CONSTRAINT setup_form_type_pkey PRIMARY KEY (id);
+    
 
 --
 -- Name: accounts_id; Type: CONSTRAINT; Schema: public; Owner: install_host_username; Tablespace: 
