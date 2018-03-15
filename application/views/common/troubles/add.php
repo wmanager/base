@@ -188,17 +188,6 @@
 							ng-show="filedata.errors" type="danger">{{filedata.error}}</alert>
 						<div ng-hide="filedata.busy">
 							<div>
-								<!--<div class="form-group">
-												           	 		<label class="col-md-3 control-label" for="title">Tipo</label>
-												            		<div class="col-md-9">
-													            		<select name="attach_type" ng-model="filedata.attach_type" class="form-control">
-																			<option ng-repeat="file in filetypes" ng-value="file.id" ng-if="file.required != 'f'">{{file.title}} *</option>
-																			<option ng-repeat="file in filetypes" ng-value="file.id" ng-if="file.required != 't'">{{file.title}}</option>
-																		</select>
-												            		</div>
-												            	</div>
-												            	<div class="clearfix"></div>
-												            	<br>-->
 								<div class="form-group">
 									<label class="col-md-3 control-label" for="title">Description</label>
 									<div class="col-md-9">

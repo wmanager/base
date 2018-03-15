@@ -96,7 +96,7 @@ class  Form_array_builder{
 	public function get_db2html($type){
 		
 		$field_array = array(
-			"integer" => "number",
+			"integer" => "text",
 			"dropdown" => "dropdown",
 			"date" => "date",
 			"text" => "text",
@@ -228,7 +228,7 @@ class  Form_array_builder{
 			
 			//set type
 			$type = $this->get_db2html($item->type);
-			if($type != 'text' && $type != 'date')
+			if($type != 'text')
 				$return[$i]['type'] = $type;
 			
 			//set label
@@ -249,8 +249,8 @@ class  Form_array_builder{
 			
 			//for checkbox
 			if($type == 'checkbox'){
-				$return[$i]['value'] = 't';
-				$return[$i]['default_value'] = 't';				
+				$return[$i]['value'] = 'y';
+				$return[$i]['default_value'] = 'y';				
 			}
 			
 			$i++;

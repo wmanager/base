@@ -1,7 +1,7 @@
 <div class="row">
 	<div>
 		<div class="col-xs-6">
-			<a href="/"><img style="height: 50px" title=""
+			<a href="/"><img style="height: 50px; width:100%;" title=""
 						alt="Wmanager" src="/assets/img/logo.png"></a>
 		</div>
 		<div class="col-xs-6 text-right">
@@ -15,6 +15,7 @@
       <?php echo form_open("auth/login", array('class' => 'form-horizontal')); ?>
       <form class="form-horizontal" accept-charset="utf-8" method="post"
 			action="/auth/login">
+			<div class="clearfix"></div>
       <?php $error = (isset($field['name'])) ? form_error($field['name']) : NULL; ?>
       <div
 				class="control-group md-login-text <? if (!empty($error)): ?>error<? endif; ?>">

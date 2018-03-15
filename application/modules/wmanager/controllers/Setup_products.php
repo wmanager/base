@@ -111,6 +111,16 @@ class Setup_products extends Admin_Controller {
 			}
 		}
 		$data['product_details'] = $this->product->get_product_detail($id);
+		if($data['product_details']->selling_date != NULL){
+			$var = $data['product_details']->selling_date;
+			$data['product_details']->selling_date =  date("Y-m-d", strtotime(str_replace("/","-",$var)) );
+		}
+		
+		if($data['product_details']->selling_end != NULL){
+			$var = $data['product_details']->selling_end;
+			$data['product_details']->selling_end =  date("Y-m-d", strtotime(str_replace("/","-",$var)) );
+		}
+		
 		$form_array 			 = $this->form_array_builder->table_structure('products');
 		$data ['form_edit'] 	 = $this->form_builder->build_form_horizontal ($form_array,$data['product_details']);
 		$data ['content'] 	= $this->load->view ( 'wmanager/products/edit', $data, true );

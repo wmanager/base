@@ -84,7 +84,7 @@
 						<div ng-hide="filedata.busy">
 							<div>
 								<div class="form-group">
-									<label class="col-md-3 control-label" for="title">Tipo</label>
+									<label class="col-md-3 control-label" for="title">Type</label>
 									<div class="col-md-9">
 										<select name="attach_type" ng-model="filedata.attach_type"
 											class="form-control">

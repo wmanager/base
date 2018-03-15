@@ -205,7 +205,7 @@ ALTER TABLE public.api_keys OWNER TO install_host_username;
 --
 
 CREATE SEQUENCE api_keys_id_seq
-    START WITH 2
+    START WITH 1
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
@@ -774,7 +774,7 @@ ALTER TABLE public.form_types OWNER TO install_host_username;
 --
 
 CREATE SEQUENCE form_types_id_seq
-    START WITH 4
+    START WITH 3
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
@@ -940,7 +940,7 @@ ALTER TABLE public.list_ambits OWNER TO install_host_username;
 --
 
 CREATE SEQUENCE list_ambits_id_seq
-    START WITH 17
+    START WITH 2
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
@@ -1333,7 +1333,7 @@ ALTER TABLE public.products OWNER TO install_host_username;
 --
 
 CREATE SEQUENCE products_id_seq
-    START WITH 1
+    START WITH 2
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
@@ -2100,7 +2100,7 @@ ALTER TABLE public.setup_troubles_status OWNER TO install_host_username;
 --
 
 CREATE SEQUENCE setup_troubles_status_id_seq
-    START WITH 4
+    START WITH 5
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
@@ -2266,7 +2266,7 @@ ALTER SEQUENCE setup_users_roles_id_seq OWNED BY setup_users_roles.id;
 --
 
 CREATE SEQUENCE setup_vars_id_seq
-    START WITH 1219
+    START WITH 1
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE

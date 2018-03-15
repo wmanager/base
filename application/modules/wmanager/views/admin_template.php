@@ -11,6 +11,7 @@
 	<script src="/assets/js/libs/bootstrap.min.js"></script>
 	<script src="/assets/js/libs/bootstrap/bootbox.min.js"></script>
 	<link href="/assets/css/bootstrap.min.css" rel="stylesheet">
+	<link href="/assets/css/datepicker.css" rel="stylesheet">
 	<link href="/assets/css/bootstrap-responsive.min.css" rel="stylesheet">
 	<link href="/assets/css/admin-section.css" rel="stylesheet">
 	<link href="/assets/css/custom.css" rel="stylesheet">
