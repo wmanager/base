@@ -3,6 +3,7 @@
 <input type="text" name="customer_id" ng-model="selected.customer.id" style="display: none;"/>
 <input type="text" name="be_id" ng-model="selected.contract" style="display: none;"/>
 <input type="text" name="request_activity" id="request_activity" style="display: none;"/>
+<input type="text" name="thread_id" id="thread_id" style="display: none;"/>
 <input type="text" name="thread_type" id="thread_type" style="display: none;"/>
 <div class="col-md-12">
 <div ng-repeat="(key, request) in related_threads_activities track by $index" style="border: 1px solid #ccc;padding: 17px;margin-top: 5px;">
@@ -33,7 +34,7 @@
 	<div class="col-md-12"><label class="control-label"><b>Activity Type</b></label></div>
 	<div class="form-group">
 		<div class="col-md-4">
-			<select ng-model="manualForm.request_activity" class="form-control" ng-change="set_process(manualForm.request_activity,request[0].thread_type)" ng-disabled="trouble_status == 'DONE' || trouble_status == 'CANCELLED' || request[0].bpm == 'AUTOMATIC' ">
+			<select ng-model="manualForm.request_activity" class="form-control" ng-change="set_process(manualForm.request_activity,request[0].thread_type,request[0].thread_id)" ng-disabled="trouble_status == 'DONE' || trouble_status == 'CANCELLED' || request[0].bpm == 'AUTOMATIC' ">
 				<option ng-repeat="req in related_threads_activities[key][0].request_activity" ng-value="req.act_key">{{req.act_key}}</option>
 			</select>
 		</div>

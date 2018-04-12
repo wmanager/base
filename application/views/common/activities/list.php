@@ -81,6 +81,9 @@
 													$selected = '';
 													if ($s->status == $this->session->userdata ( 'filter_activities_status' ))
 														$selected = 'selected';
+													if ($s->status == $this->session->flashdata ( 'activities_status' ))
+														$selected = 'selected';
+														
 													echo "<option value='$s->status' $selected>$s->status</option>";
 												}
 												?>

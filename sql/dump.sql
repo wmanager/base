@@ -268,17 +268,18 @@ ALTER SEQUENCE assets_id_seq OWNED BY assets.id;
 
 CREATE TABLE attachments (
     id integer NOT NULL,
-    thread_id integer,
-    activity_id integer,
     attach_type integer,
+    be_id integer,
+    client_id integer,    
     filename character varying(255),
     url character varying(255),
     description text,
+    entity_key character varying(255),
+    entity_id integer,
     created timestamp(6) without time zone DEFAULT now(),
     created_by integer,
     modified timestamp(6) without time zone,
-    modified_by integer,
-    trouble_id integer
+    modified_by integer
 );
 
 
@@ -926,6 +927,7 @@ CREATE TABLE list_ambits (
     title character varying(255),
     ordering integer,
     disabled boolean DEFAULT false,
+    entity_key character varying(255),
     created timestamp(6) without time zone DEFAULT now(),
     created_by integer,
     modified timestamp(6) without time zone,

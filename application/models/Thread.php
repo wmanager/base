@@ -121,15 +121,7 @@ class Thread extends CI_Model {
 		
 		$result = $query->result ();
 		
-		if (count ( $result ) > 0) {
-			foreach ( $result as $key => $row ) {
-				$d_created = $this->get_thread_integration ( $row->id );
-				$result [$key]->d_decorrenza = $d_created->d_decorrenza ? $d_created->d_decorrenza : '';
-				$result [$key]->exre_created = $d_created->exre_created ? $d_created->exre_created : '';
-				$result [$key]->exauto_created = $d_created->exauto_created ? $d_created->exauto_created : '';
-			}
-		}
-		
+
 		return $result;
 	}
 	public function total() {
@@ -138,9 +130,6 @@ class Thread extends CI_Model {
 		$filter5 = $this->session->userdata ( 'filter_threads_process' );
 		$filter6 = $this->session->userdata ( 'filter_threads_status' );
 		$filter8 = $this->session->userdata ( 'filter_esito_result' );
-		
-		acl ( 'threads' ); 
-		
 		
 		if ($filter2) {
 			$this->db->where ( "(accounts.first_name ILIKE '%$filter2%' OR accounts.last_name ILIKE '%$filter2%' OR accounts.code ILIKE '%$filter2%')" );

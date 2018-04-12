@@ -57,8 +57,7 @@ class Common_Controller extends CI_Controller {
 	protected $the_user;
 	public function __construct() {
 		parent::__construct ();
-		$data = new stdClass ();
-		
+		$data = new stdClass ();		
 		if ($this->ion_auth->logged_in ()) {
 			$this->the_user = $this->ion_auth->user ()->row ();
 			

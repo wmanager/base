@@ -451,6 +451,31 @@ var app = angular.module('WmanagerApp', ['ui.bootstrap','validation','ui.calenda
 
 })
 
+.controller("Dashboard", function( $scope, $rootScope, $http) {
+	$scope.busy = false;
+	$scope.loadcomments = function(){
+		   $scope.busy = true;
+		   $http.get('/common/home/get_memos').
+		        success(function(data, status) {
+		            $scope.comments = data;		            
+		            $scope.busy = false;
+		    }); 
+		}
+	$scope.loadcomments();
+	
+    $scope.followupSetDone = function(id){
+        $scope.busy = true;
+          $http({        
+          method: "get",
+          url: '/common/activities/setdonefollowup/'+id
+              }).success(function(data){ 
+                  $scope.busy = false;
+                  
+                  $scope.loadcomments($scope.thread,$scope.actid);
+              });
+      }
+})
+
 .controller("Activity", function( $scope, $rootScope, $http, $timeout, transformRequestAsFormPost, $ngBootbox, uiCalendarConfig, $compile) {
   $scope.roles = [];
   $scope.actid = '';
@@ -1884,9 +1909,12 @@ $scope.loadmemo_allaccio = function(company){
  	});
  }
  
- $scope.set_process = function(request,process) {
+ $scope.set_process = function(request,process,manual_thread_id=null) {
 	 $('#request_activity').val(request);
 	 $('#thread_type').val(process);
+	 if(manual_thread_id != null){
+		 $('#thread_id').val(manual_thread_id);
+	 }
  } 
 $scope.insertFollowup = function(){
   var pattern = /^(([01][0-9]|2[0-3])h)|(([01][0-9]|2[0-3]):[0-5][0-9])$/;
@@ -3542,4 +3570,153 @@ app.directive('verifyToken', function ($http) {
             ctrl.$parsers.push(myValidation);
         }
       }
+});
+//angular directive
+app.directive('attachment', function($http) {
+	return {
+		restrict: 'A',
+		scope: {
+			attachmentRefkey: '@',
+			attachmentRefid: '=',
+			custid: '=',
+			beid: '='
+		    },
+		templateUrl: '/common/new_attachment/load_attament_template',
+		link: function(scope, elem, attr) {
+			scope.$watch('custid', function () {
+				scope.loadfiles();
+			});
+
+			scope.filedata = {};
+			scope.loadfiles = function(){
+
+				scope.ref_id = scope.attachmentRefid;
+				scope.ref_key = scope.attachmentRefkey;
+		    	scope.busy = true;
+		        $http.get('/common/new_attachment/attachment_list/'+scope.ref_id+'/'+scope.ref_key).
+                    success(function(data, status, headers, config) {
+                        // this callback will be called asynchronously
+                        // when the response is available
+                    		  scope.setup_attach_hidden = data.setup_attach_hidden;
+                    		  scope.setup_attach_hidden_value = data.setup_attach_hidden_value;
+                    		  scope.setup_attach_list = data.setup_attach_list;
+                              if(data.file_list.length > 0){
+                            	  scope.listfiles = data.file_list;
+                            	  scope.arr_attachments = data.file_list;
+                              } else {
+                            	  scope.listfiles = {};
+                            	  scope.arr_attachments = undefined;
+                              }
+                              scope.busy = false;
+                });	       
+		    };
+		    
+		    	scope.$on("fileSelected", function (event, args) {
+		    	scope.$apply(function () {            
+			          //add the file object to the scope's files collection
+		    		scope.files.push(args.file);
+			      });
+		    	});
+		    
+		    	scope.setFiles = function(element) {
+		    	scope.$apply(function(scope) {			        
+			        // Turn the FileList object into an Array
+		    		scope.files = []
+			          for (var i = 0; i < element.files.length; i++) {
+			        	  scope.files.push(element.files[i])
+			          }
+		    		scope.progressVisible = false
+			        });
+			    };
+			    
+			    scope.upload = function() {
+			        var uploadUrl = '/common/new_attachment/upload/'+scope.ref_key+'/'+scope.ref_id;
+			        //console.log(scope.filedata);
+			        var fd = new FormData();
+			        for (var i in scope.files) {
+			            fd.append("userfile", scope.files[i])
+			        }
+			        //fd.append("attach_type",scope.filedata.attach_type)
+			        if(scope.filedata.description){
+			          fd.append("description",scope.filedata.description)
+			        } else {
+			          fd.append("description","")
+			        }
+			        
+			        if(scope.filedata.attach_type) {
+			        	fd.append("attach_type",scope.filedata.attach_type);
+			        } else {
+			        	fd.append("attach_type",scope.setup_attach_hidden_value);
+			        }			        
+			        fd.append("client_id",scope.custid);
+			        fd.append("be_id",scope.beid);
+			        
+			        var xhr = new XMLHttpRequest()
+			        xhr.upload.addEventListener("progress", scope.uploadProgress, false)
+			        xhr.addEventListener("load", scope.uploadComplete, false)
+			        xhr.addEventListener("error", scope.uploadFailed, false)
+			        xhr.addEventListener("abort", scope.uploadCanceled, false)
+			        xhr.open("POST", uploadUrl)
+			        scope.progressVisible = true
+			        xhr.send(fd)
+			    }
+			    
+			    scope.deleteFile = function(id,ref_id){
+				      $http.get('/common/new_attachment/delete_file/'+id+'/'+scope.ref_key+'/'+scope.ref_id).
+				        success(function(data, status, headers, config) {
+				        	scope.loadfiles();
+				       }); 
+				    };
+
+				    scope.uploadProgress = function(evt) {
+				    	scope.$apply(function(){
+				    		scope.filedata.busy = true
+				            if (evt.lengthComputable) {
+				            	scope.progress = Math.round(evt.loaded * 100 / evt.total)
+				            } else {
+				            	scope.progress = 'unable to compute'
+				            }
+				        })
+				    }
+				    scope.uploadComplete = function(evt) {
+				        var response = JSON.parse(evt.target.responseText);
+				        
+				        if(!response.status){
+				        	scope.filedata.errors = true;
+				        	scope.filedata.error = response.error;
+				        	scope.filedata.busy = false;
+				        } else {
+				        	scope.filedata.errors = false;
+				        	scope.filedata.success = response.message;
+				        	scope.filedata.busy = false;
+				        	scope.loadfiles();
+				        }
+				        
+				         scope.$digest();
+				    }
+
+				    scope.uploadFailed = function(evt) {
+				        var response = JSON.parse(evt.target.responseText);
+				        if(!response.status){
+				          scope.filedata.error = response.message;
+				          scope.filedata.errors = true;
+				        } else {
+				          scope.filedata.errors = false;
+				        }
+		
+				        scope.filedata.busy = false;
+				        scope.$digest();
+				    }
+
+				    scope.uploadCanceled = function(evt) {
+				        scope.$apply(function(){
+				           scope.progressVisible = false
+				        })
+				        scope.filedata.errors = "The upload has been canceled by the user or the browser dropped the connection.";
+				        scope.filedata.busy = false;
+				        scope.$digest();
+				    }
+			 
+		}
+	}
 });

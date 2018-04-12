@@ -67,9 +67,43 @@ class Home extends Common_Controller {
 				'user',
 				'admin' 
 		) );
-		$data ['troubles'] = $this->dashboard->get_open_troubles ();
+		
+		$data ['troubles'] 	= $this->dashboard->get_open_troubles ();
+		$data ['activity'] 	= $this->dashboard->get_open_activities ();
+		$data ['threads'] 	= $this->dashboard->get_open_threads ();
+		$data ['contract'] 	= $this->dashboard->get_contract ();
+		$data ['activities'] = $this->dashboard->get_memos_last();
 		$data ['content'] = $this->load->view ( 'common/dashboard', $data, true );
 		$this->load->view ( 'template', $data );
+	}
+	
+	public function set_session($type) {
+		if($type == 'activity') {
+			$session_value = 'activities_status';
+			$this->session->set_flashdata ( $session_value, 'OPEN' );
+			redirect('/common/activities/');
+		} else if($type == 'thread') {
+			$session_value = 'threads_status';
+			$this->session->set_flashdata ( $session_value, 'OPEN' );
+			redirect('/common/cases/');
+		} else if($type == 'trouble') {
+			$session_value = 'trouble_status';
+			$this->session->set_flashdata ( $session_value, 'NEW' );			
+			redirect('/common/troubles/');
+		} else if($type == 'contract') {
+			redirect('/common/businessentities/');
+		}
+		
+	}
+	
+	public function get_status() {
+		$this->load->model ( 'dashboard' );
+		echo json_encode($this->dashboard->get_status());
+	}
+	
+	public function get_memos() {
+		$this->load->model ( 'dashboard' );
+		echo json_encode($this->dashboard->get_memos());
 	}
 }
 

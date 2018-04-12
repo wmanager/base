@@ -105,7 +105,9 @@ $autoload ['helper'] = array (
 		'core/dependencies',
 		'core/catalog',
 		'string_helper',
-		'php-excel'
+		'php-excel',
+		'core/numbers',
+		'core/dates'
 );
 
 /*

@@ -20,12 +20,12 @@
 
 <style type="text/css">
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak,
-	.x-ng-cloak {
+	.x-ng-cloak,.highcharts-credits {
 	display: none !important;
 }
 </style>
 
-<script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+<script src="/assets/js/jquery-1.11.3.min.js"></script>
 <script src="/assets/js/libs/jquery-migrate-1.2.1.min.js"></script>
 <script src="/assets/js/libs/bootstrap.min.js"></script>
 <script src="/assets/js/libs/bootstrap/bootbox.min.js"></script>
@@ -34,7 +34,7 @@
 <link href="/assets/css/bootstrap-responsive.min.css" rel="stylesheet">
 
 <link
-	href="//fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,600"
+	href="/assets/css/font.css"
 	rel="stylesheet">
 <link href="/assets/css/font-awesome.min.css" rel="stylesheet">
 
@@ -67,10 +67,13 @@
 <link rel="stylesheet" href="/assets/js/plugins/fullcalendar/theme.css"
 	type="text/css" />
 
-
+<!-- toaster -->
+<link rel="stylesheet"
+	href="/assets/css/toastr.min.css">
 
 <link href="/assets/css/pnotify.custom.min.css" media="all"
 	rel="stylesheet" type="text/css" />
+	
 
 <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
 <!--[if lt IE 9]>
@@ -281,12 +284,13 @@
 
 
 	<script
-		src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.9/angular.min.js"></script>
+		src="/assets/js/angular/angular.min.js"></script>
 	<script src="/assets/js/libs/angular-filter.js"></script>
 	<script
-		src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.9/i18n/angular-locale_it-it.js"></script>
+		src="/assets/js/angular/angular-locale_it-it.js"></script>
 	<!--<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>-->
 
+	<script type="text/javascript" src="/assets/js/toastr.min.js"></script>
 	<script src="/assets/js/charts/pie.js"></script>
 	<script src="/assets/js/charts/line.js"></script>
 	<script src="/assets/js/checklist-model.js"></script>
@@ -316,36 +320,30 @@
 	<script src="/assets/js/process.js"></script>
 
 	<script src="/assets/js/highcharts.js"></script>
-
+	<?php 
+	$uri = $this->uri->segment('1');
+	if($uri == 'home') { 	?>
+		<script src="/assets/js/dashboard_chart.js"></script>
+	<?php } ?>
 	<script>
 <?php
 if ($this->session->flashdata ( 'growl_show' ) == 'true') {
 	?>
 	PNotify.prototype.options.styling = "bootstrap3";
-	$( document ).ready(function() {
+	$( document ).ready(function() {		
 		var success_growl = "<?=$this->session->flashdata('growl_success')?>";
 		var error_growl = "<?=$this->session->flashdata('growl_error')?>";
-		//var success_growl = "Activity is created";
 		if(success_growl != ''){
-			new PNotify({
-		        title: false,
-		        text: success_growl,
-		        type: "success",
-		        width:'600px'
-		    });
+			toastr.success(success_growl, 'Success');
 		}
 		if(error_growl != ''){
-			new PNotify({
-		        title: false,
-		        text: error_growl,
-		        type: "error",
-		         width:'600px'
-		    });
+			toastr.error(error_growl, 'Error');
 		}
 	});
 <?php
 }
 ?>
+
 </script>
 
 	<?php 

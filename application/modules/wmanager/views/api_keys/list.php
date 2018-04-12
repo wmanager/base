@@ -27,7 +27,7 @@
 					    	</thead>
 					    	<tbody>
 					    		<?php
-					    			$tf_array = array('t' => 'Attiva','f' => 'Sospesa');
+					    			$tf_array = array('t' => 'Active','f' => 'Suspended');
 					    			if(is_array($keys)){
 						    			foreach($keys as $key){
 						    				echo '<tr>';
@@ -39,7 +39,7 @@
 						    					echo "<td>$key->name</td>";
 						    					echo "<td>$key->key</td>";
 						    					echo "<td>".$tf_array[$key->active]."</td>";
-						    					echo "<td>Rilasciata il ".date('d-m-Y',strtotime($key->created))."</td>";
+						    					echo "<td>Created on ".date('d-m-Y',strtotime($key->created))."</td>";
 						    					echo "<td><a href='".base_url()."admin/api_keys/edit/$key->id'>Modifica</a></td>";
 						    				echo '</tr>';
 						    			}

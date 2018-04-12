@@ -588,7 +588,7 @@ class Form_builder {
 					if (empty ( $this->elm_options ['value'] )) {
 						$this->elm_options ['value'] = '';
 					} else {
-						$this->elm_options ['value'] = date ( "Y-m-d", strtotime ( $this->elm_options ['value'] ) );
+						$this->elm_options ['value'] = date ( "d-m-Y", strtotime ( $this->elm_options ['value'] ) );
 					}
 					$input_html_string .= form_input ( $this->elm_options );
 					break;
@@ -667,7 +667,7 @@ class Form_builder {
 				$ret_string = $this->input_addons ['pre_html'];
 			} else {
 				if ($this->func == 'form_date') {
-					$ret_string .= '<div class="input-group date" data-date="' . $this->elm_options ['value'] . '" data-date-format="yyyy-mm-dd" data-date-viewmode="days">';
+					$ret_string .= '<div class="input-group date" data-date="' . $this->elm_options ['value'] . '" data-date-format="dd-mm-yyyy" data-date-viewmode="days">';
 				} else {
 					$ret_string .= '<div class="input-group">';
 				}

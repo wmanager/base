@@ -229,9 +229,8 @@ class Troubles extends Common_Controller {
 		
 		if(isset($_POST)) {
 				
-			if(isset($_POST['activity_save']) && !empty($_POST['activity_save'])) {
-				$thread_process_id = $this->actions->create_thread($_POST['thread_type'], $_POST['customer_id'], $_POST['be_id'] ,NULL, $_POST['trouble_id'],'f');
-				$act = $CI->core_actions->create_activity('THREAD',$thread_process_id,$_POST['request_activity'],array('STATUS'=>'NEW'),NULL);
+			if(isset($_POST['activity_save']) && !empty($_POST['activity_save'])) {				
+				$act = $CI->core_actions->create_activity('THREAD',$_POST['thread_id'],$_POST['request_activity'],array('STATUS'=>'NEW'),NULL);
 	
 			} else {
 				$thread_process_id = $this->actions->create_thread($_POST['process'], $_POST['customer_id'], $_POST['be_id'] ,NULL, $_POST['trouble_id'],'f');

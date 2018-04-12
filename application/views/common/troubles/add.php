@@ -184,66 +184,8 @@
 									ng-hide="trouble_status == 'DONE' || trouble_status == 'CANCELLED'">Save</button>
 							</div>
 						</div>
-						</tab> <tab heading="Attachments" disable="locked"> <alert
-							ng-show="filedata.errors" type="danger">{{filedata.error}}</alert>
-						<div ng-hide="filedata.busy">
-							<div>
-								<div class="form-group">
-									<label class="col-md-3 control-label" for="title">Description</label>
-									<div class="col-md-9">
-										<input type="text" class="form-control" label="Description"
-											id="description" name="description"
-											ng-model="filedata.description">
-									</div>
-								</div>
-								<div class="clearfix"></div>
-								<br>
-								<div class="form-group">
-									<label class="col-md-3 control-label" for="title">File</label>
-									<div class="col-md-9">
-										<input type="file" ng-model-instant id="fileToUpload" multiple
-											onchange="angular.element(this).scope().setFiles(this)" />
-									</div>
-								</div>
-								<div class="clearfix"></div>
-								<br>
-								<div class="form-group">
-									<div class="col-md-12">
-										<button type="submit" class="btn btn-success"
-											ng-click="upload(activity.id_thread)"
-											ng-hide="selected.status == 'CANCELLED' || selected.status == 'DONE'">Save</button>
-									</div>
-								</div>
-								<div class="clearfix"></div>
-								<hr />
-							</div>
-							<div ng-repeat="file in listfiles">
-							
-								<div class="row-fluid">
-									<div class="col-md-1">
-										<i class="fa fa-file-o"></i>
-									</div>
-									<div class="col-md-8">
-										<p>
-											<a href="{{file.link}}">{{file.filename}}</a>
-										</p>
-										<small>{{file.description}}<br> Created on
-											{{file.created.substring(0,16)}} by {{file.first_name}}
-											{{file.last_name}}
-										</small>
-									</div>
-									<div class="col-md-1" ng-if="activity.status!='DONE'">
-										<a href="#" ng-click="deleteFile(file.id,file.trouble_id)"><i
-											class="fa fa-trash"></i></a>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div ng-show="filedata.busy"
-							style="width: 100px; height: 50px; margin: auto;">
-							<i class="fa fa-4x fa-spinner fa-pulse"></i>
-						</div>
-
+						</tab> <tab heading="Attachments" disable="locked"> 
+							<div attachment attachment-refid='<?=$this->uri->segment(4);?>' attachment-refkey="TROUBLE" custid='selected.customer.id' beid='selected.contract'></div>
 						</tab> 
 						<tab heading="Task" disable="locked || trouble_status  == 'DRAFT'">
 							<div ng-include="manual_process"></div>

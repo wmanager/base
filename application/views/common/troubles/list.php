@@ -53,17 +53,20 @@
 											}
 											?>
 										</select>
-							</div>
-							
+							</div>	
+													
 							<div class="form-group ">
 								<div class="input-group">
 									<select name="search_status" class="form-control" onchange="this.form.submit()" >
 										<option value="">Filter status</option>
 										<?php
+										
 										foreach($trouble_status as $s){
 											$selected = '';
 											if($s->key == $this->session->userdata('filter_trouble_status')) $selected = 'selected';
+											if($s->key == $this->session->flashdata('trouble_status')) $selected = 'selected';
 											echo "<option value='$s->key' $selected>$s->label</option>";
+											
 										}
 										?>
 							      </select>

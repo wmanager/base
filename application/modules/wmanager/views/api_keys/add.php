@@ -3,7 +3,7 @@
 
 	            <div class="widget-header">
 	              <i class="icon-pencil"></i>
-	              <h3><i class="fa fa-key"></i> Nuova API-Key</h3>
+	              <h3><i class="fa fa-key"></i> New API-Key</h3>
 	            </div> <!-- /.widget-header -->
 
 					

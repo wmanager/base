@@ -36,7 +36,15 @@
  * @filesource
  */
 var ready;
-ready = function() {
+var rules;
+ready = function() {	 
+	 $('.monthpicker').datepicker({
+	        autoclose: true,
+	        minViewMode: 1,
+	        useCurrent: true,
+	        format: 'mm/yyyy'
+	    });
+	 
 	$.ajaxSetup({ cache: false });
 
 	$.fn.datepicker.defaults.format = "dd/mm/yyyy";
@@ -151,7 +159,7 @@ ready = function() {
 
 	handleTabLinks();
 	
-	var rules = {
+	rules = {
 	    	focusCleanup: false,
 			
 			wrapper: 'div',
@@ -175,7 +183,11 @@ ready = function() {
 	    	
 	    };
 	
-	$('form').validate(rules);
+	 	$('form').each(function () {
+	        $(this).validate(rules);
+	    });
+	 
+//	/$('form').validate(rules);
 
 	$('.delete-confirm').click(function(e){
 		e.preventDefault();

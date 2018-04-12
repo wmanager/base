@@ -104,7 +104,6 @@ class Activity extends CI_Model {
 		
 		$this->db->flush_cache ();
 		// GET ACL HELPER
-		acl ( 'activities' );
 		
 		if ($filter2) {
 			$this->db->where ( "setup_activities.id_process", $filter2 );
@@ -184,7 +183,6 @@ class Activity extends CI_Model {
 		
 		$this->db->flush_cache ();
 		// GET ACL HELPER
-		acl ( 'activities' );
 		
 		if ($filter2) {
 			$this->db->where ( "setup_activities.id_process", $filter2 );
@@ -262,8 +260,6 @@ class Activity extends CI_Model {
 		$filter17 = $this->session->userdata ( 'filter_esito_result' );
 		
 		$this->db->flush_cache ();
-		// GET ACL HELPER
-		acl ( 'activities' );
 		
 		if ($filter2) {
 			$this->db->where ( "setup_activities.id_process", $filter2 );
@@ -349,7 +345,6 @@ class Activity extends CI_Model {
 	public function get_companies() {
 		$this->db->flush_cache ();
 		// GET ACL HELPER
-		acl ( 'activities' );
 		$query = $this->db->distinct ( 'companies.id' )->select ( 'companies.name, companies.id' )->join ( 'companies', 'companies.id = activities.owner_company' )->order_by ( 'companies.name', 'asc' )->get ( 'activities' );
 		$result = $query->result ();
 		$this->db->flush_cache ();

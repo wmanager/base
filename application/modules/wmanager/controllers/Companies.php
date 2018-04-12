@@ -400,7 +400,7 @@ class Companies extends Admin_Controller {
 		        'id' => 'active',
 						'type' => 'checkbox',
 						'class' => 'checkbox',
-						'label' => 'Attiva',
+						'label' => 'Active',
 						'default_value' => 't' 
 				) 
 		);
@@ -872,7 +872,7 @@ class Companies extends Admin_Controller {
 				array(/* Active */
 			        'id' => 'active',
 						'type' => 'checkbox',
-						'label' => 'Attiva',
+						'label' => 'Active',
 						'default_value' => 't',
 						'checked' => true 
 				) 
@@ -926,7 +926,7 @@ class Companies extends Admin_Controller {
 				array(/* Active */
 			    'id' => 'active',
 						'type' => 'checkbox',
-						'label' => 'Attiva',
+						'label' => 'Active',
 						'default_value' => 't' 
 				) 
 		);
@@ -990,7 +990,7 @@ class Companies extends Admin_Controller {
 				array(/* Status */
 				'id' => 'active',
 						'type' => 'checkbox',
-						'label' => 'Attiva',
+						'label' => 'Active',
 						'default_value' => 't',
 						'checked' => 'checked' 
 				) 
@@ -1057,7 +1057,7 @@ class Companies extends Admin_Controller {
 				array(/* Status */
 				'id' => 'active',
 						'type' => 'checkbox',
-						'label' => 'Attiva',
+						'label' => 'Active',
 						'default_value' => 't' 
 				) 
 		);

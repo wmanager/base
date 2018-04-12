@@ -58,6 +58,9 @@
 												$selected = '';
 												if ($s->status == $this->session->userdata ( 'filter_threads_status' ))
 													$selected = 'selected';
+												if ($s->status == $this->session->flashdata ( 'threads_status' ))
+													$selected = 'selected';
+													
 												echo "<option value='$s->status' $selected>$s->status</option>";
 											}
 											?>
