@@ -3626,7 +3626,7 @@ CREATE TABLE setup_form_type (
 );
 
 
-ALTER TABLE public.setup_form_type OWNER TO postgres;
+ALTER TABLE public.setup_form_type OWNER TO install_host_username;
 
 --
 -- Name: setup_form_type_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -3640,7 +3640,7 @@ CREATE SEQUENCE setup_form_type_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.setup_form_type_id_seq OWNER TO postgres;
+ALTER TABLE public.setup_form_type_id_seq OWNER TO install_host_username;
 
 --
 -- Name: setup_form_type_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
