@@ -60,10 +60,9 @@
 
 						<div class="form-group">
 							<div class="col-md-6">
-								<label>VAT *</label><input									
+								<label>VAT</label><input									
 									maxlength="15" class="form-control" name="vat"
-									ng-model="form_data.vat"
-									validator="required">
+									ng-model="form_data.vat">
 							</div>
 						</div>
 						<div class="clearfix"></div>

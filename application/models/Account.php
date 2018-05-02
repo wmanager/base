@@ -198,10 +198,8 @@ class Account extends CI_Model
 		$query = $this->db->select("attachments.*,
 									setup_attachments.description as attachment_description,
 									setup_attachments.title as attachment_type")
-							->where('be.account_id',$id)
-							->join('threads',"attachments.thread_id=threads.id")
+							->where("attachments.client_id",$id)
 							->join("setup_attachments","attachments.attach_type = setup_attachments.id")
-							->join('be','threads.be = be.id')
 							->get('attachments');
 		return $query->result();
 		

@@ -193,7 +193,7 @@ class Install extends CI_Controller {
 		$this->install_model->reset_configs($step); 
 		$data = (object)[];
 		// form validation
-		$this->form_validation->set_rules('database_name', 'Database name', 'trim|required|max_length[64]');
+		$this->form_validation->set_rules('database_name', 'Database name', 'trim|required|max_length[64]|strtolower');
 		
 		if ($this->form_validation->run() === false) {
 		

@@ -100,6 +100,11 @@ class Extension_model extends CI_Model {
 			return false;
 		}
 		
+		//replace string with current database settings
+		$db_username = $this->db->username;
+		$query = str_replace("postgres",$db_username,$query);
+		$query = str_replace("install_host_username",$db_username,$query);
+		
 		if($this->db->query($query)){
 			return true;
 		}else{

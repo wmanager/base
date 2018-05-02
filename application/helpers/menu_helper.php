@@ -38,11 +38,11 @@
  */
 
 if (! function_exists ( 'top_menu' )) {
-	function top_menu() {
+	function top_menu($template='wmanager') {
 		$CI = & get_instance ();
 		
 		$CI->load->model("core/dependencies");
-		$menu_array = $CI->dependencies->get_menu();
+		$menu_array = $CI->dependencies->get_menu($template);
 		
 		$user = $CI->session->userdata ( 'user' );
 		$role_details = $CI->ion_auth->get_users_groups ( $user->id )->result ();
@@ -144,5 +144,42 @@ if (! function_exists ( 'top_menu' )) {
 		echo '</ul>';
 		echo '</div>';
 		echo '</nav>';
+	}
+	
+	function admin_menu(){
+		$CI = & get_instance ();
+		
+		$CI->load->model("core/dependencies");
+		$menu_array = $CI->dependencies->get_menu('admin');
+		
+		$user = $CI->session->userdata ( 'user' );
+		$role_details = $CI->ion_auth->get_users_groups ( $user->id )->result ();
+		$roles = array ();
+		
+		foreach ( $role_details as $key => $value ) {
+			if ($value->name == 'admin') {
+				$roles [] = $value->name;
+			}
+		}
+		
+		foreach ( $menu_array as $item ) {
+				
+			$admin_group = 'admin';
+				
+			$item ['access'] = array_key_exists ( 'access', $item ) ? $item ['access'] : $admin_group;
+				
+			if ($CI->ion_auth->in_group ( $item ['access'] )) {
+				if (array_key_exists ( 'children', $item )) {
+					echo '<li class="dropdown ' . $item ['class'] . '"><a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"><span>' . $item ['label'] . '</span><b class="caret"></b></a>';
+				} else {
+						
+					if (count ( $roles ) != 2) {
+						echo '<li class="' . $item ['class'] . '"><a href="' . $item ['link'] . '"><span>' . $item ['label'] . '</span></a>';
+					}
+				}
+				echo '</li>';
+			} // end if
+		} // end foreach
+		
 	}
 }

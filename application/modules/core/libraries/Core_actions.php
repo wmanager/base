@@ -417,7 +417,7 @@ class Core_actions {
 				$exit_code_check = $CI->actions_model->check_exit_code ( $thread_id, $exit->code );
 				
 				$condition = $exit->condition;
-				$response = $this->decode_condition ( $condition );
+				$response = $this->decode_condition ( $condition );				
 				log_message ( 'DEBUG', 'conditions ' . print_r ( $response, true ) );
 				$count = 0;
 				foreach ( $response as $key => $item ) {
@@ -427,20 +427,27 @@ class Core_actions {
 						switch ($key_type [0]) {
 							case 'ACTID' :
 								$value = $CI->actions_model->get_var_value ( $act_id, $key_type [1] );
+								
 								break;
 							case 'THREAD' :
 								$value = $CI->actions_model->get_var_value_thread ( $thread_id, $key_type [1] );
 								break;
 						}
 					} else {
+						
 						$value = $CI->actions_model->get_var_value ( $act_id, $key_type [0] );
 					}
+		
 					log_message ( 'DEBUG', print_r ( $value, true ) );
-					
+	
 					if (isset ( $value->value )) {
-						if ($value->value == $item) {
+
+						if ($value->value == trim($item)) {
+						
 							$count ++;
+							
 							if ($count == count ( $response )) {
+		
 								if ($exit_code_check != 0) {
 									$history = $CI->actions_model->add_history ( 'ACTIVITY', $act_id, NULL, NULL, NULL, 'ENGINE_BREAK', $CI->session->userdata ( 'session_id' ), 0, $exit->code );
 									break;
@@ -452,6 +459,7 @@ class Core_actions {
 								
 								$action = $exit->actions;
 								$action_decode = $this->decoding_action ( $action, $thread_id, $act_id );
+
 								log_message ( 'DEBUG', print_r ( $action_decode, true ) );
 								
 								$flag = true;
@@ -471,7 +479,9 @@ class Core_actions {
 									$key = 0;
 									$error = false;
 									$growl_messages = '';
+									
 									foreach ( $action_decode as $each_action ) {
+										
 										if ($error) {
 											break;
 										}
@@ -479,7 +489,9 @@ class Core_actions {
 											$each_action ['target_id'] = $$each_action ['target_id_label'];
 										}
 										$action_method = $each_action ['function'];
+										
 										switch ($action_method) {
+											
 											case "Update_Var" :
 												$response = $this->update_var ( 'ACTIVITY', $act_id, $each_action ['target_type'], $each_action ['target_id'], $each_action ['params_array'], $each_action ['duty'], $exit->code );
 												if ($response != 0) {
@@ -492,6 +504,7 @@ class Core_actions {
 												break;
 												
 											case "Create_Activity" :
+												
 												$response = $this->create_activity ( 'ACTIVITY', $act_id, $each_action ['target_type'], $each_action ['params_array'], $each_action ['duty'], $exit->code );
 												if ($response <= 0 && $response != - 4) {
 													// -4 means prevented duplication therefore not error it should continue process
@@ -504,6 +517,7 @@ class Core_actions {
 												$growl_messages .= "The activity " . $each_action ['target_type'] . " has been successfully created.";
 												
 												$$each_action ['res'] = $response;
+												
 												log_message ( 'DEBUG', 'trigger engine 6' );
 												// $history = $CI->actions_model->add_history('ACTIVITY',$act_id,$each_action['target_type'],$response,NULL,'create_activity',$CI->session->userdata('session_id'),0,$exit->code);
 												break;
@@ -577,6 +591,7 @@ class Core_actions {
 												break;
 												
 											default:
+												
 												if(strpos($each_action['function'],'.')!=''){
 													
 													$module_array = explode('.',$each_action['function']);
