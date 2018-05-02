@@ -3189,7 +3189,7 @@ SELECT pg_catalog.setval('list_activities_id_seq', 1, false);
 -- Data for Name: list_ambits; Type: TABLE DATA; Schema: public; Owner: install_host_username
 --
 
-INSERT INTO list_ambits VALUES (1, 'Connection', 1, false, '2017-12-06 11:33:57.615025', NULL, NULL, NULL);
+INSERT INTO list_ambits VALUES (1, 'Connection', 1, false, 'ACTIVITY','2017-12-06 11:33:57.615025', NULL, NULL, NULL);
 
 
 --
