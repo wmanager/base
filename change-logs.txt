@@ -1,0 +1,13 @@
+WManager v1.0.2
+Author @AdharshJamain
+1)Dummy/Admin => Admin menu loaded dynamically from database (SQL-CHANGE)
+2)Core => Database hostname fix during installation
+3)Dummy/Admin => GIT-HUB #0002 - Added activity type gate
+4)Dummy/FrontEnd => Accounts page attachment bug
+5)Core => Extensions DB host name changes during installation
+6)Core => Engine small fix on changes
+7)Dummy/Admin => Notification added for admin side
+8)Dummy/FrontEnd => GIT-HUB #0001 - Fix on new customer.
+ 
+
+  

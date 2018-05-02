@@ -17,6 +17,9 @@
 	<link href="/assets/css/custom.css" rel="stylesheet">
 	<link href="//fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,600" rel="stylesheet">
 	<link href="/assets/css/font-awesome.min.css" rel="stylesheet">
+	<!-- toaster -->
+	<link rel="stylesheet" href="/assets/css/toastr.min.css">
+	<link href="/assets/css/pnotify.custom.min.css" media="all" rel="stylesheet" type="text/css" />
 
 	<?php 
 		$dependencies_css = get_dependencies("admin","css");
@@ -72,6 +75,10 @@
               <ul class="dropdown-menu">
                 <li><a href="/admin/setup_attach/">Setup Attachment</a></li>
                 <li><a href="/admin/setup_collection/">Setup Collection</a></li>
+                <?php 
+                	//get admin menu
+                	admin_menu('admin');	
+                 ?>
 <!--                 <li><a href="/admin/setup_reports/">Setup Reports</a></li> -->
               </ul>
             </li>
@@ -145,7 +152,7 @@
 	<script
 		src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.9/i18n/angular-locale_it-it.js"></script>
 	<!--<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>-->
-
+	<script type="text/javascript" src="/assets/js/toastr.min.js"></script>
 	<script src="/assets/js/charts/pie.js"></script>
 	<script src="/assets/js/charts/line.js"></script>
 	<script src="/assets/js/checklist-model.js"></script>
@@ -180,6 +187,27 @@
 	
 	<script src="/assets/js/admin.js"></script>
 	
+	
+	<script>
+<?php
+if ($this->session->flashdata ( 'growl_show' ) == 'true') {
+	?>
+	PNotify.prototype.options.styling = "bootstrap3";
+	$( document ).ready(function() {		
+		var success_growl = "<?=$this->session->flashdata('growl_success')?>";
+		var error_growl = "<?=$this->session->flashdata('growl_error')?>";
+		if(success_growl != ''){
+			toastr.success(success_growl, 'Success');
+		}
+		if(error_growl != ''){
+			toastr.error(error_growl, 'Error');
+		}
+	});
+<?php
+}
+?>
+
+</script>
 	<?php 
 		$dependencies_js = get_dependencies("admin","js");
 		

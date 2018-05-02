@@ -65,6 +65,7 @@ class Menu_settings_model extends CI_Model {
 		$data['order'] = $result['order'] + 1;
 		$data['is_child'] = 'f';		
 		$data['access'] = implode(',',$data['access']);
+		$data['template'] = 'wmanager';
 		if($this->db->insert('setup_menu', $data)) {
 			return TRUE;
 		} else {
@@ -87,6 +88,7 @@ class Menu_settings_model extends CI_Model {
 		$data['is_child'] = 't';
 		$data['parent_id'] = $id;
 		$data['access'] = implode(',',$data['access']);
+		$data['template'] = 'wmanager';
 		if($this->db->insert('setup_menu', $data)) {
 			return TRUE;
 		} else {

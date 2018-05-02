@@ -1935,7 +1935,8 @@ CREATE TABLE setup_menu (
     is_child boolean,
     parent_id integer,
     child_order integer,
-    module character varying
+    module character varying,
+    template character varying
 );
 
 
@@ -3452,14 +3453,14 @@ INSERT INTO products VALUES (1, 'Unknown', 'UNKNOWN', 'UNKNOWN', NULL, NULL, '20
 -- Data for Name: setup_menu; Type: TABLE DATA; Schema: public; Owner: install_host_username
 --
 
-INSERT INTO setup_menu VALUES (1, 'Home', NULL, 'admin', 'fa-dashboard', NULL, 1, false, NULL, NULL, NULL);
-INSERT INTO setup_menu VALUES (2, 'Clients', '/common/accounts/', 'admin', 'fa-user', NULL, 2, false, NULL, NULL, NULL);
-INSERT INTO setup_menu VALUES (3, 'Contracts', '/common/businessentities/', 'admin,operator,controller', 'fa-suitcase', NULL, 3, false, NULL, NULL, NULL);
-INSERT INTO setup_menu VALUES (4, 'Troubles', '/common/troubles/', 'admin,operator,controller', 'fa-bug', NULL, 4, false, NULL, NULL, NULL);
-INSERT INTO setup_menu VALUES (5, 'Threads', '/common/cases/', 'admin,operator,controller', 'fa-file-text-o', NULL, 5, false, NULL, NULL, NULL);
-INSERT INTO setup_menu VALUES (6, 'Activity', '/common/activities/', 'admin,operator,controller', 'fa-tasks', NULL, 6, false, NULL, NULL, NULL);
-INSERT INTO setup_menu VALUES (7, 'New', '#', 'admin', 'fa-plus', 'pull-right', 10, false, NULL, NULL, NULL);
-INSERT INTO setup_menu VALUES (8, 'New Client', '/common/module_inorder/', 'admin', '', NULL, NULL, true, 7, 1, NULL);
+INSERT INTO setup_menu VALUES (1, 'Home', NULL, 'admin', 'fa-dashboard', NULL, 1, false, NULL, NULL, NULL,'wmanager');
+INSERT INTO setup_menu VALUES (2, 'Clients', '/common/accounts/', 'admin', 'fa-user', NULL, 2, false, NULL, NULL, NULL,'wmanager');
+INSERT INTO setup_menu VALUES (3, 'Contracts', '/common/businessentities/', 'admin,operator,controller', 'fa-suitcase', NULL, 3, false, NULL, NULL, NULL,'wmanager');
+INSERT INTO setup_menu VALUES (4, 'Troubles', '/common/troubles/', 'admin,operator,controller', 'fa-bug', NULL, 4, false, NULL, NULL, NULL,'wmanager');
+INSERT INTO setup_menu VALUES (5, 'Threads', '/common/cases/', 'admin,operator,controller', 'fa-file-text-o', NULL, 5, false, NULL, NULL, NULL,'wmanager');
+INSERT INTO setup_menu VALUES (6, 'Activity', '/common/activities/', 'admin,operator,controller', 'fa-tasks', NULL, 6, false, NULL, NULL, NULL,'wmanager');
+INSERT INTO setup_menu VALUES (7, 'New', '#', 'admin', 'fa-plus', 'pull-right', 10, false, NULL, NULL, NULL,'wmanager');
+INSERT INTO setup_menu VALUES (8, 'New Client', '/common/module_inorder/', 'admin', '', NULL, NULL, true, 7, 1, NULL,'wmanager');
 
 --
 -- Name: setup_menu_id_seq; Type: SEQUENCE SET; Schema: public; Owner: install_host_username

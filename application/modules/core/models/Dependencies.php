@@ -60,13 +60,13 @@ class Dependencies extends CI_Model
 		}	
 	}
 	
-	public function get_menu(){
+	public function get_menu($template = 'wmanager'){
 		//get all childs
-		$query_child = $this->db->where("is_child = 't'")->order_by("id","ASC")->get("setup_menu");
+		$query_child = $this->db->where("is_child = 't'")->where("template = '$template'")->order_by("id","ASC")->get("setup_menu");
 		$result_child = $query_child->result();
 		
 		//get unique all parents
-		$query_parent_ids = $this->db->select("parent_id as id")->where("parent_id IS NOT NULL")->group_by("parent_id")->get("setup_menu");
+		$query_parent_ids = $this->db->select("parent_id as id")->where("template = '$template'")->where("parent_id IS NOT NULL")->group_by("parent_id")->get("setup_menu");
 		$result_parent_list = $query_parent_ids->result();
 		
 		$parent_ids = array();
@@ -77,7 +77,7 @@ class Dependencies extends CI_Model
 		}
 		
 		//get all except child
-		$query = $this->db->where("is_child = 'f'")->order_by("order","ASC")->get("setup_menu");
+		$query = $this->db->where("is_child = 'f'")->where("template = '$template'")->order_by("order","ASC")->get("setup_menu");
 		$result_parent = $query->result();
 		
 		$menu_array = array();

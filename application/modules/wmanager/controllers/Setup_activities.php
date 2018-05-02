@@ -95,7 +95,8 @@ class Setup_activities extends Admin_Controller {
 		}
 		
 		$activity_type = array (
-				'STANDARD' => 'STANDARD'
+				'STANDARD' => 'STANDARD',
+				'GATE' => 'GATE'
 		);
 		
 		$duty_company_list = $this->setup_activity->get_duty_company ();
@@ -261,8 +262,10 @@ class Setup_activities extends Admin_Controller {
 		$data ['activity'] = $activity;
 		if (! $data ['activity'])
 			redirect ( '/admin/setup_activities/' . $pid, 'refresh' );
+		
 		$activity_type = array (
-				'STANDARD' => 'STANDARD'
+				'STANDARD' => 'STANDARD',
+				'GATE' => 'GATE'
 		);
 		
 		$duty_company_list = $this->setup_activity->get_duty_company ();
