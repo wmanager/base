@@ -486,15 +486,16 @@ class Activity extends CI_Model {
 	}
 	public function get_customer($thread_id) {
 		$query = $this->db->select ( "accounts.*, accounts.id as cliente_id, address.*,
-									(SELECT c.value  FROM contacts c LEFT JOIN accounts ON c.account_id = accounts.id where c.contact_type = 'tel') as tel,
-									(SELECT c.value  FROM contacts c LEFT JOIN accounts ON c.account_id = accounts.id where c.contact_type = 'email') as email,
-									(SELECT c.value  FROM contacts c LEFT JOIN accounts ON c.account_id = accounts.id where c.contact_type = 'cell') as cell")
-			->where ( 'threads.id', $thread_id )
-			->join ( 'accounts', 'accounts.id = threads.customer' )
-			->join ( 'address', 'address.id = accounts.address_id', 'left' )			
-			->where ( 'address.type', 'CLIENT' )			
-			->or_where ( 'address.type', NULL )
-			->get ( 'threads' );
+										(SELECT c.value  FROM contacts c LEFT JOIN accounts ON c.account_id = accounts.id where c.contact_type = 'tel' order by c.id desc limit 1) as tel,
+										(SELECT c.value  FROM contacts c LEFT JOIN accounts ON c.account_id = accounts.id where c.contact_type = 'email'  order by c.id desc limit 1) as email,
+										(SELECT c.value  FROM contacts c LEFT JOIN accounts ON c.account_id = accounts.id where c.contact_type = 'cell'  order by c.id desc limit 1) as cell")
+							->where ( 'threads.id', $thread_id )
+							->join ( 'accounts', 'accounts.id = threads.customer' )
+							->join ( 'address', 'address.id = accounts.address_id', 'left' )			
+							->where ( 'address.type', 'CLIENT' )			
+							->or_where ( 'address.type', NULL )
+							->get ( 'threads' );
+		
 		return $query->row ();
 	}
 

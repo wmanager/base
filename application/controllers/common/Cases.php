@@ -442,4 +442,39 @@ class Cases extends Common_Controller {
 		$xls->generateXML ( $filename );
 		return false;
 	}
+	
+	public function new_thread(){
+		
+		$data = array();
+		
+		$data['content'] = $this->load->view("/common/cases/add_thread",$data,true);
+		$this->load->view ( 'template', $data );
+	}
+	
+	public function create_new_thread(){
+		$this->load->library ( "core/core_actions" );
+		
+		$thread_process_id = $this->actions->create_thread($_POST['process_key'], $_POST['customer_id'], $_POST['be_id'] ,NULL, NULL,'f');
+		
+		if($thread_process_id > 0){
+			$act = $this->core_actions->create_activity('THREAD',$thread_process_id,$_POST['request_key'],array('STATUS'=>'NEW'),NULL);
+		}else{
+			$act = 0;
+		}
+		
+		if($act > 0){
+			$return =  array(
+				"status" => true,
+				"message" => "Activity created successfully",
+				"act_id" => $act	
+			);
+		}else{
+			$return = array(
+				"status" => false,
+				"message" => "Activity failed to create"	
+			);
+		}
+		
+		$this->output->set_content_type ( 'application/json' )->set_output ( json_encode ( $return ) );
+	}
 }

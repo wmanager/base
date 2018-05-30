@@ -35,6 +35,9 @@
 							<th>Lable</th>
 							<th>Link</th>
 							<th>Access</th>
+							<th>Is Child?</th>
+							<th>Module</th>
+							<th>Order</th>
 							<th></th>
 						</tr>
 					</thead>
@@ -46,7 +49,18 @@
 													echo "<td width='40'></td>";
 													echo "<td>$row->label</td>";
 													echo "<td>$row->link</td>";
-													echo "<td>$row->access</td>";													
+													echo "<td>$row->access</td>";
+													
+													if($row->is_child == 't'){
+														$child = "Yes <br> <b>Parent: $row->parent_name</b>";
+													}else{
+														$child = 'No';
+													}
+													
+													echo "<td>$child</td>";
+													echo "<td>$row->module</td>";
+													echo "<td>$row->order</td>";
+													
 													echo "<td width='100'>";
 													echo '<div class="dropdown">';
 													echo '<a href="#" data-toggle="dropdown" class="dropdown-toggle"><i class="fa fa-list"></i></a>';

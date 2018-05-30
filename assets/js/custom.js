@@ -667,7 +667,23 @@ $('#be_id').on('change',function(){
 	$('#FOR_BE').prop('checked', false);
 });
 
+$('#is_request').on('change',function(){
+		if($('#is_request').prop("checked") == true){
+			$('#be_required').closest('div').removeClass('hidden');
+		}else{
+			$('#be_required').closest('div').addClass('hidden');
+		}
+});
 
+$(document).ready(function() {
+	if($("#be_required").length) {
+		if($('#is_request').prop("checked") == true){
+			$('#be_required').closest('div').removeClass('hidden');
+		}else{
+			$('#be_required').closest('div').addClass('hidden');
+		}	
+	}
+});
 	function manage_trouble_thread($type) {
 		
 

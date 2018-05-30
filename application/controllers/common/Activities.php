@@ -176,7 +176,7 @@ class Activities extends Common_Controller {
 			$this->load->view ( 'template', $data );
 		}
 	}
-	public function get_activity($id) {		
+	public function get_activity($id) {
 		$activity = $this->activity->detail ( $id );
 		
 		$company = $this->activity->get_company_name ();
@@ -195,6 +195,7 @@ class Activities extends Common_Controller {
 
 		// CHANGE FORM DATA BASED ON FORM/ACTIVITY TYPE
 		$this->load->library ( "get_activity_data" );
+		
 		if ($id != null && isset ( $activity->type )) {
 			$activity_lib_data = $this->get_activity_data->get_data ( $id, $activity );
 			$activity = $activity_lib_data;

@@ -42,9 +42,10 @@ if (! defined ( 'BASEPATH' ))
 class Menu_settings_model extends CI_Model {
 	
 	public function get_all_menus(){		
-		$query  = $this->db->select("*")
-			->order_by("order","ASC")
-			->get("setup_menu");
+		$query  = $this->db->select("setup_menu.*,a.label as parent_name")
+							->join("setup_menu a","a.id = setup_menu.parent_id","left")
+							->order_by("order","ASC")
+							->get("setup_menu");
 		$result = $query->result();
 		
 		return $result;
@@ -59,13 +60,17 @@ class Menu_settings_model extends CI_Model {
 	}
 	
 	public function add_menu($data) {
-		$query = $this->db->select_max("order")
-					->get("setup_menu");
-		$result = $query->row_array();
-		$data['order'] = $result['order'] + 1;
-		$data['is_child'] = 'f';		
-		$data['access'] = implode(',',$data['access']);
-		$data['template'] = 'wmanager';
+		$query = $this->db->select_max("order")->get("setup_menu");
+		$result= $query->row_array();
+		
+		if($data['order'] == ''){
+			$data['order'] = $result['order'] + 1;
+		}
+		
+		$data['is_child'] 	= 'f';		
+		$data['access'] 	= implode(',',$data['access']);
+		$data['template'] 	= 'wmanager';
+		
 		if($this->db->insert('setup_menu', $data)) {
 			return TRUE;
 		} else {
@@ -85,10 +90,12 @@ class Menu_settings_model extends CI_Model {
 			$data['child_order'] = $result['child_order'] + 1;
 		}
 
-		$data['is_child'] = 't';
-		$data['parent_id'] = $id;
-		$data['access'] = implode(',',$data['access']);
-		$data['template'] = 'wmanager';
+		$data['is_child'] 	= 't';
+		$data['parent_id']  = $id;
+		$data['label'] 		= ucfirst(strtolower($data['label']));
+		$data['access'] 	= implode(',',$data['access']);
+		$data['template'] 	= 'wmanager';
+		
 		if($this->db->insert('setup_menu', $data)) {
 			return TRUE;
 		} else {
@@ -107,12 +114,21 @@ class Menu_settings_model extends CI_Model {
 	}
 	
 	public function edit($data, $id, $parent_id) {	
-
+		
+		if(isset($data['convert_to_child'])){
+			unset($data['icon']);
+			unset($data['convert_to_child']);
+			$data['order']    = NULL;
+			$data['is_child'] = true;
+			$data['child_order'] = 1;
+		}else{
+			unset($data['parent_id']);
+		}
 		
 		if($parent_id)
 			$data['is_child'] = 'f';
 		$data['access'] = implode(',',$data['access']);
-
+		
 		if($this->db->where('id', $id)->update('setup_menu', $data)) {
 
 			return TRUE;
@@ -120,6 +136,22 @@ class Menu_settings_model extends CI_Model {
 			return FALSE;
 		}
 	
+	}
+	
+	public function get_all_parents(){
+		$query = $this->db->select('id,label')->where("link = '#'")->get("setup_menu");
+		
+		$return = array(
+			"" => 'Select Parent'	
+		);
+		
+		if($query->num_rows() > 0){
+			foreach($query->result() as $item){
+				$return[$item->id] = $item->label;
+			}
+		}
+		
+		return $return;
 	}
 }	
 ?>	

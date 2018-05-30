@@ -42,6 +42,7 @@ if (! defined ( 'BASEPATH' ))
 class Menu_settings extends Admin_Controller {
 	public function __construct() {
 		parent::__construct ();
+		
 		$this->load->model("menu_settings_model");
 		$this->load->model("company");		
 		$this->load->library("form_array_builder");
@@ -90,9 +91,21 @@ class Menu_settings extends Admin_Controller {
 						'label' => 'Icon',
 						'placeholder' => 'Enter icon for menu',
 						'help' => 'Please add the font awsome icon label. Eg.fa-user'
+				),
+				array(
+						'id' => 'order',
+						'label' => 'Ordering',
+						'placeholder' => 'Enter the order for icon'
+				),
+				array(
+						'id'   => 'is_dropdown',
+						'label'=> 'Is Sub-menu',
+						'type' => 'checkbox',
+						'value' => 'y',
+						'default_vaue' => ''	
 				)
-				
 		);
+		
 		$array_users_group= array();
 		foreach ($users_group_list as $usergroup){
 			$usergroups[$usergroup->id] = $usergroup->key;
@@ -147,9 +160,8 @@ class Menu_settings extends Admin_Controller {
 				array(
 						'id' => 'link',
 						'label' => 'Link',
-						'placeholder' => 'Enter link for menu',
+						'placeholder' => 'Enter link for menu'
 				)
-	
 		);
 		if(!$parent_id) {
 			$icon  = array(
@@ -159,6 +171,42 @@ class Menu_settings extends Admin_Controller {
 					'help' => 'Please add the font awsome icon label. Eg.fa-user'
 			);
 			array_push($array_form, $icon);
+			
+			$order = array(
+						'id' => 'order',
+						'label' => 'Ordering',
+						'placeholder' => 'Enter the order for icon'
+						);
+			
+			array_push($array_form, $order);
+			
+			//convert to child
+			$all_parents = $this->menu_settings_model->get_all_parents();
+			
+			$convert = array(
+					'id' => "convert_to_child",
+					'type'  => "checkbox",
+					'label' => "Convert to Submenu",
+					'class' => 'form-control',
+					'value' => 'y',
+					'default_value' => ''
+			);
+			array_push($array_form, $convert);
+			$parent_dropdown = array(
+							'id' => "parent_id",
+							'label' => "Parent",
+							'type'  => "dropdown",
+							'class' => 'form-control',
+							'options' => $all_parents
+						);
+			array_push($array_form, $parent_dropdown);
+		}else{
+			$child_order  = array(
+					'id' => 'child_order',
+					'label' => 'Child Order',
+					'placeholder' => 'Enter order for Child'
+			);
+			array_push($array_form, $child_order);
 		}
 
 		$user_group = explode(',', $menu_list->access);

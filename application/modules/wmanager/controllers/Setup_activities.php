@@ -77,17 +77,18 @@ class Setup_activities extends Admin_Controller {
 			} else {
 				$_POST ['disabled'] = 't';
 			}
-			if (! $this->input->post ( 'be_required' )) {
-				$_POST ['be_required'] = 'f';
-			} else {
-				$_POST ['be_required'] = 't';
-			}
+			
 			if (! $this->input->post ( 'is_request' )) {
 				$_POST ['is_request'] = 'f';
 			} else {
 				$_POST ['is_request'] = 't';
 			}
 			
+			if (! $this->input->post ( 'be_required' )) {
+				$_POST ['be_required'] = 'f';
+			} else {
+				$_POST ['be_required'] = 't';
+			}			
 			
 			if ($this->setup_activity->add ()) {
 				redirect ( '/admin/setup_activities/get/' . $pid, 'refresh' );
@@ -159,18 +160,18 @@ class Setup_activities extends Admin_Controller {
 						'default_value' => 'f' 
 				),
 				array(/* Active */
-						'id' => 'be_required',
-						'type' => 'checkbox',
-						'class' => 'checkbox',
-						'label' => 'BE required',
-						'default_value' => 'f' 
-				),
-				array(/* Active */
 						'id' => 'is_request',
 						'type' => 'checkbox',
 						'class' => 'checkbox',
 						'label' => 'Is a request?',
 						'default_value' => 'f' 
+				),
+				array(/* Active */
+						'id' => 'be_required',
+						'type' => 'checkbox',
+						'class' => 'checkbox hidden',
+						'label' => 'BE required',
+						'default_value' => 'f'
 				),
 				array(/* process id */
 						'id' => 'id_process',
@@ -322,18 +323,18 @@ class Setup_activities extends Admin_Controller {
 						'label' => 'Help' 
 				),
 				array(/* Active */
-						'id' => 'be_required',
-						'type' => 'checkbox',
-						'class' => 'checkbox',
-						'label' => 'BE required',
-						'default_value' => 'f' 
-				),
-				array(/* Active */
 						'id' => 'is_request',
 						'type' => 'checkbox',
 						'class' => 'checkbox',
 						'label' => 'Is a request?',
 						'default_value' => 'f' 
+				),
+				array(/* Active */
+						'id' => 'be_required',
+						'type' => 'checkbox',
+						'class' => 'checkbox',
+						'label' => 'BE required',
+						'default_value' => 'f'
 				),
 				array(/* Active */
 						'id' => 'disabled',

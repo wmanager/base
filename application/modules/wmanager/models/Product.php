@@ -98,8 +98,8 @@ class Product extends CI_Model {
 				}
 			}
 			
-			$data['modified'] = date("d-m-y H:i:s");
-			$data['created'] = date("d-m-y H:i:s");
+			$data['modified'] = date("Y-m-d H:i:s");
+			$data['created'] = date("Y-m-d H:i:s");
 			$data['created_by'] = $this->ion_auth->user ()->row ()->id;
 			$data['modified_by'] = $this->ion_auth->user ()->row ()->id;
 			return $data;

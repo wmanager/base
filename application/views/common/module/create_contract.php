@@ -154,8 +154,8 @@
 							<h3>A) Business Data</h3>							
 										<div class="form-group">
 											<div class="col-md-6">
-												<label>Be Code *</label>
-												<input type="text" class="form-control" name="be_code" ng-model="form_data.be.be_code" validator="required" readonly>
+												<label>Be Code</label>
+												<input type="text" class="form-control" name="be_code" ng-model="form_data.be.be_code">
 											</div>
 											<div class="form-group">
 											<div class="col-md-6">

@@ -37,48 +37,33 @@
  * @filesource
  */
 
-class Get_activity_data {
-	var $CI;
+if (! defined ( 'BASEPATH' ))
+	exit ( 'No direct script access allowed' );
+class Request extends Common_Controller {
 	public function __construct() {
-		$this->CI = & get_instance ();
-		$this->CI->load->model ( 'activity' );
-		log_message ( 'debug', "Actions Class Initialized" );
+		parent::__construct ();
+		$this->load->model ( 'request_model' );
 	}
-	public function get_data($id, $activity) {
-		$this->CI = & get_instance ();
-		
-		// activity object that returns same value with new value
-		
-		// NOTICE
-		// OLD EXISTING FORM USES the case
-		// NEW FORMS USE default
-		$act_data = array ();
-		switch ($activity->type) {
-			default :
-				if ($activity->fetch_model_name != '') {
-					$this->CI->load->model ( $activity->fetch_model_name, 'temp_model' );
-					if (method_exists ( $activity->fetch_model_name, 'fetch_data' )) {
-						
-						$tempo_data = $this->CI->temp_model->fetch_data ( $id, $activity );
-						
-						if (isset ( $tempo_data ['activity'] )) {
-							$activity = $tempo_data ['activity'];
-						}
-						
-						if (isset ( $tempo_data ['act_data'] )) {
-							$act_data = $tempo_data ['act_data'];
-						}
-					}
-				}
-				break;
-		}
-		
-		if (count ( $act_data ) > 0) {
-			// merge with existing payload
-			$payload = json_decode ( $activity->payload );
-			$merged_data = ( object ) array_merge ( ( array ) $payload, ( array ) $act_data );
-			$activity->payload = json_encode ( $merged_data );
-		}
-		return $activity;
+	
+	public function index()
+	{
+		$this->get();	
 	}
+	
+	public function get()
+	{
+		$data = array();
+		$data['details'] 	= $this->request->get($this->config->item('per_page'), $this->uri->segment(4));
+		$config['base_url'] = '/request/get/page/';
+		$config['total_rows'] = $data['total'] = $this->request->total();
+		$this->pagination->initialize($config);
+		$data['content'] = $this->load->view('admin/customer_request/list',$data,true);
+		$this->load->view('template',$data);
+	}
+	
+	
+	public function new_request(){
+		
+	}
+	
 }	

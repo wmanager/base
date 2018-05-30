@@ -24,3 +24,24 @@
 	<button class="btn btn-default" data-dismiss="modal">Close</button>
 </div>
 <?= $this->form_builder->close_form(); ?>
+
+<script>
+	
+	$('#convert_to_child').on('change',function(){
+		if($('#convert_to_child').prop("checked") == true){
+			$('#parent_id').parent().parent().closest('div').removeClass('hidden');
+		}else{
+			$('#parent_id').parent().parent().closest('div').addClass('hidden');
+		}
+	});
+	
+	$(document).ready(function() {
+	if($("#convert_to_child").length) {
+		if($('#convert_to_child').prop("checked") == true){
+			$('#parent_id').parent().parent().closest('div').removeClass('hidden');
+		}else{
+			$('#parent_id').parent().parent().closest('div').addClass('hidden');
+		}	
+	}
+	});
+</script>

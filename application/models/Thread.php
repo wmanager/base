@@ -429,4 +429,26 @@ class Thread extends CI_Model {
 		
 		return $query->result_array ();
 	}
+	
+	public function get_process_key(){
+		$query = $this->db->select("key,title")->get("setup_processes");
+		
+		return $query->result();
+	}
+	
+	public function get_request_key($key){
+		
+		if($key == ''){
+			return array();
+		}
+		
+		$query  = $this->db->select('setup_activities.key,setup_activities.title')
+							->join("setup_processes","setup_processes.id = setup_activities.id_process","left")
+							->where("setup_processes.key = '$key'")
+							->where("setup_activities.is_request = 't'")
+							->get("setup_activities");
+		
+		$result = $query->result();
+		return $result;
+	}
 }

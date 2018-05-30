@@ -15,7 +15,6 @@ class Plain_description extends CI_Controller {
 	 */
 	public function index()
 	{
-		//print_r($this->input->post());exit;
 		if($this->input->post()){
 			$data = array();
 			//$update['title'] = $this->input->post('title');

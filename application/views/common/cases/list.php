@@ -94,7 +94,12 @@
 				</div>
 				<div class="pull-right">
 					<div class="input-group pull-right">
-						<a class="btn btn-primary" href="export_thread">Export Thread</a>
+						<a class="btn btn-primary" href="export_thread" style="margin-left: 10px;">Export</a>
+					</div>
+				</div>
+				<div class="pull-right">
+					<div class="input-group pull-right">
+						<a class="btn btn-primary" href="new_thread" >New</a>
 					</div>
 				</div>
 				<div class="clearfix"></div>

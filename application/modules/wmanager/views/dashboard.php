@@ -167,12 +167,20 @@
 				</div>
 				<div class="col-md-4 box_right admin-box">
 					<div class="admin-box-content text-center ">
-						
+						<a href="/admin/setup_roles/">
+							<i class="fa fa-user fa-2x" aria-hidden="true"></i>
+							<br/>
+							Setup Roles
+						</a>
 					</div>
 				</div>
 				<div class="col-md-4 box_bottom_alone admin-box">
 					<div class="admin-box-content text-center ">
-						
+						<a href="/admin/setup_groups/">
+							<i class="fa fa-users fa-2x" aria-hidden="true"></i>
+							<br/>
+							Setup Groups
+						</a>
 					</div>
 				</div>
 				<div class="col-md-4 box_only_right admin-box">

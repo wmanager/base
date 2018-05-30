@@ -3150,7 +3150,85 @@ $scope.setFiles = function(element) {
     };
 	//$scope.changeView('agendaDay', 'myMemoCalendar');
 })
+.controller('NewRequest', function($scope,$rootScope,$http,$timeout,$filter,uiCalendarConfig,transformRequestAsFormPost) {
+	
+	
+	//get process keys
+	 $http.get('/json/forms/get_process_key')
+	 	  .then(function(response){
+	 		  $scope.processKeys = response.data;
+	 		 console.log($scope.processKeys);
+	      });
+	
+	 //get requests
+	 $scope.getRequest = function(){
+		 $http.get('/json/forms/get_request_key/'+$scope.selected.process_key)
+	 	  .then(function(response){
+	 		  $scope.requestKeys = response.data;
+	      });
+	 }
+	
+	
+	$scope.getCustomers = function(val) {
+	      return $http.get('/json/customers', {
+	        params: {
+	          q: val
+	        }
+	      }).then(function(response){
+	        return response.data.map(function(item){
+	          return item;
+	        });
+	      });
+	    };
+	     
+    $scope.setCustomer = function(item) {
+        $scope.selected.customer = item;
+        var request = $http({
+          method: "post",
+          url: "/json/customers/contracts",
+          transformRequest: transformRequestAsFormPost,
+          data: {
+            user:item.id
+          }
+        });
 
+        // Store the data-dump of the FORM scope.
+        request.success(
+          function( data ) {
+            $scope.contracts = data;
+          }
+        );
+    };  
+    
+    //create activity
+    $scope.createThread = function(){
+    	var request = $http({
+            method: "post",
+            url: "/common/cases/create_new_thread",
+            transformRequest: transformRequestAsFormPost,
+            data: {
+	              customer_id:	$scope.selected.customer.id,
+	              be_id:		$scope.selected.contract,
+	              process_key:	$scope.selected.process_key,
+	              request_key:	$scope.selected.request_key
+            }
+          });
+
+          // Store the data-dump of the FORM scope.
+          request.success(
+            function( response ) {
+            	if(response.status == true){
+            	    toastr.success(response.message);
+            		window.location = "/common/cases/";
+            	}else{
+            		toastr.error(response.message);
+            	}
+            }
+          );
+    }
+	
+	
+})
 
 
 /* memos calendar list end */

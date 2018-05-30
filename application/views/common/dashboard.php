@@ -10,21 +10,21 @@
 		<div class="widget-content">
 			<div>
 				<div class="col-lg-3 col-md-6">
-				<a style="color: black" href="<?php echo ($troubles) ? '/common/home/set_session/trouble' : '#'?>">
-				<div class="panel block-shadow">
-					<div class="panel-heading">
-						<div class="row">
-							<div class="col-xs-3">
-								<i class="fa fa-bug fa-5x fa-color"></i>
-							</div>
-							<div class="col-xs-9 text-right">
-							<h2><?php echo $troubles; ?></h2>
-							<div>Total Open Trouble</div>
+					<a style="color: black" href="<?php echo ($troubles) ? '/common/home/set_session/trouble' : '#'?>">
+						<div class="panel block-shadow">
+							<div class="panel-heading">
+								<div class="row">
+									<div class="col-xs-3">
+										<i class="fa fa-bug fa-5x fa-color"></i>
+									</div>
+									<div class="col-xs-9 text-right">
+									<h2><?php echo $troubles; ?></h2>
+									<div>Total Open Trouble</div>
+									</div>
+								</div>
 							</div>
 						</div>
-					</div>
-				</div>
-				</a>
+					</a>
 				</div>
 				<a style="color: black" href="<?php echo ($threads) ? '/common/home/set_session/thread' : '#' ?>">
 				<div class="col-lg-3 col-md-6">				

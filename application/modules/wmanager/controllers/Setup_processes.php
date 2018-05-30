@@ -75,6 +75,8 @@ class Setup_processes extends Admin_Controller {
 			}
 						
 			if ($this->process->add ()) {
+				$this->session->set_flashdata('growl_show', true);
+				$this->session->set_flashdata('growl_success', 'New process was added successfully.');
 				redirect ( '/admin/setup_processes', 'refresh' );
 			}
 		}
@@ -162,13 +164,6 @@ class Setup_processes extends Admin_Controller {
 			$form_type [$value->id] = $value->title;
 		}
 		$array_form_form = array (
-				array(/* DROP DOWN  Form Type*/
-			        'id' => 'form_id',
-						'label' => 'Form Type',
-						'type' => 'dropdown',
-						'class' => 'form-control',
-						'options' => $form_type 
-				),
 				array(/* Label for roles */
 						'type' => 'label',
 						'label' => 'Authorized roles',
@@ -220,6 +215,8 @@ class Setup_processes extends Admin_Controller {
 			}
 			
 			if ($this->process->edit ( $id )) {
+				$this->session->set_flashdata('growl_show', true);
+				$this->session->set_flashdata('growl_success', 'Updates were saved successfully.');
 				redirect ( '/admin/setup_processes', 'refresh' );
 			}
 		}
@@ -322,13 +319,6 @@ class Setup_processes extends Admin_Controller {
 			$form_type [$value->id] = $value->title;
 		}
 		$array_form_form = array (
-				array(/* DROP DOWN  Form Type*/
-			        'id' => 'form_id',
-						'label' => 'Form Type',
-						'type' => 'dropdown',
-						'class' => 'form-control',
-						'options' => $form_type 
-				),
 				array(/* Label for roles */
 						'type' => 'label',
 						'label' => 'Authorized roles',

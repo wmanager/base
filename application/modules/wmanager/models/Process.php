@@ -63,7 +63,6 @@ class Process extends CI_Model {
 		$general_data ['weight'] = $data ['weight'];
 		$general_data ['sla'] = $data ['sla'];
 		$general_data ['wiki_url'] = $data ['wiki_url'];
-		$general_data ['form_id'] = $data ['form_id'];
 		$general_data ['disabled'] = $data ['disabled'];
 		$general_data ['created_by'] = $this->ion_auth->user ()->row ()->id;
 		$general_data ['modified_by'] = $this->ion_auth->user ()->row ()->id;
@@ -184,7 +183,6 @@ class Process extends CI_Model {
 		$general_data ['weight'] = $data ['weight'];
 		$general_data ['sla'] = $data ['sla'];
 		$general_data ['wiki_url'] = $data ['wiki_url'];
-		$general_data ['form_id'] = $data ['form_id'];
 		$general_data ['disabled'] = $data ['disabled'];
 		$general_data ['modified_by'] = $this->ion_auth->user ()->row ()->id;
 		$general_data ['modified'] = date ( 'Y-m-d H:i:s' );

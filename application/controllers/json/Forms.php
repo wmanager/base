@@ -84,4 +84,17 @@ class Forms extends CI_Controller {
 		
 		$this->output->set_content_type ( 'application/json' )->set_output ( json_encode ( $result ) );
 	}
+	public function get_process_key(){
+		$this->load->model ( 'thread' );
+		
+		$process_key = $this->thread->get_process_key ();
+		$this->output->set_content_type ( 'application/json' )->set_output ( json_encode ( $process_key ) );
+	}
+	public function get_request_key($key){
+		$this->load->model ( 'thread' );
+		
+		$request_key = $this->thread->get_request_key ($key);
+		$this->output->set_content_type ( 'application/json' )->set_output ( json_encode ( $request_key ) );
+	}
+	
 }
